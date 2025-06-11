@@ -61,7 +61,7 @@ function parseAADid(didUrl: string): AADidParts {
 }
 
 const getServerAccount = async() : Promise<any> => {
-    
+
   const publicClient = createPublicClient({
     chain: sepolia,
     transport: http(),
@@ -73,7 +73,7 @@ const getServerAccount = async() : Promise<any> => {
 
   const rawKey = process.env.SERVER_PRIVATE_KEY;
   const serverPrivateKey = (rawKey.startsWith('0x') ? rawKey : `0x${rawKey}`) as `0x${string}`;
-  
+
   if (!/^0x[0-9a-fA-F]{64}$/.test(serverPrivateKey)) {
     throw new Error('Invalid private key format. Must be 32 bytes (64 hex characters) with optional 0x prefix');
   }
@@ -112,7 +112,7 @@ const handleMcpRequest: RequestHandler = async (req, res) => {
 
   const serverAccount = await getServerAccount()
 
-  
+
   const challenge = 'hello world ....' // make this random in real world implementation
   if (type == 'PresentationRequest') {
 
@@ -197,7 +197,7 @@ const handleMcpRequest: RequestHandler = async (req, res) => {
           });
 
 
-          const key1 = BigInt(Date.now()) 
+          const key1 = BigInt(Date.now())
           const nonce1 = encodeNonce({ key: key1, sequence: 0n })
           const userOperationHash = await bundlerClient.sendUserOperation({
             account: serverAccount,
@@ -209,14 +209,14 @@ const handleMcpRequest: RequestHandler = async (req, res) => {
             ],
             nonce: nonce1,
             ...fee
-            
+
           });
 
           const { receipt } = await bundlerClient.waitForUserOperationReceipt({
               hash: userOperationHash,
           });
-          
-          
+
+
           console.info("payment received: ", receipt)
 
           // get gator service AA balance
@@ -226,10 +226,10 @@ const handleMcpRequest: RequestHandler = async (req, res) => {
           res.json({
             type: 'ServiceRequestConfirmation',
             services: [
-              { name: 'Gator Lawn Service', location: 'Erie', confirmation: "request processed" }
+              { name: 'Daisys Home Cleaning', location: 'Erie', confirmation: "request processed" }
             ],
           })
-        } 
+        }
       }
       else {
         console.error("verification failed")

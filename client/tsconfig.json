@@ -17,10 +17,13 @@
     "allowImportingTsExtensions": true,
     "allowJs": true,
     "resolveJsonModule": true,
+    "esModuleInterop": true, // Also recommended for most projects
     "isolatedModules": true,
     "noEmit": true
   },
-  "files": [],
+  "files": [
+    "src/components/data/service-list.json"
+  ],
   "references": [
     { "path": "../shared" }
   ],

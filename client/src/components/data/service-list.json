@@ -1,0 +1,51 @@
+[
+  {
+    "url": "/images/cleaning.jpg",
+    "name": "Daisy's Home Cleaning",
+    "linkTo": "/dhc",
+    "zipCode": "80516",
+    "tags": ["residential", "eco-friendly", "deep-clean", "weekly", "sanitizing"]
+  },
+  {
+    "url": "/images/tax-services.jpg",
+    "name": "Rob's Tax Services",
+    "linkTo": "/dhc",
+    "zipCode": "80516",
+    "tags": ["accounting", "business", "personal", "consulting", "planning"]
+  },
+  {
+    "url": "/images/training.jpeg",
+    "name": "Doug's Athletic Training",
+    "linkTo": "/dhc",
+    "zipCode": "80516",
+    "tags": ["fitness", "strength", "cardio", "personal", "nutrition"]
+  },
+  {
+    "url": "/images/catering.jpg",
+    "name": "Diane's Catering",
+    "linkTo": "/dhc",
+    "zipCode": "80026",
+    "tags": ["events", "corporate", "weddings", "gourmet", "custom"]
+  },
+  {
+    "url": "/images/mechanic.jpg",
+    "name": "Mike's Mobile Garage",
+    "linkTo": "/dhc",
+    "zipCode": "80496",
+    "tags": ["automotive", "repairs", "mobile", "diagnostic", "maintenance"]
+  },
+  {
+    "url": "/images/tutoring.jpg",
+    "name": "ABC Tutoring",
+    "linkTo": "/dhc",
+    "zipCode": "80510",
+    "tags": ["mathematics", "science", "english", "test-prep", "homework"]
+  },
+  {
+    "url": "/images/design.jpg",
+    "name": "Creative Collective Design Studio",
+    "linkTo": "/dhc",
+    "zipCode": "80523",
+    "tags": ["branding", "digital", "print", "web", "packaging"]
+  }
+]

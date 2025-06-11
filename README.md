@@ -1,11 +1,4 @@
-# Amazon Marketplace App
-
-### Account Abstraction DID (did:aa). Verifiable Credentials, Verifiable Presentation - leveraging EIP-1271.
-
-A decentralized identity and verifiable credentials provider that supports EIP-1271 for smart contract-based signature verification.
-
-Account Abstraction DID resolver that produces DID Document
-Account Abstraction DID relationships/delegations published via on-chain DID attestations and Metamask Delegation
+# Service Marketplace
 
 ## Prerequisites
 
@@ -17,7 +10,7 @@ Account Abstraction DID relationships/delegations published via on-chain DID att
 ### 1. Clone the Repo
 
 ```sh
-cd amazon-marketplace-app
+cd service-marketplace
 ```
 
 ### 2. Create & Populate Environment Variables
