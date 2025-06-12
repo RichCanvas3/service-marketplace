@@ -1,10 +1,10 @@
 import express, { Request, Response, RequestHandler } from 'express'
 import { agent } from '../agents/veramoAgent.js'
 import sanitizeHtml from 'sanitize-html';
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
 import { ethers } from "ethers";
 
-dotenv.config();
+config();
 
 import { createPublicClient, createWalletClient, http, createClient, custom, parseEther, zeroAddress, toHex, type Address, encodeFunctionData, hashMessage } from "viem";
 import { privateKeyToAccount, PrivateKeyAccount, generatePrivateKey } from "viem/accounts";

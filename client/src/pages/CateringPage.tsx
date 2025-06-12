@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import ServiceList from '../components/ServiceList.tsx'
-import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
 import data from '../components/data/service-list.json';
 import '../custom-styles.css'
@@ -11,15 +9,16 @@ interface Service {
   description?: string;
 }
 
-const CleaningPage: React.FC = () => {
+const CateringPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
-  const [preferredDate, setPreferredDate] = useState('');
-  const [preferredTime, setPreferredTime] = useState('');
-  const dhcServices = data.find(service => service.name === "Daisy's Home Cleaning")?.services || [];
+  const [eventDate, setEventDate] = useState('');
+  const [eventTime, setEventTime] = useState('');
+  const [numGuests, setNumGuests] = useState('');
+  const dcServices = data.find(service => service.name === "Diane's Catering")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
-  const isStep2Valid = preferredDate && preferredTime;
+  const isStep2Valid = eventDate && eventTime && numGuests;
 
   const handleServiceToggle = (serviceName: string) => {
     setSelectedServices(prev =>
@@ -34,7 +33,7 @@ const CleaningPage: React.FC = () => {
     if (currentStep === 2 && !isStep2Valid) return;
     if (currentStep === 3) {
       // Handle form submission
-      const selectedServiceDetails = dhcServices
+      const selectedServiceDetails = dcServices
         .filter(service => selectedServices.includes(service.name))
         .map(service => `${service.name} (${service.price})`);
 
@@ -53,8 +52,9 @@ const CleaningPage: React.FC = () => {
     setIsModalOpen(false);
     setCurrentStep(1);
     setSelectedServices([]);
-    setPreferredDate('');
-    setPreferredTime('');
+    setEventDate('');
+    setEventTime('');
+    setNumGuests('');
   };
 
   const renderStepContent = () => {
@@ -64,7 +64,7 @@ const CleaningPage: React.FC = () => {
           <div>
             <h3>Step 1: Select Services</h3>
             <ul className="service-list">
-              {dhcServices.map((service, index) => (
+              {dcServices.map((service, index) => (
                 <li key={index} className="service-list-item">
                   <div className="service-list-item-checkbox">
                     <input
@@ -90,24 +90,29 @@ const CleaningPage: React.FC = () => {
       case 2:
         return (
           <div>
-            <h3>Step 2: Schedule Service</h3>
+            <h3>Step 2: Event Details</h3>
             <div className="schedule-form">
               <div className="form-group">
-                <label>Preferred Date</label>
-                <input type="date" className="form-input" value={preferredDate} onChange={e => setPreferredDate(e.target.value)} required />
+                <label>Event Date</label>
+                <input type="date" className="form-input" value={eventDate} onChange={e => setEventDate(e.target.value)} required />
               </div>
               <div className="form-group">
-                <label>Preferred Time</label>
-                <select className="form-input" value={preferredTime} onChange={e => setPreferredTime(e.target.value)} required>
+                <label>Event Time</label>
+                <select className="form-input" value={eventTime} onChange={e => setEventTime(e.target.value)} required>
                   <option value="">Select a time...</option>
-                  <option value="morning">Morning (8AM - 12PM)</option>
-                  <option value="afternoon">Afternoon (12PM - 4PM)</option>
-                  <option value="evening">Evening (4PM - 8PM)</option>
+                  <option value="breakfast">Breakfast (7AM - 10AM)</option>
+                  <option value="lunch">Lunch (11AM - 2PM)</option>
+                  <option value="dinner">Dinner (5PM - 9PM)</option>
+                  <option value="custom">Custom Time</option>
                 </select>
               </div>
               <div className="form-group">
+                <label>Number of Guests</label>
+                <input type="number" className="form-input" placeholder="Estimated number of guests" min="1" value={numGuests} onChange={e => setNumGuests(e.target.value)} required />
+              </div>
+              <div className="form-group">
                 <label>Special Instructions</label>
-                <textarea className="form-input" rows={4} placeholder="Any special requirements or notes..."></textarea>
+                <textarea className="form-input" rows={4} placeholder="Dietary restrictions, venue details, theme preferences..."></textarea>
               </div>
             </div>
           </div>
@@ -120,7 +125,7 @@ const CleaningPage: React.FC = () => {
               <h4>Selected Services:</h4>
               <ul className="review-list">
                 {selectedServices.map((serviceName, index) => {
-                  const service = dhcServices.find(s => s.name === serviceName);
+                  const service = dcServices.find(s => s.name === serviceName);
                   return (
                     <li key={index} className="review-item">
                       <span>{service?.name}</span>
@@ -129,19 +134,23 @@ const CleaningPage: React.FC = () => {
                   );
                 })}
               </ul>
-              <h4>Appointment Details:</h4>
+              <h4>Event Details:</h4>
               <ul className="review-list">
                 <li className="review-item">
-                  <span>Preferred Date</span>
-                  <span>{preferredDate}</span>
+                  <span>Event Date</span>
+                  <span>{eventDate}</span>
                 </li>
                 <li className="review-item">
-                  <span>Preferred Time</span>
-                  <span>{preferredTime}</span>
+                  <span>Event Time</span>
+                  <span>{eventTime}</span>
+                </li>
+                <li className="review-item">
+                  <span>Number of Guests</span>
+                  <span>{numGuests}</span>
                 </li>
               </ul>
               <div className="confirmation-message">
-                <p>Click 'Finish' to submit your service request. We'll contact you shortly to confirm your appointment.</p>
+                <p>Click 'Finish' to submit your catering request. We'll contact you shortly to discuss menu options and finalize the details for your event.</p>
               </div>
             </div>
           </div>
@@ -153,48 +162,48 @@ const CleaningPage: React.FC = () => {
 
   return (
     <div className="individual-page">
-      <h2>Daisy's Home Cleaning Page</h2>
+      <h2>Diane's Catering</h2>
 
       <img
         className='service-card-image'
-        src='/images/cleaning.jpg'
-        alt="Daisy's Home Cleaning Service"
+        src='/images/catering.jpg'
+        alt="Diane's Catering"
       />
 
       <div style={{ maxWidth: '800px', lineHeight: '1.6', width: '100%' }}>
-        <p>Welcome to Daisy's Home Cleaning Service, where we bring sparkle and shine to every corner of your home. With over a decade of experience in professional home cleaning, we understand that a clean home is more than just appearance – it's about creating a healthy, comfortable space for you and your loved ones.</p>
+        <p>Welcome to Diane's Catering, where we turn every event into an unforgettable culinary experience. From intimate gatherings to grand celebrations, we bring creativity, quality, and exceptional service to your table. Our passion for food and attention to detail ensures your event will be remembered for its outstanding cuisine.</p>
 
-        <p>Our comprehensive cleaning services include:</p>
-
-        <ul style={{ marginLeft: '20px', marginBottom: '20px' }}>
-          <li>Deep cleaning of kitchens and bathrooms</li>
-          <li>Thorough dusting and vacuuming of all living spaces</li>
-          <li>Window and glass surface cleaning</li>
-          <li>Eco-friendly cleaning options available</li>
-          <li>Regular maintenance cleaning schedules</li>
-        </ul>
-
-        <p>What sets us apart:</p>
+        <p>Our catering services include:</p>
 
         <ul style={{ marginLeft: '20px', marginBottom: '20px' }}>
-          <li>Fully insured and bonded professional cleaners</li>
-          <li>Flexible scheduling to fit your busy lifestyle</li>
-          <li>Attention to detail and consistent quality</li>
-          <li>Pet-friendly cleaning products available</li>
-          <li>100% satisfaction guarantee</li>
+          <li>Wedding receptions and rehearsal dinners</li>
+          <li>Corporate events and business meetings</li>
+          <li>Private parties and celebrations</li>
+          <li>Holiday events and seasonal gatherings</li>
+          <li>Custom menu planning and design</li>
         </ul>
 
-        <p>Serving the Erie area and surrounding communities, we're committed to making your home cleaning experience effortless and reliable. Ready to experience the difference of professional home cleaning?</p>
+        <p>Why choose us:</p>
+
+        <ul style={{ marginLeft: '20px', marginBottom: '20px' }}>
+          <li>Professional culinary team</li>
+          <li>Fresh, locally-sourced ingredients</li>
+          <li>Customizable menu options</li>
+          <li>Full-service event catering</li>
+          <li>Experienced event coordination</li>
+        </ul>
+
+        <p>Serving the Erie area and surrounding communities, we're committed to making your event exceptional through outstanding cuisine and impeccable service. Ready to create an unforgettable dining experience?</p>
       </div>
 
       <button className="service-button" onClick={() => setIsModalOpen(true)}>
-        Book Services
+        Book Catering
       </button>
 
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        title="Book Cleaning Services"
+        title="Book Catering Services"
         currentStep={currentStep}
         totalSteps={3}
         onNext={handleNext}
@@ -204,10 +213,8 @@ const CleaningPage: React.FC = () => {
       >
         {renderStepContent()}
       </Modal>
-
-      <SendMcpMessage />
     </div>
   );
 };
 
-export default CleaningPage;
+export default CateringPage;

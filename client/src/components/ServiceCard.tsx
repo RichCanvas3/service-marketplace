@@ -9,8 +9,6 @@ interface ServiceCardProps {
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ url, name, linkTo, zipCode, tags }) => {
-
-
   return (
     <a href={linkTo} className="service-card-link">
       <div className='service-card'>

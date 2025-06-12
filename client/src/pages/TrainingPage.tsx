@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import ServiceList from '../components/ServiceList.tsx'
-import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
 import data from '../components/data/service-list.json';
 import '../custom-styles.css'
@@ -11,13 +9,13 @@ interface Service {
   description?: string;
 }
 
-const CleaningPage: React.FC = () => {
+const TrainingPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [preferredDate, setPreferredDate] = useState('');
   const [preferredTime, setPreferredTime] = useState('');
-  const dhcServices = data.find(service => service.name === "Daisy's Home Cleaning")?.services || [];
+  const datServices = data.find(service => service.name === "Doug's Athletic Training")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
 
@@ -34,7 +32,7 @@ const CleaningPage: React.FC = () => {
     if (currentStep === 2 && !isStep2Valid) return;
     if (currentStep === 3) {
       // Handle form submission
-      const selectedServiceDetails = dhcServices
+      const selectedServiceDetails = datServices
         .filter(service => selectedServices.includes(service.name))
         .map(service => `${service.name} (${service.price})`);
 
@@ -64,7 +62,7 @@ const CleaningPage: React.FC = () => {
           <div>
             <h3>Step 1: Select Services</h3>
             <ul className="service-list">
-              {dhcServices.map((service, index) => (
+              {datServices.map((service, index) => (
                 <li key={index} className="service-list-item">
                   <div className="service-list-item-checkbox">
                     <input
@@ -90,7 +88,7 @@ const CleaningPage: React.FC = () => {
       case 2:
         return (
           <div>
-            <h3>Step 2: Schedule Service</h3>
+            <h3>Step 2: Schedule Training</h3>
             <div className="schedule-form">
               <div className="form-group">
                 <label>Preferred Date</label>
@@ -100,14 +98,15 @@ const CleaningPage: React.FC = () => {
                 <label>Preferred Time</label>
                 <select className="form-input" value={preferredTime} onChange={e => setPreferredTime(e.target.value)} required>
                   <option value="">Select a time...</option>
-                  <option value="morning">Morning (8AM - 12PM)</option>
-                  <option value="afternoon">Afternoon (12PM - 4PM)</option>
-                  <option value="evening">Evening (4PM - 8PM)</option>
+                  <option value="early-morning">Early Morning (6AM - 9AM)</option>
+                  <option value="morning">Morning (9AM - 12PM)</option>
+                  <option value="afternoon">Afternoon (2PM - 5PM)</option>
+                  <option value="evening">Evening (5PM - 8PM)</option>
                 </select>
               </div>
               <div className="form-group">
                 <label>Special Instructions</label>
-                <textarea className="form-input" rows={4} placeholder="Any special requirements or notes..."></textarea>
+                <textarea className="form-input" rows={4} placeholder="Any fitness goals, health conditions, or preferences..."></textarea>
               </div>
             </div>
           </div>
@@ -120,7 +119,7 @@ const CleaningPage: React.FC = () => {
               <h4>Selected Services:</h4>
               <ul className="review-list">
                 {selectedServices.map((serviceName, index) => {
-                  const service = dhcServices.find(s => s.name === serviceName);
+                  const service = datServices.find(s => s.name === serviceName);
                   return (
                     <li key={index} className="review-item">
                       <span>{service?.name}</span>
@@ -129,7 +128,7 @@ const CleaningPage: React.FC = () => {
                   );
                 })}
               </ul>
-              <h4>Appointment Details:</h4>
+              <h4>Session Details:</h4>
               <ul className="review-list">
                 <li className="review-item">
                   <span>Preferred Date</span>
@@ -141,7 +140,7 @@ const CleaningPage: React.FC = () => {
                 </li>
               </ul>
               <div className="confirmation-message">
-                <p>Click 'Finish' to submit your service request. We'll contact you shortly to confirm your appointment.</p>
+                <p>Click 'Finish' to submit your training request. We'll contact you shortly to confirm your session and discuss your fitness goals.</p>
               </div>
             </div>
           </div>
@@ -153,48 +152,48 @@ const CleaningPage: React.FC = () => {
 
   return (
     <div className="individual-page">
-      <h2>Daisy's Home Cleaning Page</h2>
+      <h2>Doug's Athletic Training</h2>
 
       <img
         className='service-card-image'
-        src='/images/cleaning.jpg'
-        alt="Daisy's Home Cleaning Service"
+        src='/images/training.jpeg'
+        alt="Doug's Athletic Training"
       />
 
       <div style={{ maxWidth: '800px', lineHeight: '1.6', width: '100%' }}>
-        <p>Welcome to Daisy's Home Cleaning Service, where we bring sparkle and shine to every corner of your home. With over a decade of experience in professional home cleaning, we understand that a clean home is more than just appearance – it's about creating a healthy, comfortable space for you and your loved ones.</p>
+        <p>Welcome to Doug's Athletic Training, where we transform goals into achievements. Our personalized approach to fitness combines cutting-edge training techniques with nutrition guidance to help you reach your peak performance. Whether you're just starting your fitness journey or looking to break through plateaus, we're here to guide you every step of the way.</p>
 
-        <p>Our comprehensive cleaning services include:</p>
-
-        <ul style={{ marginLeft: '20px', marginBottom: '20px' }}>
-          <li>Deep cleaning of kitchens and bathrooms</li>
-          <li>Thorough dusting and vacuuming of all living spaces</li>
-          <li>Window and glass surface cleaning</li>
-          <li>Eco-friendly cleaning options available</li>
-          <li>Regular maintenance cleaning schedules</li>
-        </ul>
-
-        <p>What sets us apart:</p>
+        <p>Our comprehensive training services include:</p>
 
         <ul style={{ marginLeft: '20px', marginBottom: '20px' }}>
-          <li>Fully insured and bonded professional cleaners</li>
-          <li>Flexible scheduling to fit your busy lifestyle</li>
-          <li>Attention to detail and consistent quality</li>
-          <li>Pet-friendly cleaning products available</li>
-          <li>100% satisfaction guarantee</li>
+          <li>One-on-one personal training sessions</li>
+          <li>Customized workout programs</li>
+          <li>Nutrition planning and guidance</li>
+          <li>Group fitness classes</li>
+          <li>Performance assessment and tracking</li>
         </ul>
 
-        <p>Serving the Erie area and surrounding communities, we're committed to making your home cleaning experience effortless and reliable. Ready to experience the difference of professional home cleaning?</p>
+        <p>Why train with us:</p>
+
+        <ul style={{ marginLeft: '20px', marginBottom: '20px' }}>
+          <li>Certified professional trainers</li>
+          <li>Customized programs for your goals</li>
+          <li>State-of-the-art equipment and facilities</li>
+          <li>Flexible scheduling options</li>
+          <li>Proven results and ongoing support</li>
+        </ul>
+
+        <p>Serving the Erie area and surrounding communities, we're dedicated to helping you achieve your fitness goals through expert guidance and motivation. Ready to start your transformation?</p>
       </div>
 
       <button className="service-button" onClick={() => setIsModalOpen(true)}>
-        Book Services
+        Book Training
       </button>
 
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        title="Book Cleaning Services"
+        title="Book Training Services"
         currentStep={currentStep}
         totalSteps={3}
         onNext={handleNext}
@@ -204,10 +203,8 @@ const CleaningPage: React.FC = () => {
       >
         {renderStepContent()}
       </Modal>
-
-      <SendMcpMessage />
     </div>
   );
 };
 
-export default CleaningPage;
+export default TrainingPage;

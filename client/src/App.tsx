@@ -1,12 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import PageContent from './components/PageContent';
-import SideNav from './components/SideNav';
 import Root from './pages/RootPage';
-import Example from './pages/ExamplePage';
 import CleaningPage from './pages/CleaningPage';
+import TaxPage from './pages/TaxPage';
+import TrainingPage from './pages/TrainingPage';
+import CateringPage from './pages/CateringPage';
+import GaragePage from './pages/GaragePage';
+import TutoringPage from './pages/TutoringPage';
+import DesignPage from './pages/DesignPage';
 import { ZipCodeProvider } from './context/ZipCodeContext';
 import { SearchProvider } from './context/SearchContext';
+import SideNav from './components/SideNav';
 
 const App: React.FC = () => {
   return (
@@ -18,8 +22,13 @@ const App: React.FC = () => {
             <Router>
               <Routes>
                 <Route path="/" element={<Root />} />
-                <Route path="/example" element={<Example />} />
                 <Route path="/dhc" element={<CleaningPage />} />
+                <Route path="/rts" element={<TaxPage />} />
+                <Route path="/dat" element={<TrainingPage />} />
+                <Route path="/dc" element={<CateringPage />} />
+                <Route path="/mmg" element={<GaragePage />} />
+                <Route path="/abct" element={<TutoringPage />} />
+                <Route path="/ccds" element={<DesignPage />} />
               </Routes>
             </Router>
           </div>

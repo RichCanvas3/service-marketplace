@@ -1,8 +1,8 @@
-import { ShoppingCartIcon, BriefcaseIcon, UserCircleIcon, StarIcon} from '@heroicons/react/20/solid'
-import '../custom-styles.css'
-import ServiceList from '../components/ServiceList.tsx'
-import { useZipCode } from '../context/ZipCodeContext'
-import { useSearch } from '../context/SearchContext'
+import { ShoppingCartIcon, BriefcaseIcon, UserCircleIcon, StarIcon } from '@heroicons/react/20/solid';
+import '../custom-styles.css';
+import ServiceList from '../components/ServiceList';
+import { useZipCode } from '../context/ZipCodeContext';
+import { useSearch } from '../context/SearchContext';
 
 const RootPage: React.FC = () => {
   const { zipCode } = useZipCode();

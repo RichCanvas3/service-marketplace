@@ -1,7 +1,7 @@
 import '../custom-styles.css'
-import FilterButton from './FilterButton.tsx'
-import { useZipCode } from '../context/ZipCodeContext'
-import { useSearch } from '../context/SearchContext'
+import FilterButton from './FilterButton';
+import { useZipCode } from '../context/ZipCodeContext';
+import { useSearch } from '../context/SearchContext';
 
 const SideNav: React.FC = () => {
   const { zipCode, setZipCode } = useZipCode();
@@ -16,7 +16,7 @@ const SideNav: React.FC = () => {
     'Athletic Training',
     'Childcare',
     'Professional Services'
-  ]
+  ];
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -29,10 +29,15 @@ const SideNav: React.FC = () => {
   return (
     <div className='side-nav'>
       <a className='header-title' href='/'>
-        <h2> Service Marketplace </h2>
+        <div className="header-content">
+          <div className="header-logo-container">
+            <img src="/favicon.svg" alt="Logo" className="header-logo" />
+          </div>
+          <h2>Service Marketplace</h2>
+        </div>
       </a>
 
-      <p> Search: </p>
+      <p>Search:</p>
       <input
         type="text"
         className='search-input'
@@ -41,7 +46,7 @@ const SideNav: React.FC = () => {
         onChange={handleSearch}
       />
 
-      <p> Zip Code: </p>
+      <p>Zip Code:</p>
       <input
         type="text"
         className='zip-input'
@@ -52,12 +57,10 @@ const SideNav: React.FC = () => {
         pattern="[0-9]*"
       />
 
-      <p> Filters: </p>
-
+      <p>Filters:</p>
       {filterButtons.map((content) => (
         <FilterButton key={content} name={content} />
       ))}
-
     </div>
   );
 };

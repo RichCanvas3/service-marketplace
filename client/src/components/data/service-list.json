@@ -4,48 +4,172 @@
     "name": "Daisy's Home Cleaning",
     "linkTo": "/dhc",
     "zipCode": "80516",
-    "tags": ["residential", "eco-friendly", "deep-clean", "weekly", "sanitizing"]
+    "tags": ["residential", "eco-friendly", "deep-clean", "weekly", "sanitizing"],
+    "services": [
+      {
+        "name": "Basic House Cleaning",
+        "price": "$120",
+        "description": "Standard cleaning of all rooms, dusting, vacuuming, and mopping"
+      },
+      {
+        "name": "Deep Clean",
+        "price": "$200",
+        "description": "Thorough cleaning including baseboards, windows, and cabinet exteriors"
+      },
+      {
+        "name": "Move-in/Move-out Clean",
+        "price": "$300",
+        "description": "Complete cleaning service for moving transitions"
+      },
+      {
+        "name": "Weekly Maintenance",
+        "price": "$90/week",
+        "description": "Regular weekly cleaning service"
+      }
+    ]
   },
   {
     "url": "/images/tax-services.jpg",
     "name": "Rob's Tax Services",
-    "linkTo": "/dhc",
+    "linkTo": "/rts",
     "zipCode": "80516",
-    "tags": ["accounting", "business", "personal", "consulting", "planning"]
+    "tags": ["accounting", "business", "personal", "consulting", "planning"],
+    "services": [
+      {
+        "name": "Personal Tax Return",
+        "price": "$150+",
+        "description": "Individual tax return preparation and filing"
+      },
+      {
+        "name": "Business Tax Return",
+        "price": "$400+",
+        "description": "Business tax preparation and planning"
+      },
+      {
+        "name": "Tax Planning Session",
+        "price": "$200",
+        "description": "Strategic tax planning and consultation"
+      }
+    ]
   },
   {
     "url": "/images/training.jpeg",
     "name": "Doug's Athletic Training",
-    "linkTo": "/dhc",
+    "linkTo": "/dat",
     "zipCode": "80516",
-    "tags": ["fitness", "strength", "cardio", "personal", "nutrition"]
+    "tags": ["fitness", "strength", "cardio", "personal", "nutrition"],
+    "services": [
+      {
+        "name": "Personal Training Session",
+        "price": "$75/hr",
+        "description": "One-on-one personalized training"
+      },
+      {
+        "name": "Nutrition Consultation",
+        "price": "$100",
+        "description": "Personalized nutrition planning and guidance"
+      },
+      {
+        "name": "Group Training",
+        "price": "$30/person",
+        "description": "Small group workout sessions"
+      }
+    ]
   },
   {
     "url": "/images/catering.jpg",
     "name": "Diane's Catering",
-    "linkTo": "/dhc",
+    "linkTo": "/dc",
     "zipCode": "80026",
-    "tags": ["events", "corporate", "weddings", "gourmet", "custom"]
+    "tags": ["events", "corporate", "weddings", "gourmet", "custom"],
+    "services": [
+      {
+        "name": "Wedding Package",
+        "price": "From $2000",
+        "description": "Full-service wedding catering"
+      },
+      {
+        "name": "Corporate Lunch",
+        "price": "$25/person",
+        "description": "Business lunch catering service"
+      },
+      {
+        "name": "Special Event",
+        "price": "Custom",
+        "description": "Customized menu for your special occasion"
+      }
+    ]
   },
   {
     "url": "/images/mechanic.jpg",
     "name": "Mike's Mobile Garage",
-    "linkTo": "/dhc",
+    "linkTo": "/mmg",
     "zipCode": "80496",
-    "tags": ["automotive", "repairs", "mobile", "diagnostic", "maintenance"]
+    "tags": ["automotive", "repairs", "mobile", "diagnostic", "maintenance"],
+    "services": [
+      {
+        "name": "Basic Service",
+        "price": "$80",
+        "description": "Oil change, fluid check, and basic inspection"
+      },
+      {
+        "name": "Diagnostic Check",
+        "price": "$60",
+        "description": "Computer diagnostic scan and analysis"
+      },
+      {
+        "name": "Mobile Repair",
+        "price": "From $120",
+        "description": "On-location automotive repair service"
+      }
+    ]
   },
   {
     "url": "/images/tutoring.jpg",
     "name": "ABC Tutoring",
-    "linkTo": "/dhc",
+    "linkTo": "/abct",
     "zipCode": "80510",
-    "tags": ["mathematics", "science", "english", "test-prep", "homework"]
+    "tags": ["mathematics", "science", "english", "test-prep", "homework"],
+    "services": [
+      {
+        "name": "One-on-One Tutoring",
+        "price": "$50/hr",
+        "description": "Personalized tutoring in any subject"
+      },
+      {
+        "name": "Test Prep Package",
+        "price": "$400",
+        "description": "SAT/ACT preparation course (8 sessions)"
+      },
+      {
+        "name": "Group Study",
+        "price": "$30/hr",
+        "description": "Small group tutoring sessions"
+      }
+    ]
   },
   {
     "url": "/images/design.jpg",
     "name": "Creative Collective Design Studio",
-    "linkTo": "/dhc",
+    "linkTo": "/ccds",
     "zipCode": "80523",
-    "tags": ["branding", "digital", "print", "web", "packaging"]
+    "tags": ["branding", "digital", "print", "web", "packaging"],
+    "services": [
+      {
+        "name": "Logo Design",
+        "price": "From $500",
+        "description": "Custom logo and brand identity design"
+      },
+      {
+        "name": "Website Design",
+        "price": "From $2000",
+        "description": "Custom website design and development"
+      },
+      {
+        "name": "Brand Package",
+        "price": "From $1500",
+        "description": "Complete brand identity package"
+      }
+    ]
   }
 ]

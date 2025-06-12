@@ -8,7 +8,7 @@ interface SearchProps {
   searchQuery: string;
 }
 
-function ServiceList({ searchQuery }: SearchProps) {
+const ServiceList: React.FC<SearchProps> = ({ searchQuery }) => {
   const { zipCode } = useZipCode();
   const [filteredServices, setFilteredServices] = useState(data);
 
@@ -18,7 +18,6 @@ function ServiceList({ searchQuery }: SearchProps) {
       const matchesZip = !zipCode || service.zipCode.includes(zipCode);
       return matchesSearch && matchesZip;
     });
-
     setFilteredServices(filtered);
   }, [searchQuery, zipCode]);
 
@@ -34,18 +33,18 @@ function ServiceList({ searchQuery }: SearchProps) {
 
   return (
     <div className="service-grid">
-      {filteredServices.map((value, index) => (
+      {filteredServices.map((service, index) => (
         <ServiceCard
           key={index}
-          url={value.url}
-          name={value.name}
-          linkTo={value.linkTo}
-          zipCode={value.zipCode}
-          tags={value.tags || []}
+          url={service.url}
+          name={service.name}
+          linkTo={service.linkTo}
+          zipCode={service.zipCode}
+          tags={service.tags}
         />
       ))}
     </div>
   );
-}
+};
 
 export default ServiceList;

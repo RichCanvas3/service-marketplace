@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import ServiceList from '../components/ServiceList.tsx'
-import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
 import data from '../components/data/service-list.json';
 import '../custom-styles.css'
@@ -11,15 +9,17 @@ interface Service {
   description?: string;
 }
 
-const CleaningPage: React.FC = () => {
+const TutoringPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
+  const [subject, setSubject] = useState('');
   const [preferredDate, setPreferredDate] = useState('');
   const [preferredTime, setPreferredTime] = useState('');
-  const dhcServices = data.find(service => service.name === "Daisy's Home Cleaning")?.services || [];
+  const [gradeLevel, setGradeLevel] = useState('');
+  const abctServices = data.find(service => service.name === "ABC Tutoring")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
-  const isStep2Valid = preferredDate && preferredTime;
+  const isStep2Valid = subject && preferredDate && preferredTime && gradeLevel;
 
   const handleServiceToggle = (serviceName: string) => {
     setSelectedServices(prev =>
@@ -34,7 +34,7 @@ const CleaningPage: React.FC = () => {
     if (currentStep === 2 && !isStep2Valid) return;
     if (currentStep === 3) {
       // Handle form submission
-      const selectedServiceDetails = dhcServices
+      const selectedServiceDetails = abctServices
         .filter(service => selectedServices.includes(service.name))
         .map(service => `${service.name} (${service.price})`);
 
@@ -53,8 +53,10 @@ const CleaningPage: React.FC = () => {
     setIsModalOpen(false);
     setCurrentStep(1);
     setSelectedServices([]);
+    setSubject('');
     setPreferredDate('');
     setPreferredTime('');
+    setGradeLevel('');
   };
 
   const renderStepContent = () => {
@@ -64,7 +66,7 @@ const CleaningPage: React.FC = () => {
           <div>
             <h3>Step 1: Select Services</h3>
             <ul className="service-list">
-              {dhcServices.map((service, index) => (
+              {abctServices.map((service, index) => (
                 <li key={index} className="service-list-item">
                   <div className="service-list-item-checkbox">
                     <input
@@ -90,24 +92,47 @@ const CleaningPage: React.FC = () => {
       case 2:
         return (
           <div>
-            <h3>Step 2: Schedule Service</h3>
+            <h3>Step 2: Session Details</h3>
             <div className="schedule-form">
               <div className="form-group">
-                <label>Preferred Date</label>
+                <label>Subject Area</label>
+                <select className="form-input" value={subject} onChange={e => setSubject(e.target.value)} required>
+                  <option value="">Select a subject...</option>
+                  <option value="math">Mathematics</option>
+                  <option value="science">Science</option>
+                  <option value="english">English</option>
+                  <option value="history">History</option>
+                  <option value="sat">SAT Prep</option>
+                  <option value="act">ACT Prep</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Preferred Start Date</label>
                 <input type="date" className="form-input" value={preferredDate} onChange={e => setPreferredDate(e.target.value)} required />
               </div>
               <div className="form-group">
                 <label>Preferred Time</label>
                 <select className="form-input" value={preferredTime} onChange={e => setPreferredTime(e.target.value)} required>
                   <option value="">Select a time...</option>
-                  <option value="morning">Morning (8AM - 12PM)</option>
-                  <option value="afternoon">Afternoon (12PM - 4PM)</option>
-                  <option value="evening">Evening (4PM - 8PM)</option>
+                  <option value="after-school">After School (3PM - 6PM)</option>
+                  <option value="evening">Evening (6PM - 8PM)</option>
+                  <option value="weekend-morning">Weekend Morning (9AM - 12PM)</option>
+                  <option value="weekend-afternoon">Weekend Afternoon (1PM - 4PM)</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Student Grade Level</label>
+                <select className="form-input" value={gradeLevel} onChange={e => setGradeLevel(e.target.value)} required>
+                  <option value="">Select grade level...</option>
+                  <option value="elementary">Elementary School</option>
+                  <option value="middle">Middle School</option>
+                  <option value="high">High School</option>
+                  <option value="college">College</option>
                 </select>
               </div>
               <div className="form-group">
                 <label>Special Instructions</label>
-                <textarea className="form-input" rows={4} placeholder="Any special requirements or notes..."></textarea>
+                <textarea className="form-input" rows={4} placeholder="Any specific areas of focus, learning style preferences, or concerns..."></textarea>
               </div>
             </div>
           </div>
@@ -120,7 +145,7 @@ const CleaningPage: React.FC = () => {
               <h4>Selected Services:</h4>
               <ul className="review-list">
                 {selectedServices.map((serviceName, index) => {
-                  const service = dhcServices.find(s => s.name === serviceName);
+                  const service = abctServices.find(s => s.name === serviceName);
                   return (
                     <li key={index} className="review-item">
                       <span>{service?.name}</span>
@@ -129,8 +154,16 @@ const CleaningPage: React.FC = () => {
                   );
                 })}
               </ul>
-              <h4>Appointment Details:</h4>
+              <h4>Session Details:</h4>
               <ul className="review-list">
+                <li className="review-item">
+                  <span>Subject</span>
+                  <span>{subject}</span>
+                </li>
+                <li className="review-item">
+                  <span>Grade Level</span>
+                  <span>{gradeLevel}</span>
+                </li>
                 <li className="review-item">
                   <span>Preferred Date</span>
                   <span>{preferredDate}</span>
@@ -141,7 +174,7 @@ const CleaningPage: React.FC = () => {
                 </li>
               </ul>
               <div className="confirmation-message">
-                <p>Click 'Finish' to submit your service request. We'll contact you shortly to confirm your appointment.</p>
+                <p>Click 'Finish' to submit your tutoring request. We'll contact you shortly to match you with the best tutor for your needs and confirm your session details.</p>
               </div>
             </div>
           </div>
@@ -153,48 +186,48 @@ const CleaningPage: React.FC = () => {
 
   return (
     <div className="individual-page">
-      <h2>Daisy's Home Cleaning Page</h2>
+      <h2>ABC Tutoring</h2>
 
       <img
         className='service-card-image'
-        src='/images/cleaning.jpg'
-        alt="Daisy's Home Cleaning Service"
+        src='/images/tutoring.jpg'
+        alt="ABC Tutoring"
       />
 
       <div style={{ maxWidth: '800px', lineHeight: '1.6', width: '100%' }}>
-        <p>Welcome to Daisy's Home Cleaning Service, where we bring sparkle and shine to every corner of your home. With over a decade of experience in professional home cleaning, we understand that a clean home is more than just appearance – it's about creating a healthy, comfortable space for you and your loved ones.</p>
+        <p>Welcome to ABC Tutoring, where we empower students to reach their full academic potential. Our experienced tutors provide personalized instruction across a wide range of subjects, helping students build confidence and achieve their educational goals. Whether you're looking to improve grades, prepare for standardized tests, or gain a deeper understanding of challenging subjects, we're here to help.</p>
 
-        <p>Our comprehensive cleaning services include:</p>
-
-        <ul style={{ marginLeft: '20px', marginBottom: '20px' }}>
-          <li>Deep cleaning of kitchens and bathrooms</li>
-          <li>Thorough dusting and vacuuming of all living spaces</li>
-          <li>Window and glass surface cleaning</li>
-          <li>Eco-friendly cleaning options available</li>
-          <li>Regular maintenance cleaning schedules</li>
-        </ul>
-
-        <p>What sets us apart:</p>
+        <p>Our tutoring services include:</p>
 
         <ul style={{ marginLeft: '20px', marginBottom: '20px' }}>
-          <li>Fully insured and bonded professional cleaners</li>
-          <li>Flexible scheduling to fit your busy lifestyle</li>
-          <li>Attention to detail and consistent quality</li>
-          <li>Pet-friendly cleaning products available</li>
-          <li>100% satisfaction guarantee</li>
+          <li>One-on-one personalized tutoring</li>
+          <li>SAT/ACT test preparation</li>
+          <li>Subject-specific assistance</li>
+          <li>Study skills development</li>
+          <li>Homework help and academic support</li>
         </ul>
 
-        <p>Serving the Erie area and surrounding communities, we're committed to making your home cleaning experience effortless and reliable. Ready to experience the difference of professional home cleaning?</p>
+        <p>Why choose us:</p>
+
+        <ul style={{ marginLeft: '20px', marginBottom: '20px' }}>
+          <li>Experienced, qualified tutors</li>
+          <li>Personalized learning plans</li>
+          <li>Flexible scheduling options</li>
+          <li>Progress tracking and reporting</li>
+          <li>Proven success strategies</li>
+        </ul>
+
+        <p>Serving the Erie area and surrounding communities, we're committed to helping students achieve academic excellence through personalized tutoring and support. Ready to boost your academic performance?</p>
       </div>
 
       <button className="service-button" onClick={() => setIsModalOpen(true)}>
-        Book Services
+        Book Tutoring
       </button>
 
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        title="Book Cleaning Services"
+        title="Book Tutoring Services"
         currentStep={currentStep}
         totalSteps={3}
         onNext={handleNext}
@@ -204,10 +237,8 @@ const CleaningPage: React.FC = () => {
       >
         {renderStepContent()}
       </Modal>
-
-      <SendMcpMessage />
     </div>
   );
 };
 
-export default CleaningPage;
+export default TutoringPage;
