@@ -22,7 +22,8 @@
     "noEmit": true
   },
   "files": [
-    "src/components/data/service-list.json"
+    "src/components/data/service-list.json",
+    "src/components/data/employees.json"
   ],
   "references": [
     { "path": "../shared" }

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Modal from '../components/Modal';
 import data from '../components/data/service-list.json';
+import employees from '../components/data/employees.json';
+import { companyInfoStyles } from '../styles/companyInfoStyles';
 import '../custom-styles.css'
 
 interface Service {
@@ -216,6 +218,23 @@ const TutoringPage: React.FC = () => {
         src='/images/tutoring.jpg'
         alt="ABC Tutoring"
       />
+
+      <div style={companyInfoStyles.companyInfo}>
+        <div style={companyInfoStyles.infoGrid}>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Employees</span>
+            <span style={companyInfoStyles.infoValue}>{employees.tutoring.length}</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Address</span>
+            <span style={companyInfoStyles.infoValue}>987 Elm Court, Erie, CO 16506</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Phone</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0128</span>
+          </div>
+        </div>
+      </div>
 
       <div style={{ maxWidth: '800px', lineHeight: '1.6', width: '100%' }}>
         <p>Welcome to ABC Tutoring, where we empower students to reach their full academic potential. Our experienced tutors provide personalized instruction across a wide range of subjects, helping students build confidence and achieve their educational goals. Whether you're looking to improve grades, prepare for standardized tests, or gain a deeper understanding of challenging subjects, we're here to help.</p>

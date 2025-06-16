@@ -25,24 +25,10 @@
   "training": [
     {
       "id": 1,
-      "name": "David Wilson",
+      "name": "Doug Croft",
       "role": "Lead Trainer",
       "experience": "8 years",
       "rating": 4.9
-    },
-    {
-      "id": 2,
-      "name": "Lisa Thompson",
-      "role": "Fitness Coach",
-      "experience": "6 years",
-      "rating": 4.8
-    },
-    {
-      "id": 3,
-      "name": "James Martinez",
-      "role": "Personal Trainer",
-      "experience": "4 years",
-      "rating": 4.7
     }
   ],
   "tutoring": [
@@ -59,36 +45,15 @@
       "role": "Math Specialist",
       "experience": "7 years",
       "rating": 4.8
-    },
-    {
-      "id": 3,
-      "name": "Dr. Maria Garcia",
-      "role": "Science Tutor",
-      "experience": "5 years",
-      "rating": 4.7
     }
   ],
   "garage": [
     {
       "id": 1,
-      "name": "Tom Anderson",
+      "name": "Mike Anderson",
       "role": "Master Mechanic",
       "experience": "15 years",
       "rating": 4.9
-    },
-    {
-      "id": 2,
-      "name": "Chris Lee",
-      "role": "Auto Technician",
-      "experience": "8 years",
-      "rating": 4.8
-    },
-    {
-      "id": 3,
-      "name": "Mike Patel",
-      "role": "Service Specialist",
-      "experience": "6 years",
-      "rating": 4.7
     }
   ],
   "tax": [
@@ -135,6 +100,22 @@
       "role": "Pastry Chef",
       "experience": "8 years",
       "rating": 4.7
+    }
+  ],
+  "design": [
+    {
+      "id": 1,
+      "name": "Mitch Roberts",
+      "role": "Senior Designer",
+      "experience": "10 years",
+      "rating": 4.9
+    },
+    {
+      "id": 2,
+      "name": "Mike Evans",
+      "role": "Associate DEsigner",
+      "experience": "4 years",
+      "rating": 4.2
     }
   ]
 }

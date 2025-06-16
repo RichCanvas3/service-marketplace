@@ -4,6 +4,8 @@ import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import data from '../components/data/service-list.json';
+import employees from '../components/data/employees.json';
+import { companyInfoStyles } from '../styles/companyInfoStyles';
 import '../custom-styles.css'
 
 interface Service {
@@ -215,8 +217,25 @@ const GaragePage: React.FC = () => {
       <img
         className='service-card-image'
         src='/images/mechanic.jpg'
-        alt="Daisy's Garage"
+        alt="Mike's Mobile Garage"
       />
+
+      <div style={companyInfoStyles.companyInfo}>
+        <div style={companyInfoStyles.infoGrid}>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Employees</span>
+            <span style={companyInfoStyles.infoValue}>{employees.garage.length}</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Address</span>
+            <span style={companyInfoStyles.infoValue}>321 Oak Avenue, Erie, CO 16504</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Phone</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0126</span>
+          </div>
+        </div>
+      </div>
 
       <div style={{ maxWidth: '800px', lineHeight: '1.6', width: '100%' }}>
         <p>Welcome to Mike's Mobile Garage, your trusted mobile automotive service provider. We bring professional automotive care directly to your location, saving you time and hassle. Whether you need routine maintenance or emergency repairs, our certified mechanics are equipped to handle your vehicle's needs with expertise and convenience.</p>

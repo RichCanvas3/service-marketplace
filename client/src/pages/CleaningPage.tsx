@@ -4,12 +4,32 @@ import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import data from '../components/data/service-list.json';
+import employees from '../components/data/employees.json';
+import { companyInfoStyles } from '../styles/companyInfoStyles';
 import '../custom-styles.css'
 
 interface Service {
   name: string;
   price: string;
   description?: string;
+}
+
+interface Employee {
+  id: number;
+  name: string;
+  role: string;
+  experience: string;
+  rating: number;
+}
+
+interface EmployeesData {
+  cleaning: Employee[];
+  training: Employee[];
+  tutoring: Employee[];
+  garage: Employee[];
+  tax: Employee[];
+  catering: Employee[];
+  design: Employee[];
 }
 
 const CleaningPage: React.FC = () => {
@@ -21,6 +41,7 @@ const CleaningPage: React.FC = () => {
   const [preferredTime, setPreferredTime] = useState('');
   const [specialInstructions, setSpecialInstructions] = useState('');
   const dhcServices = data.find(service => service.name === "Daisy's Home Cleaning")?.services || [];
+  const employeesData = employees as EmployeesData;
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
 
@@ -218,6 +239,23 @@ const CleaningPage: React.FC = () => {
         alt="Daisy's Home Cleaning Service"
       />
 
+      <div style={companyInfoStyles.companyInfo}>
+        <div style={companyInfoStyles.infoGrid}>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Employees</span>
+            <span style={companyInfoStyles.infoValue}>{employeesData.cleaning.length}</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Address</span>
+            <span style={companyInfoStyles.infoValue}>123 Maple Street, Erie, CO 16501</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Phone</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0123</span>
+          </div>
+        </div>
+      </div>
+
       <div style={{ maxWidth: '800px', lineHeight: '1.6', width: '100%' }}>
         <p>Welcome to Daisy's Home Cleaning Service, where we bring sparkle and shine to every corner of your home. With over a decade of experience in professional home cleaning, we understand that a clean home is more than just appearance – it's about creating a healthy, comfortable space for you and your loved ones.</p>
 
@@ -265,16 +303,14 @@ const CleaningPage: React.FC = () => {
       <InfoModal
         isOpen={isInfoModalOpen}
         onClose={() => setIsInfoModalOpen(false)}
-        title="About Payment Options"
+        title="Payment Information"
       >
         <div>
-          <h3>Payment Methods</h3>
-          <p>We offer two convenient payment options:</p>
+          <p>Choose your preferred payment method:</p>
           <ul>
-            <li><strong>Card Payment:</strong> Secure credit/debit card payment processed through our payment gateway.</li>
-            <li><strong>MetaMask:</strong> Pay using cryptocurrency through the MetaMask wallet.</li>
+            <li>Card Payment: Secure credit/debit card processing</li>
+            <li>MetaMask: Pay using cryptocurrency</li>
           </ul>
-          <p>All payments are secure and encrypted. Choose the method that works best for you!</p>
         </div>
       </InfoModal>
     </div>

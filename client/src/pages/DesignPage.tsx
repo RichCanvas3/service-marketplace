@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Modal from '../components/Modal';
 import data from '../components/data/service-list.json';
+import employees from '../components/data/employees.json';
+import { companyInfoStyles } from '../styles/companyInfoStyles';
 import '../custom-styles.css'
 
 interface Service {
@@ -9,8 +11,27 @@ interface Service {
   description?: string;
 }
 
+interface Employee {
+  id: number;
+  name: string;
+  role: string;
+  experience: string;
+  rating: number;
+}
+
+interface EmployeesData {
+  cleaning: Employee[];
+  training: Employee[];
+  tutoring: Employee[];
+  garage: Employee[];
+  tax: Employee[];
+  catering: Employee[];
+  design: Employee[];
+}
+
 const DesignPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const ccdsServices = data.find(service => service.name === "Creative Collective Design Studio")?.services || [];
@@ -23,6 +44,7 @@ const DesignPage: React.FC = () => {
   const [preferredTime, setPreferredTime] = useState('');
   const [specialInstructions, setSpecialInstructions] = useState('');
   const designServices = data.find(service => service.name === "Design Studio")?.services || [];
+  const employeesData = employees as EmployeesData;
 
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
@@ -223,6 +245,23 @@ const DesignPage: React.FC = () => {
         src='/images/design.jpg'
         alt="Creative Collective Design Studio"
       />
+
+      <div style={companyInfoStyles.companyInfo}>
+        <div style={companyInfoStyles.infoGrid}>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Employees</span>
+            <span style={companyInfoStyles.infoValue}>{employeesData.design.length}</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Address</span>
+            <span style={companyInfoStyles.infoValue}>789 Pine Road, Erie, CO 16503</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Phone</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0125</span>
+          </div>
+        </div>
+      </div>
 
       <div style={{ maxWidth: '800px', lineHeight: '1.6', width: '100%' }}>
         <p>Welcome to Creative Collective Design Studio, where creativity meets strategy to build powerful brand experiences. Our team of passionate designers and brand strategists work collaboratively to create visually stunning and strategically sound design solutions. Whether you're starting from scratch or looking to refresh your brand, we're here to bring your vision to life.</p>

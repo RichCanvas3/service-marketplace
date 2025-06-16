@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Modal from '../components/Modal';
 import data from '../components/data/service-list.json';
+import employees from '../components/data/employees.json';
+import { companyInfoStyles } from '../styles/companyInfoStyles';
 import '../custom-styles.css'
 
 interface Service {
@@ -208,6 +210,23 @@ const TrainingPage: React.FC = () => {
         src='/images/training.jpeg'
         alt="Doug's Athletic Training"
       />
+
+      <div style={companyInfoStyles.companyInfo}>
+        <div style={companyInfoStyles.infoGrid}>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Employees</span>
+            <span style={companyInfoStyles.infoValue}>{employees.training.length}</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Address</span>
+            <span style={companyInfoStyles.infoValue}>654 Birch Street, Erie, CO 16505</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Phone</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0127</span>
+          </div>
+        </div>
+      </div>
 
       <div style={{ maxWidth: '800px', lineHeight: '1.6', width: '100%' }}>
         <p>Welcome to Doug's Athletic Training, where we transform goals into achievements. Our personalized approach to fitness combines cutting-edge training techniques with nutrition guidance to help you reach your peak performance. Whether you're just starting your fitness journey or looking to break through plateaus, we're here to guide you every step of the way.</p>

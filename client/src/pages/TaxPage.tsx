@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import Modal from '../components/Modal';
+import InfoModal from '../components/InfoModal';
 import data from '../components/data/service-list.json';
+import employees from '../components/data/employees.json';
+import { companyInfoStyles } from '../styles/companyInfoStyles';
 import '../custom-styles.css'
 
 interface Service {
@@ -212,6 +215,23 @@ const TaxPage: React.FC = () => {
         src='/images/tax-services.jpg'
         alt="Rob's Tax Services"
       />
+
+      <div style={companyInfoStyles.companyInfo}>
+        <div style={companyInfoStyles.infoGrid}>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Employees</span>
+            <span style={companyInfoStyles.infoValue}>{employees.tax.length}</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Address</span>
+            <span style={companyInfoStyles.infoValue}>654 Pine Street, Erie, CO 16507</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Phone</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0129</span>
+          </div>
+        </div>
+      </div>
 
       <div style={{ maxWidth: '800px', lineHeight: '1.6', width: '100%' }}>
         <p>Welcome to Rob's Tax Services, your trusted partner in financial success. With years of experience in tax preparation and planning, we provide comprehensive solutions for both individuals and businesses. Our expertise ensures you receive maximum benefits while staying compliant with current tax regulations.</p>

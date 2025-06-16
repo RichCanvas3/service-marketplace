@@ -4,6 +4,8 @@ import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import data from '../components/data/service-list.json';
+import employees from '../components/data/employees.json';
+import { companyInfoStyles } from '../styles/companyInfoStyles';
 import '../custom-styles.css'
 
 interface Service {
@@ -217,6 +219,23 @@ const CateringPage: React.FC = () => {
         src='/images/catering.jpg'
         alt="Diane's Catering"
       />
+
+      <div style={companyInfoStyles.companyInfo}>
+        <div style={companyInfoStyles.infoGrid}>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Employees</span>
+            <span style={companyInfoStyles.infoValue}>{employees.catering.length}</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Address</span>
+            <span style={companyInfoStyles.infoValue}>456 Oak Avenue, Erie, CO 16502</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Phone</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0124</span>
+          </div>
+        </div>
+      </div>
 
       <div style={{ maxWidth: '800px', lineHeight: '1.6', width: '100%' }}>
         <p>Welcome to Diane's Catering, where we turn every event into an unforgettable culinary experience. From intimate gatherings to grand celebrations, we bring creativity, quality, and exceptional service to your table. Our passion for food and attention to detail ensures your event will be remembered for its outstanding cuisine.</p>
