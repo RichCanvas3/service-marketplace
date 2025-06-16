@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import ServiceList from '../components/ServiceList.tsx'
+import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
+import InfoModal from '../components/InfoModal';
 import data from '../components/data/service-list.json';
 import '../custom-styles.css'
 
@@ -11,14 +14,15 @@ interface Service {
 
 const CateringPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
-  const [eventDate, setEventDate] = useState('');
-  const [eventTime, setEventTime] = useState('');
-  const [numGuests, setNumGuests] = useState('');
-  const dcServices = data.find(service => service.name === "Diane's Catering")?.services || [];
+  const [preferredDate, setPreferredDate] = useState('');
+  const [preferredTime, setPreferredTime] = useState('');
+  const [specialInstructions, setSpecialInstructions] = useState('');
+  const cateringServices = data.find(service => service.name === "Daisy's Catering")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
-  const isStep2Valid = eventDate && eventTime && numGuests;
+  const isStep2Valid = preferredDate && preferredTime;
 
   const handleServiceToggle = (serviceName: string) => {
     setSelectedServices(prev =>
@@ -32,15 +36,17 @@ const CateringPage: React.FC = () => {
     if (currentStep === 1 && !isStep1Valid) return;
     if (currentStep === 2 && !isStep2Valid) return;
     if (currentStep === 3) {
+      setCurrentStep(4);
+    } else if (currentStep === 4) {
       // Handle form submission
-      const selectedServiceDetails = dcServices
+      const selectedServiceDetails = cateringServices
         .filter(service => selectedServices.includes(service.name))
         .map(service => `${service.name} (${service.price})`);
 
       alert(`Booking submitted!\n\nSelected services:\n${selectedServiceDetails.join('\n')}`);
       handleCloseModal();
     } else {
-      setCurrentStep(prev => Math.min(prev + 1, 3));
+      setCurrentStep(prev => prev + 1);
     }
   };
 
@@ -52,9 +58,14 @@ const CateringPage: React.FC = () => {
     setIsModalOpen(false);
     setCurrentStep(1);
     setSelectedServices([]);
-    setEventDate('');
-    setEventTime('');
-    setNumGuests('');
+    setPreferredDate('');
+    setPreferredTime('');
+    setSpecialInstructions('');
+  };
+
+  const handleInfoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsInfoModalOpen(true);
   };
 
   const renderStepContent = () => {
@@ -64,7 +75,7 @@ const CateringPage: React.FC = () => {
           <div>
             <h3>Step 1: Select Services</h3>
             <ul className="service-list">
-              {dcServices.map((service, index) => (
+              {cateringServices.map((service, index) => (
                 <li key={index} className="service-list-item">
                   <div className="service-list-item-checkbox">
                     <input
@@ -90,29 +101,30 @@ const CateringPage: React.FC = () => {
       case 2:
         return (
           <div>
-            <h3>Step 2: Event Details</h3>
+            <h3>Step 2: Schedule Service</h3>
             <div className="schedule-form">
               <div className="form-group">
-                <label>Event Date</label>
-                <input type="date" className="form-input" value={eventDate} onChange={e => setEventDate(e.target.value)} required />
+                <label>Preferred Date</label>
+                <input type="date" className="form-input" value={preferredDate} onChange={e => setPreferredDate(e.target.value)} required />
               </div>
               <div className="form-group">
-                <label>Event Time</label>
-                <select className="form-input" value={eventTime} onChange={e => setEventTime(e.target.value)} required>
+                <label>Preferred Time</label>
+                <select className="form-input" value={preferredTime} onChange={e => setPreferredTime(e.target.value)} required>
                   <option value="">Select a time...</option>
-                  <option value="breakfast">Breakfast (7AM - 10AM)</option>
-                  <option value="lunch">Lunch (11AM - 2PM)</option>
-                  <option value="dinner">Dinner (5PM - 9PM)</option>
-                  <option value="custom">Custom Time</option>
+                  <option value="morning">Morning (8AM - 12PM)</option>
+                  <option value="afternoon">Afternoon (12PM - 4PM)</option>
+                  <option value="evening">Evening (4PM - 8PM)</option>
                 </select>
               </div>
               <div className="form-group">
-                <label>Number of Guests</label>
-                <input type="number" className="form-input" placeholder="Estimated number of guests" min="1" value={numGuests} onChange={e => setNumGuests(e.target.value)} required />
-              </div>
-              <div className="form-group">
                 <label>Special Instructions</label>
-                <textarea className="form-input" rows={4} placeholder="Dietary restrictions, venue details, theme preferences..."></textarea>
+                <textarea
+                  className="form-input"
+                  rows={4}
+                  placeholder="Any special requirements or notes..."
+                  value={specialInstructions}
+                  onChange={e => setSpecialInstructions(e.target.value)}
+                ></textarea>
               </div>
             </div>
           </div>
@@ -125,7 +137,7 @@ const CateringPage: React.FC = () => {
               <h4>Selected Services:</h4>
               <ul className="review-list">
                 {selectedServices.map((serviceName, index) => {
-                  const service = dcServices.find(s => s.name === serviceName);
+                  const service = cateringServices.find(s => s.name === serviceName);
                   return (
                     <li key={index} className="review-item">
                       <span>{service?.name}</span>
@@ -134,23 +146,47 @@ const CateringPage: React.FC = () => {
                   );
                 })}
               </ul>
-              <h4>Event Details:</h4>
+              <h4>Appointment Details:</h4>
               <ul className="review-list">
                 <li className="review-item">
-                  <span>Event Date</span>
-                  <span>{eventDate}</span>
+                  <span>Preferred Date</span>
+                  <span>{preferredDate}</span>
                 </li>
                 <li className="review-item">
-                  <span>Event Time</span>
-                  <span>{eventTime}</span>
+                  <span>Preferred Time</span>
+                  <span>
+                    {preferredTime === 'morning' ? 'Morning (8AM - 12PM)' :
+                     preferredTime === 'afternoon' ? 'Afternoon (12PM - 4PM)' :
+                     preferredTime === 'evening' ? 'Evening (4PM - 8PM)' :
+                     preferredTime}
+                  </span>
                 </li>
-                <li className="review-item">
-                  <span>Number of Guests</span>
-                  <span>{numGuests}</span>
-                </li>
+                {specialInstructions && (
+                  <li className="review-item">
+                    <span>Special Instructions</span>
+                    <span>{specialInstructions}</span>
+                  </li>
+                )}
               </ul>
               <div className="confirmation-message">
-                <p>Click 'Finish' to submit your catering request. We'll contact you shortly to discuss menu options and finalize the details for your event.</p>
+                <p>Click 'Next' to proceed to payment options.</p>
+              </div>
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div>
+            <h3>Step 4: Choose Payment Method</h3>
+            <div className="payment-section">
+              <div className="payment-options">
+                <button className="service-button" onClick={handleButton1Click}>
+                  Pay with Card
+                </button>
+                <button className="service-button metamask-button" onClick={handleButton2Click}>
+                  Pay with MetaMask
+                </button>
+                <a href="#" className="help-link" onClick={handleInfoClick}>What is this?</a>
               </div>
             </div>
           </div>
@@ -205,7 +241,7 @@ const CateringPage: React.FC = () => {
         onClose={handleCloseModal}
         title="Book Catering Services"
         currentStep={currentStep}
-        totalSteps={3}
+        totalSteps={4}
         onNext={handleNext}
         onPrevious={handlePrevious}
         showNavigation={true}
@@ -213,6 +249,13 @@ const CateringPage: React.FC = () => {
       >
         {renderStepContent()}
       </Modal>
+
+      <InfoModal
+        isOpen={isInfoModalOpen}
+        onClose={() => setIsInfoModalOpen(false)}
+      />
+
+      <SendMcpMessage />
     </div>
   );
 };

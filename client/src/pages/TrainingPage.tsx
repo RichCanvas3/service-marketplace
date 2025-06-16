@@ -15,6 +15,8 @@ const TrainingPage: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [preferredDate, setPreferredDate] = useState('');
   const [preferredTime, setPreferredTime] = useState('');
+  const [specialInstructions, setSpecialInstructions] = useState('');
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const datServices = data.find(service => service.name === "Doug's Athletic Training")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
@@ -31,6 +33,8 @@ const TrainingPage: React.FC = () => {
     if (currentStep === 1 && !isStep1Valid) return;
     if (currentStep === 2 && !isStep2Valid) return;
     if (currentStep === 3) {
+      setCurrentStep(4);
+    } else if (currentStep === 4) {
       // Handle form submission
       const selectedServiceDetails = datServices
         .filter(service => selectedServices.includes(service.name))
@@ -39,7 +43,7 @@ const TrainingPage: React.FC = () => {
       alert(`Booking submitted!\n\nSelected services:\n${selectedServiceDetails.join('\n')}`);
       handleCloseModal();
     } else {
-      setCurrentStep(prev => Math.min(prev + 1, 3));
+      setCurrentStep(prev => prev + 1);
     }
   };
 
@@ -53,6 +57,22 @@ const TrainingPage: React.FC = () => {
     setSelectedServices([]);
     setPreferredDate('');
     setPreferredTime('');
+    setSpecialInstructions('');
+  };
+
+  const handleButton1Click = () => {
+    console.log('Button 1 clicked');
+    // Add your button 1 logic here
+  };
+
+  const handleButton2Click = () => {
+    console.log('Button 2 clicked');
+    // Add your button 2 logic here
+  };
+
+  const handleInfoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsInfoModalOpen(true);
   };
 
   const renderStepContent = () => {
@@ -106,7 +126,13 @@ const TrainingPage: React.FC = () => {
               </div>
               <div className="form-group">
                 <label>Special Instructions</label>
-                <textarea className="form-input" rows={4} placeholder="Any fitness goals, health conditions, or preferences..."></textarea>
+                <textarea
+                  className="form-input"
+                  rows={4}
+                  placeholder="Any fitness goals, health conditions, or preferences..."
+                  value={specialInstructions}
+                  onChange={e => setSpecialInstructions(e.target.value)}
+                ></textarea>
               </div>
             </div>
           </div>
@@ -138,9 +164,32 @@ const TrainingPage: React.FC = () => {
                   <span>Preferred Time</span>
                   <span>{preferredTime}</span>
                 </li>
+                {specialInstructions && (
+                  <li className="review-item">
+                    <span>Special Instructions</span>
+                    <span>{specialInstructions}</span>
+                  </li>
+                )}
               </ul>
               <div className="confirmation-message">
-                <p>Click 'Finish' to submit your training request. We'll contact you shortly to confirm your session and discuss your fitness goals.</p>
+                <p>Click 'Next' to proceed to payment options.</p>
+              </div>
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div>
+            <h3>Step 4: Choose Payment Method</h3>
+            <div className="payment-section">
+              <div className="payment-options">
+                <button className="service-button" onClick={handleButton1Click}>
+                  Pay with Card
+                </button>
+                <button className="service-button metamask-button" onClick={handleButton2Click}>
+                  Pay with MetaMask
+                </button>
+                <a href="#" className="help-link" onClick={handleInfoClick}>What is this?</a>
               </div>
             </div>
           </div>
@@ -195,7 +244,7 @@ const TrainingPage: React.FC = () => {
         onClose={handleCloseModal}
         title="Book Training Services"
         currentStep={currentStep}
-        totalSteps={3}
+        totalSteps={4}
         onNext={handleNext}
         onPrevious={handlePrevious}
         showNavigation={true}

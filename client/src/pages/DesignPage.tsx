@@ -19,9 +19,13 @@ const DesignPage: React.FC = () => {
   const [industry, setIndustry] = useState('');
   const [timeline, setTimeline] = useState('');
   const [projectBrief, setProjectBrief] = useState('');
+  const [preferredDate, setPreferredDate] = useState('');
+  const [preferredTime, setPreferredTime] = useState('');
+  const [specialInstructions, setSpecialInstructions] = useState('');
+  const designServices = data.find(service => service.name === "Design Studio")?.services || [];
 
   const isStep1Valid = selectedServices.length > 0;
-  const isStep2Valid = projectType && businessName && industry && timeline && projectBrief;
+  const isStep2Valid = preferredDate && preferredTime;
 
   const handleServiceToggle = (serviceName: string) => {
     setSelectedServices(prev =>
@@ -35,6 +39,8 @@ const DesignPage: React.FC = () => {
     if (currentStep === 1 && !isStep1Valid) return;
     if (currentStep === 2 && !isStep2Valid) return;
     if (currentStep === 3) {
+      setCurrentStep(4);
+    } else if (currentStep === 4) {
       // Handle form submission
       const selectedServiceDetails = ccdsServices
         .filter(service => selectedServices.includes(service.name))
@@ -43,7 +49,7 @@ const DesignPage: React.FC = () => {
       alert(`Booking submitted!\n\nSelected services:\n${selectedServiceDetails.join('\n')}`);
       handleCloseModal();
     } else {
-      setCurrentStep(prev => Math.min(prev + 1, 3));
+      setCurrentStep(prev => prev + 1);
     }
   };
 
@@ -55,11 +61,29 @@ const DesignPage: React.FC = () => {
     setIsModalOpen(false);
     setCurrentStep(1);
     setSelectedServices([]);
+    setPreferredDate('');
+    setPreferredTime('');
+    setSpecialInstructions('');
     setProjectType('');
     setBusinessName('');
     setIndustry('');
     setTimeline('');
     setProjectBrief('');
+  };
+
+  const handleButton1Click = () => {
+    console.log('Button 1 clicked');
+    // Add your button 1 logic here
+  };
+
+  const handleButton2Click = () => {
+    console.log('Button 2 clicked');
+    // Add your button 2 logic here
+  };
+
+  const handleInfoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsInfoModalOpen(true);
   };
 
   const renderStepContent = () => {
@@ -95,39 +119,30 @@ const DesignPage: React.FC = () => {
       case 2:
         return (
           <div>
-            <h3>Step 2: Project Details</h3>
+            <h3>Step 2: Schedule Service</h3>
             <div className="schedule-form">
               <div className="form-group">
-                <label>Project Type</label>
-                <select className="form-input" value={projectType} onChange={e => setProjectType(e.target.value)} required>
-                  <option value="">Select project type...</option>
-                  <option value="branding">Brand Identity</option>
-                  <option value="website">Website Design</option>
-                  <option value="print">Print Design</option>
-                  <option value="packaging">Packaging Design</option>
-                  <option value="digital">Digital Marketing Assets</option>
+                <label>Preferred Date</label>
+                <input type="date" className="form-input" value={preferredDate} onChange={e => setPreferredDate(e.target.value)} required />
+              </div>
+              <div className="form-group">
+                <label>Preferred Time</label>
+                <select className="form-input" value={preferredTime} onChange={e => setPreferredTime(e.target.value)} required>
+                  <option value="">Select a time...</option>
+                  <option value="morning">Morning (8AM - 12PM)</option>
+                  <option value="afternoon">Afternoon (12PM - 4PM)</option>
+                  <option value="evening">Evening (4PM - 8PM)</option>
                 </select>
               </div>
               <div className="form-group">
-                <label>Business/Organization Name</label>
-                <input type="text" className="form-input" placeholder="Your business or organization name" value={businessName} onChange={e => setBusinessName(e.target.value)} required />
-              </div>
-              <div className="form-group">
-                <label>Industry</label>
-                <input type="text" className="form-input" placeholder="Your industry or sector" value={industry} onChange={e => setIndustry(e.target.value)} required />
-              </div>
-              <div className="form-group">
-                <label>Project Timeline</label>
-                <select className="form-input" value={timeline} onChange={e => setTimeline(e.target.value)} required>
-                  <option value="">Select timeline...</option>
-                  <option value="urgent">Urgent (1-2 weeks)</option>
-                  <option value="standard">Standard (3-4 weeks)</option>
-                  <option value="relaxed">Relaxed (5+ weeks)</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Project Brief</label>
-                <textarea className="form-input" rows={4} placeholder="Describe your project, goals, target audience, and any specific requirements..." value={projectBrief} onChange={e => setProjectBrief(e.target.value)} required></textarea>
+                <label>Special Instructions</label>
+                <textarea
+                  className="form-input"
+                  rows={4}
+                  placeholder="Any special requirements or notes..."
+                  value={specialInstructions}
+                  onChange={e => setSpecialInstructions(e.target.value)}
+                ></textarea>
               </div>
             </div>
           </div>
@@ -149,8 +164,47 @@ const DesignPage: React.FC = () => {
                   );
                 })}
               </ul>
+              <h4>Appointment Details:</h4>
+              <ul className="review-list">
+                <li className="review-item">
+                  <span>Preferred Date</span>
+                  <span>{preferredDate}</span>
+                </li>
+                <li className="review-item">
+                  <span>Preferred Time</span>
+                  <span>
+                    {preferredTime === 'morning' ? 'Morning (8AM - 12PM)' :
+                     preferredTime === 'afternoon' ? 'Afternoon (12PM - 4PM)' :
+                     preferredTime === 'evening' ? 'Evening (4PM - 8PM)' :
+                     preferredTime}
+                  </span>
+                </li>
+                {specialInstructions && (
+                  <li className="review-item">
+                    <span>Special Instructions</span>
+                    <span>{specialInstructions}</span>
+                  </li>
+                )}
+              </ul>
               <div className="confirmation-message">
-                <p>Click 'Finish' to submit your design project request. We'll contact you shortly to discuss your project in detail and provide a customized quote based on your specific needs.</p>
+                <p>Click 'Next' to proceed to payment options.</p>
+              </div>
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div>
+            <h3>Step 4: Choose Payment Method</h3>
+            <div className="payment-section">
+              <div className="payment-options">
+                <button className="service-button" onClick={handleButton1Click}>
+                  Pay with Card
+                </button>
+                <button className="service-button metamask-button" onClick={handleButton2Click}>
+                  Pay with MetaMask
+                </button>
+                <a href="#" className="help-link" onClick={handleInfoClick}>What is this?</a>
               </div>
             </div>
           </div>
@@ -205,7 +259,7 @@ const DesignPage: React.FC = () => {
         onClose={handleCloseModal}
         title="Start Design Project"
         currentStep={currentStep}
-        totalSteps={3}
+        totalSteps={4}
         onNext={handleNext}
         onPrevious={handlePrevious}
         showNavigation={true}

@@ -66,10 +66,10 @@ const Modal: React.FC<ModalProps> = ({
             {currentStep === totalSteps ? (
               <button
                 className="service-button"
-                onClick={onNext}
+                onClick={onClose}
                 disabled={nextDisabled}
               >
-                Finish
+                Complete
               </button>
             ) : (
               <button
