@@ -20,7 +20,7 @@ const GaragePage: React.FC = () => {
   const [preferredDate, setPreferredDate] = useState('');
   const [preferredTime, setPreferredTime] = useState('');
   const [specialInstructions, setSpecialInstructions] = useState('');
-  const garageServices = data.find(service => service.name === "Daisy's Garage")?.services || [];
+  const garageServices = data.find(service => service.name === "Mike's Mobile Garage")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
 
@@ -66,6 +66,18 @@ const GaragePage: React.FC = () => {
   const handleInfoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsInfoModalOpen(true);
+  };
+
+  const handleButton1Click = () => {
+    // Handle card payment
+    alert('Card payment selected');
+    handleCloseModal();
+  };
+
+  const handleButton2Click = () => {
+    // Handle MetaMask payment
+    alert('MetaMask payment selected');
+    handleCloseModal();
   };
 
   const renderStepContent = () => {
@@ -198,7 +210,7 @@ const GaragePage: React.FC = () => {
 
   return (
     <div className="individual-page">
-      <h2>Daisy's Garage</h2>
+      <h2>Mike's Mobile Garage</h2>
 
       <img
         className='service-card-image'
@@ -207,7 +219,7 @@ const GaragePage: React.FC = () => {
       />
 
       <div style={{ maxWidth: '800px', lineHeight: '1.6', width: '100%' }}>
-        <p>Welcome to Daisy's Garage, your trusted mobile automotive service provider. We bring professional automotive care directly to your location, saving you time and hassle. Whether you need routine maintenance or emergency repairs, our certified mechanics are equipped to handle your vehicle's needs with expertise and convenience.</p>
+        <p>Welcome to Mike's Mobile Garage, your trusted mobile automotive service provider. We bring professional automotive care directly to your location, saving you time and hassle. Whether you need routine maintenance or emergency repairs, our certified mechanics are equipped to handle your vehicle's needs with expertise and convenience.</p>
 
         <p>Our mobile services include:</p>
 
@@ -254,8 +266,6 @@ const GaragePage: React.FC = () => {
         isOpen={isInfoModalOpen}
         onClose={() => setIsInfoModalOpen(false)}
       />
-
-      <SendMcpMessage />
     </div>
   );
 };

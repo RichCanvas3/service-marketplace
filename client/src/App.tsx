@@ -8,6 +8,7 @@ import CateringPage from './pages/CateringPage';
 import GaragePage from './pages/GaragePage';
 import TutoringPage from './pages/TutoringPage';
 import DesignPage from './pages/DesignPage';
+import LoyaltyCardPage from './pages/LoyaltyCardPage';
 import { ZipCodeProvider } from './context/ZipCodeContext';
 import { SearchProvider } from './context/SearchContext';
 import SideNav from './components/SideNav';
@@ -29,6 +30,7 @@ const App: React.FC = () => {
                 <Route path="/mmg" element={<GaragePage />} />
                 <Route path="/abct" element={<TutoringPage />} />
                 <Route path="/ccds" element={<DesignPage />} />
+                <Route path="/loyalty-card" element={<LoyaltyCardPage />} />
               </Routes>
             </Router>
           </div>

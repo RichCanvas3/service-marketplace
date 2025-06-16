@@ -20,7 +20,7 @@ const CateringPage: React.FC = () => {
   const [preferredDate, setPreferredDate] = useState('');
   const [preferredTime, setPreferredTime] = useState('');
   const [specialInstructions, setSpecialInstructions] = useState('');
-  const cateringServices = data.find(service => service.name === "Daisy's Catering")?.services || [];
+  const cateringServices = data.find(service => service.name === "Diane's Catering")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
 
@@ -66,6 +66,18 @@ const CateringPage: React.FC = () => {
   const handleInfoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsInfoModalOpen(true);
+  };
+
+  const handleButton1Click = () => {
+    // Handle card payment
+    alert('Card payment selected');
+    handleCloseModal();
+  };
+
+  const handleButton2Click = () => {
+    // Handle MetaMask payment
+    alert('MetaMask payment selected');
+    handleCloseModal();
   };
 
   const renderStepContent = () => {
@@ -254,8 +266,6 @@ const CateringPage: React.FC = () => {
         isOpen={isInfoModalOpen}
         onClose={() => setIsInfoModalOpen(false)}
       />
-
-      <SendMcpMessage />
     </div>
   );
 };

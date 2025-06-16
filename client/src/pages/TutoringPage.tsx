@@ -115,18 +115,6 @@ const TutoringPage: React.FC = () => {
             <h3>Step 2: Schedule Service</h3>
             <div className="schedule-form">
               <div className="form-group">
-                <label>Subject Area</label>
-                <select className="form-input" value={subject} onChange={e => setSubject(e.target.value)} required>
-                  <option value="">Select a subject...</option>
-                  <option value="math">Mathematics</option>
-                  <option value="science">Science</option>
-                  <option value="english">English</option>
-                  <option value="history">History</option>
-                  <option value="sat">SAT Prep</option>
-                  <option value="act">ACT Prep</option>
-                </select>
-              </div>
-              <div className="form-group">
                 <label>Preferred Date</label>
                 <input type="date" className="form-input" value={preferredDate} onChange={e => setPreferredDate(e.target.value)} required />
               </div>
@@ -137,16 +125,6 @@ const TutoringPage: React.FC = () => {
                   <option value="morning">Morning (8AM - 12PM)</option>
                   <option value="afternoon">Afternoon (12PM - 4PM)</option>
                   <option value="evening">Evening (4PM - 8PM)</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Student Grade Level</label>
-                <select className="form-input" value={gradeLevel} onChange={e => setGradeLevel(e.target.value)} required>
-                  <option value="">Select grade level...</option>
-                  <option value="elementary">Elementary School</option>
-                  <option value="middle">Middle School</option>
-                  <option value="high">High School</option>
-                  <option value="college">College</option>
                 </select>
               </div>
               <div className="form-group">
@@ -181,14 +159,6 @@ const TutoringPage: React.FC = () => {
               </ul>
               <h4>Appointment Details:</h4>
               <ul className="review-list">
-                <li className="review-item">
-                  <span>Subject</span>
-                  <span>{subject}</span>
-                </li>
-                <li className="review-item">
-                  <span>Grade Level</span>
-                  <span>{gradeLevel}</span>
-                </li>
                 <li className="review-item">
                   <span>Preferred Date</span>
                   <span>{preferredDate}</span>

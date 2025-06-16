@@ -2,6 +2,7 @@ import { useState } from 'react';
 import ServiceList from '../components/ServiceList.tsx'
 import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
+import InfoModal from '../components/InfoModal';
 import data from '../components/data/service-list.json';
 import '../custom-styles.css'
 
@@ -13,10 +14,12 @@ interface Service {
 
 const CleaningPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [preferredDate, setPreferredDate] = useState('');
   const [preferredTime, setPreferredTime] = useState('');
+  const [specialInstructions, setSpecialInstructions] = useState('');
   const dhcServices = data.find(service => service.name === "Daisy's Home Cleaning")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
@@ -33,6 +36,8 @@ const CleaningPage: React.FC = () => {
     if (currentStep === 1 && !isStep1Valid) return;
     if (currentStep === 2 && !isStep2Valid) return;
     if (currentStep === 3) {
+      setCurrentStep(4);
+    } else if (currentStep === 4) {
       // Handle form submission
       const selectedServiceDetails = dhcServices
         .filter(service => selectedServices.includes(service.name))
@@ -41,7 +46,7 @@ const CleaningPage: React.FC = () => {
       alert(`Booking submitted!\n\nSelected services:\n${selectedServiceDetails.join('\n')}`);
       handleCloseModal();
     } else {
-      setCurrentStep(prev => Math.min(prev + 1, 3));
+      setCurrentStep(prev => prev + 1);
     }
   };
 
@@ -55,6 +60,24 @@ const CleaningPage: React.FC = () => {
     setSelectedServices([]);
     setPreferredDate('');
     setPreferredTime('');
+    setSpecialInstructions('');
+  };
+
+  const handleInfoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsInfoModalOpen(true);
+  };
+
+  const handleButton1Click = () => {
+    // Handle card payment
+    alert('Card payment selected');
+    handleCloseModal();
+  };
+
+  const handleButton2Click = () => {
+    // Handle MetaMask payment
+    alert('MetaMask payment selected');
+    handleCloseModal();
   };
 
   const renderStepContent = () => {
@@ -107,7 +130,13 @@ const CleaningPage: React.FC = () => {
               </div>
               <div className="form-group">
                 <label>Special Instructions</label>
-                <textarea className="form-input" rows={4} placeholder="Any special requirements or notes..."></textarea>
+                <textarea
+                  className="form-input"
+                  rows={4}
+                  placeholder="Any special requirements or notes..."
+                  value={specialInstructions}
+                  onChange={e => setSpecialInstructions(e.target.value)}
+                ></textarea>
               </div>
             </div>
           </div>
@@ -137,11 +166,39 @@ const CleaningPage: React.FC = () => {
                 </li>
                 <li className="review-item">
                   <span>Preferred Time</span>
-                  <span>{preferredTime}</span>
+                  <span>
+                    {preferredTime === 'morning' ? 'Morning (8AM - 12PM)' :
+                     preferredTime === 'afternoon' ? 'Afternoon (12PM - 4PM)' :
+                     preferredTime === 'evening' ? 'Evening (4PM - 8PM)' :
+                     preferredTime}
+                  </span>
                 </li>
+                {specialInstructions && (
+                  <li className="review-item">
+                    <span>Special Instructions</span>
+                    <span>{specialInstructions}</span>
+                  </li>
+                )}
               </ul>
               <div className="confirmation-message">
-                <p>Click 'Finish' to submit your service request. We'll contact you shortly to confirm your appointment.</p>
+                <p>Click 'Next' to proceed to payment options.</p>
+              </div>
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div>
+            <h3>Step 4: Choose Payment Method</h3>
+            <div className="payment-section">
+              <div className="payment-options">
+                <button className="service-button" onClick={handleButton1Click}>
+                  Pay with Card
+                </button>
+                <button className="service-button metamask-button" onClick={handleButton2Click}>
+                  Pay with MetaMask
+                </button>
+                <a href="#" className="help-link" onClick={handleInfoClick}>What is this?</a>
               </div>
             </div>
           </div>
@@ -196,7 +253,7 @@ const CleaningPage: React.FC = () => {
         onClose={handleCloseModal}
         title="Book Cleaning Services"
         currentStep={currentStep}
-        totalSteps={3}
+        totalSteps={4}
         onNext={handleNext}
         onPrevious={handlePrevious}
         showNavigation={true}
@@ -205,7 +262,21 @@ const CleaningPage: React.FC = () => {
         {renderStepContent()}
       </Modal>
 
-      <SendMcpMessage />
+      <InfoModal
+        isOpen={isInfoModalOpen}
+        onClose={() => setIsInfoModalOpen(false)}
+        title="About Payment Options"
+      >
+        <div>
+          <h3>Payment Methods</h3>
+          <p>We offer two convenient payment options:</p>
+          <ul>
+            <li><strong>Card Payment:</strong> Secure credit/debit card payment processed through our payment gateway.</li>
+            <li><strong>MetaMask:</strong> Pay using cryptocurrency through the MetaMask wallet.</li>
+          </ul>
+          <p>All payments are secure and encrypted. Choose the method that works best for you!</p>
+        </div>
+      </InfoModal>
     </div>
   );
 };
