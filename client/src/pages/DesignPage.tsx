@@ -45,6 +45,8 @@ const DesignPage: React.FC = () => {
   const [specialInstructions, setSpecialInstructions] = useState('');
   const designServices = data.find(service => service.name === "Design Studio")?.services || [];
   const employeesData = employees as EmployeesData;
+  const [showReviews, setShowReviews] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
@@ -223,8 +225,24 @@ const DesignPage: React.FC = () => {
                 <button className="service-button" onClick={handleButton1Click}>
                   Pay with Card
                 </button>
-                <button className="service-button metamask-button" onClick={handleButton2Click}>
-                  Pay with MetaMask
+                <button
+                  onClick={handleButton2Click}
+                  style={{
+                    backgroundColor: '#ED8936',
+                    color: 'white',
+                    border: 'none',
+                    padding: '12px 24px',
+                    borderRadius: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.3s ease',
+                    width: 'fit-content',
+                    margin: '20px 0',
+                    fontSize: '16px'
+                  }}
+                >
+                  Pay with Loyalty Card
                 </button>
                 <a href="#" className="help-link" onClick={handleInfoClick}>What is this?</a>
               </div>
@@ -249,16 +267,98 @@ const DesignPage: React.FC = () => {
       <div style={companyInfoStyles.companyInfo}>
         <div style={companyInfoStyles.infoGrid}>
           <div style={companyInfoStyles.infoItem}>
-            <span style={companyInfoStyles.infoLabel}>Employees</span>
-            <span style={companyInfoStyles.infoValue}>{employeesData.design.length}</span>
-          </div>
-          <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Address</span>
-            <span style={companyInfoStyles.infoValue}>789 Pine Road, Erie, CO 16503</span>
+            <span style={companyInfoStyles.infoValue}>987 Birch Street, Erie, CO 16501</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Phone</span>
-            <span style={companyInfoStyles.infoValue}>(814) 555-0125</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0128</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Employees</span>
+            <span style={companyInfoStyles.infoValue}>{employeesData.design.length} Team Members</span>
+          </div>
+        </div>
+
+        <div style={companyInfoStyles.reviewsSection}>
+          <div
+            style={companyInfoStyles.reviewsHeader}
+            onClick={() => setShowReviews(!showReviews)}
+          >
+            <h3 style={companyInfoStyles.reviewsTitle}>Customer Reviews</h3>
+            <button
+              style={{
+                ...companyInfoStyles.toggleButton,
+                ...(showReviews ? companyInfoStyles.toggleButtonOpen : {})
+              }}
+            >
+              ▼
+            </button>
+          </div>
+          <div style={{
+            ...companyInfoStyles.reviewsGrid,
+            ...(showReviews ? companyInfoStyles.reviewsGridOpen : {})
+          }}>
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>Green Earth Cafe</span>
+                <span style={companyInfoStyles.reviewDate}>March 20, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "The team at Creative Canvas transformed our cafe's branding. Their eco-friendly design approach perfectly captured our values, and the new look has significantly increased customer engagement."
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>TechStart Inc.</span>
+                <span style={companyInfoStyles.reviewDate}>March 14, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Working with Creative Canvas on our website redesign was a game-changer. Their modern, user-friendly approach helped us increase our conversion rate by 40%. Highly recommend their services!"
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>Local Art Gallery</span>
+                <span style={companyInfoStyles.reviewDate}>March 7, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "The exhibition catalog design was stunning. They perfectly captured the essence of our artists' work while maintaining a clean, professional layout. The attention to detail was impressive."
+              </p>
+            </div>
+            <div style={companyInfoStyles.tooltipContainer}>
+              <button
+                style={companyInfoStyles.writeReviewButton}
+                onClick={() => alert('Write Review functionality coming soon!')}
+                aria-label="Write Review"
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+              >
+                Write Review
+              </button>
+              {showTooltip && (
+                <div style={companyInfoStyles.tooltip}>
+                  You need to have purchased a service from this provider before writing a review.
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

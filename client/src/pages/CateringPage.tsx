@@ -25,6 +25,8 @@ const CateringPage: React.FC = () => {
   const cateringServices = data.find(service => service.name === "Diane's Catering")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
+  const [showReviews, setShowReviews] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleServiceToggle = (serviceName: string) => {
     setSelectedServices(prev =>
@@ -197,8 +199,24 @@ const CateringPage: React.FC = () => {
                 <button className="service-button" onClick={handleButton1Click}>
                   Pay with Card
                 </button>
-                <button className="service-button metamask-button" onClick={handleButton2Click}>
-                  Pay with MetaMask
+                <button
+                  onClick={handleButton2Click}
+                  style={{
+                    backgroundColor: '#ED8936',
+                    color: 'white',
+                    border: 'none',
+                    padding: '12px 24px',
+                    borderRadius: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.3s ease',
+                    width: 'fit-content',
+                    margin: '20px 0',
+                    fontSize: '16px'
+                  }}
+                >
+                  Pay with Loyalty Card
                 </button>
                 <a href="#" className="help-link" onClick={handleInfoClick}>What is this?</a>
               </div>
@@ -223,16 +241,98 @@ const CateringPage: React.FC = () => {
       <div style={companyInfoStyles.companyInfo}>
         <div style={companyInfoStyles.infoGrid}>
           <div style={companyInfoStyles.infoItem}>
-            <span style={companyInfoStyles.infoLabel}>Employees</span>
-            <span style={companyInfoStyles.infoValue}>{employees.catering.length}</span>
-          </div>
-          <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Address</span>
-            <span style={companyInfoStyles.infoValue}>456 Oak Avenue, Erie, CO 16502</span>
+            <span style={companyInfoStyles.infoValue}>321 Elm Street, Erie, CO 16501</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Phone</span>
-            <span style={companyInfoStyles.infoValue}>(814) 555-0124</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0126</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Employees</span>
+            <span style={companyInfoStyles.infoValue}>{employees.catering.length} Team Members</span>
+          </div>
+        </div>
+
+        <div style={companyInfoStyles.reviewsSection}>
+          <div
+            style={companyInfoStyles.reviewsHeader}
+            onClick={() => setShowReviews(!showReviews)}
+          >
+            <h3 style={companyInfoStyles.reviewsTitle}>Customer Reviews</h3>
+            <button
+              style={{
+                ...companyInfoStyles.toggleButton,
+                ...(showReviews ? companyInfoStyles.toggleButtonOpen : {})
+              }}
+            >
+              ▼
+            </button>
+          </div>
+          <div style={{
+            ...companyInfoStyles.reviewsGrid,
+            ...(showReviews ? companyInfoStyles.reviewsGridOpen : {})
+          }}>
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>Jennifer & Mark</span>
+                <span style={companyInfoStyles.reviewDate}>March 16, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Diane's team catered our wedding and exceeded all expectations! The food was exquisite, service was impeccable, and they handled everything with such professionalism."
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>Corporate Events Inc.</span>
+                <span style={companyInfoStyles.reviewDate}>March 9, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "We've used Diane's Catering for multiple corporate events. Their attention to detail, quality of food, and professional service make them our go-to caterer."
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>Patricia Lee</span>
+                <span style={companyInfoStyles.reviewDate}>March 3, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Hosted a birthday party for 50 guests and Diane's team made it perfect. The menu was creative, food was delicious, and they handled all the setup and cleanup."
+              </p>
+            </div>
+            <div style={companyInfoStyles.tooltipContainer}>
+              <button
+                style={companyInfoStyles.writeReviewButton}
+                onClick={() => alert('Write Review functionality coming soon!')}
+                aria-label="Write Review"
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+              >
+                Write Review
+              </button>
+              {showTooltip && (
+                <div style={companyInfoStyles.tooltip}>
+                  You need to have purchased a service from this provider before writing a review.
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

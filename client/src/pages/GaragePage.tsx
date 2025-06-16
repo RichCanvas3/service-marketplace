@@ -22,6 +22,8 @@ const GaragePage: React.FC = () => {
   const [preferredDate, setPreferredDate] = useState('');
   const [preferredTime, setPreferredTime] = useState('');
   const [specialInstructions, setSpecialInstructions] = useState('');
+  const [showReviews, setShowReviews] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const garageServices = data.find(service => service.name === "Mike's Mobile Garage")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
@@ -197,8 +199,24 @@ const GaragePage: React.FC = () => {
                 <button className="service-button" onClick={handleButton1Click}>
                   Pay with Card
                 </button>
-                <button className="service-button metamask-button" onClick={handleButton2Click}>
-                  Pay with MetaMask
+                <button
+                  onClick={handleButton2Click}
+                  style={{
+                    backgroundColor: '#ED8936',
+                    color: 'white',
+                    border: 'none',
+                    padding: '12px 24px',
+                    borderRadius: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.3s ease',
+                    width: 'fit-content',
+                    margin: '20px 0',
+                    fontSize: '16px'
+                  }}
+                >
+                  Pay with Loyalty Card
                 </button>
                 <a href="#" className="help-link" onClick={handleInfoClick}>What is this?</a>
               </div>
@@ -223,16 +241,98 @@ const GaragePage: React.FC = () => {
       <div style={companyInfoStyles.companyInfo}>
         <div style={companyInfoStyles.infoGrid}>
           <div style={companyInfoStyles.infoItem}>
-            <span style={companyInfoStyles.infoLabel}>Employees</span>
-            <span style={companyInfoStyles.infoValue}>{employees.garage.length}</span>
-          </div>
-          <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Address</span>
-            <span style={companyInfoStyles.infoValue}>321 Oak Avenue, Erie, CO 16504</span>
+            <span style={companyInfoStyles.infoValue}>654 Pine Street, Erie, CO 16501</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Phone</span>
-            <span style={companyInfoStyles.infoValue}>(814) 555-0126</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0127</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Employees</span>
+            <span style={companyInfoStyles.infoValue}>{employees.garage.length} Team Members</span>
+          </div>
+        </div>
+
+        <div style={companyInfoStyles.reviewsSection}>
+          <div
+            style={companyInfoStyles.reviewsHeader}
+            onClick={() => setShowReviews(!showReviews)}
+          >
+            <h3 style={companyInfoStyles.reviewsTitle}>Customer Reviews</h3>
+            <button
+              style={{
+                ...companyInfoStyles.toggleButton,
+                ...(showReviews ? companyInfoStyles.toggleButtonOpen : {})
+              }}
+            >
+              ▼
+            </button>
+          </div>
+          <div style={{
+            ...companyInfoStyles.reviewsGrid,
+            ...(showReviews ? companyInfoStyles.reviewsGridOpen : {})
+          }}>
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>Robert Taylor</span>
+                <span style={companyInfoStyles.reviewDate}>March 19, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Mike's team came to my rescue when my car broke down. They were quick, professional, and fixed the issue right in my driveway. The mobile service is a game-changer!"
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>Sarah Williams</span>
+                <span style={companyInfoStyles.reviewDate}>March 13, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Regular maintenance customer here. Mike's team is always thorough and honest. They explain everything clearly and never try to upsell unnecessary services."
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>John Martinez</span>
+                <span style={companyInfoStyles.reviewDate}>March 6, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Had them do a pre-purchase inspection on a used car. Their detailed report saved me from buying a lemon. Very knowledgeable and trustworthy service!"
+              </p>
+            </div>
+            <div style={companyInfoStyles.tooltipContainer}>
+              <button
+                style={companyInfoStyles.writeReviewButton}
+                onClick={() => alert('Write Review functionality coming soon!')}
+                aria-label="Write Review"
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+              >
+                Write Review
+              </button>
+              {showTooltip && (
+                <div style={companyInfoStyles.tooltip}>
+                  You need to have purchased a service from this provider before writing a review.
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

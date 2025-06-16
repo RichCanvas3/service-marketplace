@@ -20,6 +20,8 @@ const TaxPage: React.FC = () => {
   const [preferredTime, setPreferredTime] = useState('');
   const [specialInstructions, setSpecialInstructions] = useState('');
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [showReviews, setShowReviews] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const rtsServices = data.find(service => service.name === "Rob's Tax Services")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
@@ -193,8 +195,24 @@ const TaxPage: React.FC = () => {
                 <button className="service-button" onClick={handleButton1Click}>
                   Pay with Card
                 </button>
-                <button className="service-button metamask-button" onClick={handleButton2Click}>
-                  Pay with MetaMask
+                <button
+                  onClick={handleButton2Click}
+                  style={{
+                    backgroundColor: '#ED8936',
+                    color: 'white',
+                    border: 'none',
+                    padding: '12px 24px',
+                    borderRadius: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.3s ease',
+                    width: 'fit-content',
+                    margin: '20px 0',
+                    fontSize: '16px'
+                  }}
+                >
+                  Pay with Loyalty Card
                 </button>
                 <a href="#" className="help-link" onClick={handleInfoClick}>What is this?</a>
               </div>
@@ -219,16 +237,98 @@ const TaxPage: React.FC = () => {
       <div style={companyInfoStyles.companyInfo}>
         <div style={companyInfoStyles.infoGrid}>
           <div style={companyInfoStyles.infoItem}>
-            <span style={companyInfoStyles.infoLabel}>Employees</span>
-            <span style={companyInfoStyles.infoValue}>{employees.tax.length}</span>
-          </div>
-          <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Address</span>
-            <span style={companyInfoStyles.infoValue}>654 Pine Street, Erie, CO 16507</span>
+            <span style={companyInfoStyles.infoValue}>456 Oak Avenue, Erie, CO 16501</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Phone</span>
-            <span style={companyInfoStyles.infoValue}>(814) 555-0129</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0124</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Employees</span>
+            <span style={companyInfoStyles.infoValue}>{employees.tax.length} Team Members</span>
+          </div>
+        </div>
+
+        <div style={companyInfoStyles.reviewsSection}>
+          <div
+            style={companyInfoStyles.reviewsHeader}
+            onClick={() => setShowReviews(!showReviews)}
+          >
+            <h3 style={companyInfoStyles.reviewsTitle}>Customer Reviews</h3>
+            <button
+              style={{
+                ...companyInfoStyles.toggleButton,
+                ...(showReviews ? companyInfoStyles.toggleButtonOpen : {})
+              }}
+            >
+              ▼
+            </button>
+          </div>
+          <div style={{
+            ...companyInfoStyles.reviewsGrid,
+            ...(showReviews ? companyInfoStyles.reviewsGridOpen : {})
+          }}>
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>David Thompson</span>
+                <span style={companyInfoStyles.reviewDate}>March 18, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Rob's team helped me navigate a complex tax situation with my small business. Their expertise and attention to detail saved me thousands in deductions I didn't know about."
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>Lisa Martinez</span>
+                <span style={companyInfoStyles.reviewDate}>March 12, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "As a freelancer, tax season used to be stressful. Rob's team made it simple and straightforward. They're knowledgeable, responsive, and truly care about their clients."
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>James Wilson</span>
+                <span style={companyInfoStyles.reviewDate}>March 5, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Great service for my family's tax needs. They explained everything clearly and helped us maximize our returns. Will definitely be using their services again next year."
+              </p>
+            </div>
+            <div style={companyInfoStyles.tooltipContainer}>
+              <button
+                style={companyInfoStyles.writeReviewButton}
+                onClick={() => alert('Write Review functionality coming soon!')}
+                aria-label="Write Review"
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+              >
+                Write Review
+              </button>
+              {showTooltip && (
+                <div style={companyInfoStyles.tooltip}>
+                  You need to have purchased a service from this provider before writing a review.
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

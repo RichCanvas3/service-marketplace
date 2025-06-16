@@ -21,6 +21,8 @@ const TutoringPage: React.FC = () => {
   const [gradeLevel, setGradeLevel] = useState('');
   const [specialInstructions, setSpecialInstructions] = useState('');
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [showReviews, setShowReviews] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const abctServices = data.find(service => service.name === "ABC Tutoring")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
@@ -196,8 +198,24 @@ const TutoringPage: React.FC = () => {
                 <button className="service-button" onClick={handleButton1Click}>
                   Pay with Card
                 </button>
-                <button className="service-button metamask-button" onClick={handleButton2Click}>
-                  Pay with MetaMask
+                <button
+                  onClick={handleButton2Click}
+                  style={{
+                    backgroundColor: '#ED8936',
+                    color: 'white',
+                    border: 'none',
+                    padding: '12px 24px',
+                    borderRadius: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.3s ease',
+                    width: 'fit-content',
+                    margin: '20px 0',
+                    fontSize: '16px'
+                  }}
+                >
+                  Pay with Loyalty Card
                 </button>
                 <a href="#" className="help-link" onClick={handleInfoClick}>What is this?</a>
               </div>
@@ -222,16 +240,98 @@ const TutoringPage: React.FC = () => {
       <div style={companyInfoStyles.companyInfo}>
         <div style={companyInfoStyles.infoGrid}>
           <div style={companyInfoStyles.infoItem}>
-            <span style={companyInfoStyles.infoLabel}>Employees</span>
-            <span style={companyInfoStyles.infoValue}>{employees.tutoring.length}</span>
-          </div>
-          <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Address</span>
-            <span style={companyInfoStyles.infoValue}>987 Elm Court, Erie, CO 16506</span>
+            <span style={companyInfoStyles.infoValue}>147 Willow Way, Erie, CO 16501</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Phone</span>
-            <span style={companyInfoStyles.infoValue}>(814) 555-0128</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0129</span>
+          </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>Employees</span>
+            <span style={companyInfoStyles.infoValue}>{employees.tutoring.length} Team Members</span>
+          </div>
+        </div>
+
+        <div style={companyInfoStyles.reviewsSection}>
+          <div
+            style={companyInfoStyles.reviewsHeader}
+            onClick={() => setShowReviews(!showReviews)}
+          >
+            <h3 style={companyInfoStyles.reviewsTitle}>Customer Reviews</h3>
+            <button
+              style={{
+                ...companyInfoStyles.toggleButton,
+                ...(showReviews ? companyInfoStyles.toggleButtonOpen : {})
+              }}
+            >
+              ▼
+            </button>
+          </div>
+          <div style={{
+            ...companyInfoStyles.reviewsGrid,
+            ...(showReviews ? companyInfoStyles.reviewsGridOpen : {})
+          }}>
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>Maria Garcia</span>
+                <span style={companyInfoStyles.reviewDate}>March 21, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "My daughter's math grades have improved significantly since starting with ABC Tutoring. The tutors are patient, knowledgeable, and really know how to explain concepts in a way that clicks."
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>David Chen</span>
+                <span style={companyInfoStyles.reviewDate}>March 15, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "The SAT prep program was excellent. My son's score increased by 200 points after just two months of tutoring. The personalized study plan and practice tests were incredibly helpful."
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <span style={companyInfoStyles.reviewerName}>Sarah Thompson</span>
+                <span style={companyInfoStyles.reviewDate}>March 8, 2024</span>
+              </div>
+              <div style={companyInfoStyles.reviewRating}>
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "As a parent, I appreciate how ABC Tutoring keeps me informed of my child's progress. The tutors are professional, the scheduling is flexible, and the results speak for themselves."
+              </p>
+            </div>
+            <div style={companyInfoStyles.tooltipContainer}>
+              <button
+                style={companyInfoStyles.writeReviewButton}
+                onClick={() => alert('Write Review functionality coming soon!')}
+                aria-label="Write Review"
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+              >
+                Write Review
+              </button>
+              {showTooltip && (
+                <div style={companyInfoStyles.tooltip}>
+                  You need to have purchased a service from this provider before writing a review.
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
