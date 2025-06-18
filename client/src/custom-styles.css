@@ -606,12 +606,8 @@ a.header-title:hover {
   transition: var(--transition);
 }
 
-.header-title:hover .header-logo {
-  /* filter: brightness(1) sepia(1) saturate(3) hue-rotate(140deg); */
-}
-
 .header-title:hover h2 {
-  color: #666;
+  color: #f9a600;
 }
 
 .modal-steps {

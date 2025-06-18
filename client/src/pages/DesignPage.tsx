@@ -6,6 +6,7 @@ import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import { companyInfoStyles } from '../styles/companyInfoStyles';
 import '../custom-styles.css'
+import { Link } from 'react-router-dom';
 
 interface Service {
   name: string;
@@ -50,6 +51,7 @@ const DesignPage: React.FC = () => {
   const employeesData = employees as EmployeesData;
   const [showReviews, setShowReviews] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showRewards, setShowRewards] = useState(false);
 
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
@@ -131,6 +133,12 @@ const DesignPage: React.FC = () => {
         return (
           <div>
             <h3>Step 1: Select Services</h3>
+            <div style={{ color: '#ED8936', fontSize: '0.9em', marginBottom: '10px' }}>
+              Points earned with the Loyalty Member Card.{' '}
+              <Link to="/loyalty-card" style={{ color: '#ED8936', textDecoration: 'underline' }}>
+                Learn more
+              </Link>
+            </div>
             <ul className="service-list">
               {ccdsServices.map((service, index) => (
                 <li key={index} className="service-list-item">
@@ -235,6 +243,52 @@ const DesignPage: React.FC = () => {
                   </li>
                 )}
               </ul>
+              <h4>Loyalty Tier Discount:</h4>
+              <ul className="review-list">
+                {(() => {
+                  const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
+                  const membershipLevel = mcoData.membershipLevel || 'Bronze';
+                  const discountPercentage = {
+                    'Bronze': 5,
+                    'Silver': 10,
+                    'Gold': 15,
+                    'Platinum': 20
+                  }[membershipLevel];
+
+                  const totalBeforeDiscount = selectedServices.reduce((total, serviceName) => {
+                    const service = ccdsServices.find(s => s.name === serviceName);
+                    return total + (parseFloat(service?.price?.replace(/[^0-9.-]+/g, '') || '0'));
+                  }, 0);
+
+                  const discountAmount = (totalBeforeDiscount * discountPercentage) / 100;
+                  const totalAfterDiscount = totalBeforeDiscount - discountAmount;
+
+                  return (
+                    <>
+                      <li className="review-item" style={{ borderTop: '1px solid var(--hover-color)', marginTop: '8px', paddingTop: '8px', color: '#ED8936' }}>
+                        <span>Your Tier ({membershipLevel})</span>
+                        <span>{discountPercentage}% off</span>
+                      </li>
+                      <li className="review-item" style={{
+                        backgroundColor: 'var(--card-bg)',
+                        fontWeight: 'bold',
+                        color: '#ED8936'
+                      }}>
+                        <span>Total with Loyalty Card</span>
+                        <span>${totalAfterDiscount.toFixed(2)}</span>
+                      </li>
+                      <li className="review-item" style={{
+                        backgroundColor: 'var(--card-bg)',
+                        fontWeight: 'bold',
+                        color: '#FFFFFF'
+                      }}>
+                        <span>Total with Debit/Credit Card</span>
+                        <span>${totalBeforeDiscount.toFixed(2)}</span>
+                      </li>
+                    </>
+                  );
+                })()}
+              </ul>
               <div className="confirmation-message">
                 <p>Click 'Next' to proceed to payment options.</p>
               </div>
@@ -310,7 +364,7 @@ const DesignPage: React.FC = () => {
             style={companyInfoStyles.reviewsHeader}
             onClick={() => setShowReviews(!showReviews)}
           >
-            <h3 style={companyInfoStyles.reviewsTitle}>Customer Reviews</h3>
+            <h3 style={{ ...companyInfoStyles.reviewsTitle, color: '#ED8936' }}>Customer Reviews</h3>
             <button
               style={{
                 ...companyInfoStyles.toggleButton,
@@ -392,6 +446,75 @@ const DesignPage: React.FC = () => {
                   You need to have purchased a service from this provider before writing a review.
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+
+        <div style={companyInfoStyles.reviewsSection}>
+          <div
+            style={companyInfoStyles.reviewsHeader}
+            onClick={() => setShowRewards(!showRewards)}
+          >
+            <h3 style={{ ...companyInfoStyles.reviewsTitle, color: '#ED8936' }}>Exclusive Rewards for Loyalty Members</h3>
+            <button
+              style={{
+                ...companyInfoStyles.toggleButton,
+                ...(showRewards ? companyInfoStyles.toggleButtonOpen : {})
+              }}
+            >
+              ▼
+            </button>
+          </div>
+          <div style={{
+            ...companyInfoStyles.reviewsGrid,
+            ...(showRewards ? companyInfoStyles.reviewsGridOpen : {})
+          }}>
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Bronze Tier</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>5% Off</span>
+                </div>
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Get started with our loyalty program and enjoy 5% off all design services. Perfect for small projects."
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Silver Tier</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>10% Off</span>
+                </div>
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Unlock 10% off all services plus one free design consultation per month. Ideal for regular clients."
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Gold Tier</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>15% Off</span>
+                </div>
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Enjoy 15% off all services, monthly design consultations, and access to premium templates. For growing businesses."
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Platinum Tier</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>20% Off</span>
+                </div>
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Our highest tier offers 20% off all services, unlimited design consultations, premium templates, and priority service. For established businesses."
+              </p>
             </div>
           </div>
         </div>

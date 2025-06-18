@@ -6,6 +6,7 @@ import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import { companyInfoStyles } from '../styles/companyInfoStyles';
 import '../custom-styles.css'
+import { Link } from 'react-router-dom';
 
 interface Service {
   name: string;
@@ -23,6 +24,7 @@ const TaxPage: React.FC = () => {
   const [preferredTime, setPreferredTime] = useState('');
   const [specialInstructions, setSpecialInstructions] = useState('');
   const [showReviews, setShowReviews] = useState(false);
+  const [showRewards, setShowRewards] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const rtsServices = data.find(service => service.name === "Rob's Tax Services")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
@@ -100,6 +102,12 @@ const TaxPage: React.FC = () => {
         return (
           <div>
             <h3>Step 1: Select Services</h3>
+            <div style={{ color: '#ED8936', fontSize: '0.9em', marginBottom: '10px' }}>
+              Points earned with the Loyalty Member Card.{' '}
+              <Link to="/loyalty-card" style={{ color: '#ED8936', textDecoration: 'underline' }}>
+                Learn more
+              </Link>
+            </div>
             <ul className="service-list">
               {rtsServices.map((service, index) => (
                 <li key={index} className="service-list-item">
@@ -206,22 +214,6 @@ const TaxPage: React.FC = () => {
               </ul>
               <h4>Loyalty Tier Discount:</h4>
               <ul className="review-list">
-                <li className="review-item">
-                  <span>Bronze</span>
-                  <span>5% off</span>
-                </li>
-                <li className="review-item">
-                  <span>Silver</span>
-                  <span>10% off</span>
-                </li>
-                <li className="review-item">
-                  <span>Gold</span>
-                  <span>15% off</span>
-                </li>
-                <li className="review-item">
-                  <span>Platinum</span>
-                  <span>20% off</span>
-                </li>
                 {(() => {
                   const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
                   const membershipLevel = mcoData.membershipLevel || 'Bronze';
@@ -242,7 +234,7 @@ const TaxPage: React.FC = () => {
 
                   return (
                     <>
-                      <li className="review-item" style={{ borderTop: '1px solid var(--hover-color)', marginTop: '8px', paddingTop: '8px' }}>
+                      <li className="review-item" style={{ borderTop: '1px solid var(--hover-color)', marginTop: '8px', paddingTop: '8px', color: '#ED8936' }}>
                         <span>Your Tier ({membershipLevel})</span>
                         <span>{discountPercentage}% off</span>
                       </li>
@@ -341,7 +333,7 @@ const TaxPage: React.FC = () => {
             style={companyInfoStyles.reviewsHeader}
             onClick={() => setShowReviews(!showReviews)}
           >
-            <h3 style={companyInfoStyles.reviewsTitle}>Customer Reviews</h3>
+            <h3 style={{ ...companyInfoStyles.reviewsTitle, color: '#ED8936' }}>Customer Reviews</h3>
             <button
               style={{
                 ...companyInfoStyles.toggleButton,
@@ -423,6 +415,75 @@ const TaxPage: React.FC = () => {
                   You need to have purchased a service from this provider before writing a review.
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+
+        <div style={companyInfoStyles.reviewsSection}>
+          <div
+            style={companyInfoStyles.reviewsHeader}
+            onClick={() => setShowRewards(!showRewards)}
+          >
+            <h3 style={{ ...companyInfoStyles.reviewsTitle, color: '#ED8936' }}>Exclusive Rewards for Loyalty Members</h3>
+            <button
+              style={{
+                ...companyInfoStyles.toggleButton,
+                ...(showRewards ? companyInfoStyles.toggleButtonOpen : {})
+              }}
+            >
+              ▼
+            </button>
+          </div>
+          <div style={{
+            ...companyInfoStyles.reviewsGrid,
+            ...(showRewards ? companyInfoStyles.reviewsGridOpen : {})
+          }}>
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Bronze Tier</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>5% Off</span>
+                </div>
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Get started with our loyalty program and enjoy 5% off all tax services. Perfect for individual filers."
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Silver Tier</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>10% Off</span>
+                </div>
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Unlock 10% off all services plus one free tax consultation per month. Ideal for small business owners."
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Gold Tier</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>15% Off</span>
+                </div>
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Enjoy 15% off all services, monthly tax consultations, and priority filing. For growing businesses."
+              </p>
+            </div>
+
+            <div style={companyInfoStyles.reviewItem}>
+              <div style={companyInfoStyles.reviewHeader}>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Platinum Tier</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>20% Off</span>
+                </div>
+              </div>
+              <p style={companyInfoStyles.reviewText}>
+                "Our highest tier offers 20% off all services, unlimited tax consultations, priority filing, and tax planning services. For established businesses."
+              </p>
             </div>
           </div>
         </div>

@@ -52,7 +52,8 @@ const ServiceList: React.FC<SearchProps> = ({ searchQuery }) => {
         flexWrap: 'wrap',
         gap: '8px',
         marginBottom: '20px',
-        padding: '0 40px'
+        padding: '0 40px',
+        width: '100%'
       }}>
         {allTags.map((tag, index) => (
           <span
