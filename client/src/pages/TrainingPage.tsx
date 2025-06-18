@@ -317,11 +317,11 @@ const TrainingPage: React.FC = () => {
         <div style={companyInfoStyles.infoGrid}>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Address</span>
-            <span style={companyInfoStyles.infoValue}>456 Oak Avenue, Erie, CO 16501</span>
+            <span style={companyInfoStyles.infoValue}>987 Birch Street, Erie, CO 16501</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Phone</span>
-            <span style={companyInfoStyles.infoValue}>(814) 555-0124</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0128</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Employees</span>
@@ -329,12 +329,54 @@ const TrainingPage: React.FC = () => {
           </div>
         </div>
 
-        <div style={companyInfoStyles.reviewsSection}>
+        <div className="section">
+          <h3 className="section-title">About Our Services</h3>
+          <div style={{ maxWidth: '800px', lineHeight: 'var(--line-height-relaxed)' }}>
+            <p>Welcome to Creative Collective Training Studio, where we provide professional development and skill enhancement programs. Our team of expert trainers combines industry knowledge with engaging teaching methods to deliver exceptional learning experiences.</p>
+            <p>Our comprehensive training services include:</p>
+          </div>
+        </div>
+
+        <div className="section">
+          <h3 className="section-title">Our Services</h3>
+          <ul className="service-list">
+            {datServices.map((service, index) => (
+              <li
+                key={index}
+                className={`service-list-item ${index === 0 ? 'popular' : ''}`}
+              >
+                <div className="service-list-item-checkbox">
+                  <input
+                    type="checkbox"
+                    id={`service-${index}`}
+                    checked={selectedServices.includes(service.name)}
+                    onChange={() => handleServiceToggle(service.name)}
+                    className="service-checkbox"
+                  />
+                  <div className="service-list-item-name">
+                    <label htmlFor={`service-${index}`}>{service.name}</label>
+                    {service.description && (
+                      <p className="service-list-item-description">{service.description}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="service-list-item-price">
+                  <span>{service.price}</span>
+                  <span>
+                    {service.price.replace('$', '')} points
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="reviews-section">
           <div
-            style={companyInfoStyles.reviewsHeader}
+            className="reviews-header"
             onClick={() => setShowReviews(!showReviews)}
           >
-            <h3 style={{ ...companyInfoStyles.reviewsTitle, color: '#ED8936' }}>Customer Reviews</h3>
+            <h3 className="reviews-title">Customer Reviews</h3>
             <button
               style={{
                 ...companyInfoStyles.toggleButton,
@@ -348,143 +390,80 @@ const TrainingPage: React.FC = () => {
             ...companyInfoStyles.reviewsGrid,
             ...(showReviews ? companyInfoStyles.reviewsGridOpen : {})
           }}>
-            <div style={companyInfoStyles.reviewItem}>
-              <div style={companyInfoStyles.reviewHeader}>
-                <div style={companyInfoStyles.reviewerName}>
-                  <span>Alex Rivera</span>
+            <div className="review-item">
+              <div className="review-header">
+                <div className="reviewer-name">
+                  <span>Green Earth Cafe</span>
                   <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
                 </div>
-                <span style={companyInfoStyles.reviewDate}>March 17, 2024</span>
+                <span className="review-date">March 20, 2024</span>
               </div>
-              <div style={companyInfoStyles.reviewRating}>
+              <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} style={companyInfoStyles.star}>★</span>
                 ))}
               </div>
-              <p style={companyInfoStyles.reviewText}>
-                "Doug's training program transformed my fitness journey. His personalized approach and expertise helped me achieve goals I never thought possible. The nutrition guidance was invaluable!"
+              <p className="review-text">
+                "The team at Creative Canvas transformed our cafe's branding. Their eco-friendly design approach perfectly captured our values, and the new look has significantly increased customer engagement."
               </p>
             </div>
 
-            <div style={companyInfoStyles.reviewItem}>
-              <div style={companyInfoStyles.reviewHeader}>
-                <div style={companyInfoStyles.reviewerName}>
-                  <span>Rachel Kim</span>
+            <div className="review-item">
+              <div className="review-header">
+                <div className="reviewer-name">
+                  <span>TechStart Inc.</span>
                   <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
                 </div>
-                <span style={companyInfoStyles.reviewDate}>March 11, 2024</span>
+                <span className="review-date">March 14, 2024</span>
               </div>
-              <div style={companyInfoStyles.reviewRating}>
+              <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} style={companyInfoStyles.star}>★</span>
                 ))}
               </div>
-              <p style={companyInfoStyles.reviewText}>
-                "The group fitness classes are amazing! Doug creates a supportive environment where everyone feels welcome. I've seen incredible results in just a few months."
+              <p className="review-text">
+                "Working with Creative Canvas on our website redesign was a game-changer. Their modern, user-friendly approach helped us increase our conversion rate by 40%. Highly recommend their services!"
               </p>
             </div>
 
-            <div style={companyInfoStyles.reviewItem}>
-              <div style={companyInfoStyles.reviewHeader}>
-                <div style={companyInfoStyles.reviewerName}>
-                  <span>Tom Anderson</span>
+            <div className="review-item">
+              <div className="review-header">
+                <div className="reviewer-name">
+                  <span>Local Art Gallery</span>
                   <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
                 </div>
-                <span style={companyInfoStyles.reviewDate}>March 4, 2024</span>
+                <span className="review-date">March 7, 2024</span>
               </div>
-              <div style={companyInfoStyles.reviewRating}>
+              <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} style={companyInfoStyles.star}>★</span>
                 ))}
               </div>
-              <p style={companyInfoStyles.reviewText}>
-                "As someone recovering from an injury, Doug's careful attention to form and personalized program has been crucial to my rehabilitation. Highly recommend his expertise!"
+              <p className="review-text">
+                "The exhibition catalog design was stunning. They perfectly captured the essence of our artists' work while maintaining a clean, professional layout. The attention to detail was impressive."
               </p>
-            </div>
-            <div style={companyInfoStyles.tooltipContainer}>
-              <button
-                style={companyInfoStyles.writeReviewButton}
-                onClick={() => alert('Write Review functionality coming soon!')}
-                aria-label="Write Review"
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
-              >
-                Write Review
-              </button>
-              {showTooltip && (
-                <div style={companyInfoStyles.tooltip}>
-                  You need to have purchased a service from this provider before writing a review.
-                </div>
-              )}
             </div>
           </div>
         </div>
 
-        <div style={companyInfoStyles.reviewsSection}>
-          <div
-            style={companyInfoStyles.reviewsHeader}
-            onClick={() => setShowRewards(!showRewards)}
-          >
-            <h3 style={{ ...companyInfoStyles.reviewsTitle, color: '#ED8936' }}>Exclusive Rewards for Loyalty Members</h3>
-            <button
-              style={{
-                ...companyInfoStyles.toggleButton,
-                ...(showRewards ? companyInfoStyles.toggleButtonOpen : {})
-              }}
-            >
-              ▼
-            </button>
-          </div>
-          <div style={{
-            ...companyInfoStyles.reviewsGrid,
-            ...(showRewards ? companyInfoStyles.reviewsGridOpen : {})
-          }}>
-            <div style={companyInfoStyles.reviewItem}>
-              <div style={companyInfoStyles.reviewHeader}>
-                <div style={companyInfoStyles.reviewerName}>
-                  <span>Bronze Tier</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>5% Off</span>
-                </div>
-              </div>
-              <p style={companyInfoStyles.reviewText}>
-                "Get started with our loyalty program and enjoy 5% off all training sessions. Perfect for those beginning their fitness journey."
-              </p>
+        <div className="loyalty-section">
+          <h3>Exclusive Rewards for Loyalty Members</h3>
+          <div className="tiers-grid">
+            <div className="tier-card">
+              <h4>Bronze Tier</h4>
+              <p>Get started with our loyalty program and enjoy 5% off all training services. Perfect for individual courses.</p>
             </div>
-
-            <div style={companyInfoStyles.reviewItem}>
-              <div style={companyInfoStyles.reviewHeader}>
-                <div style={companyInfoStyles.reviewerName}>
-                  <span>Silver Tier</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>10% Off</span>
-                </div>
-              </div>
-              <p style={companyInfoStyles.reviewText}>
-                "Unlock 10% off all services plus one free nutrition consultation per month. Ideal for regular fitness enthusiasts."
-              </p>
+            <div className="tier-card">
+              <h4>Silver Tier</h4>
+              <p>Unlock 10% off all services plus one free training consultation per month. Ideal for regular clients.</p>
             </div>
-
-            <div style={companyInfoStyles.reviewItem}>
-              <div style={companyInfoStyles.reviewHeader}>
-                <div style={companyInfoStyles.reviewerName}>
-                  <span>Gold Tier</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>15% Off</span>
-                </div>
-              </div>
-              <p style={companyInfoStyles.reviewText}>
-                "Enjoy 15% off all services, monthly nutrition consultations, and exclusive access to premium equipment. For dedicated fitness followers."
-              </p>
+            <div className="tier-card">
+              <h4>Gold Tier</h4>
+              <p>Enjoy 15% off all services, monthly workshops, and priority scheduling. Perfect for growing businesses.</p>
             </div>
-
-            <div style={companyInfoStyles.reviewItem}>
-              <div style={companyInfoStyles.reviewHeader}>
-                <div style={companyInfoStyles.reviewerName}>
-                  <span>Platinum Tier</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>20% Off</span>
-                </div>
-              </div>
-              <p style={companyInfoStyles.reviewText}>
-                "Our highest tier offers 20% off all services, unlimited nutrition consultations, premium equipment access, and personalized training programs. For serious fitness enthusiasts."
-              </p>
+            <div className="tier-card">
+              <h4>Platinum Tier</h4>
+              <p>Get 20% off all services, unlimited workshops, and exclusive training sessions. For serious clients.</p>
             </div>
           </div>
         </div>

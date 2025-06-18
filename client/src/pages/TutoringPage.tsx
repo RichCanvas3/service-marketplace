@@ -311,11 +311,11 @@ const TutoringPage: React.FC = () => {
         <div style={companyInfoStyles.infoGrid}>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Address</span>
-            <span style={companyInfoStyles.infoValue}>789 Pine Street, Erie, CO 16501</span>
+            <span style={companyInfoStyles.infoValue}>987 Birch Street, Erie, CO 16501</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Phone</span>
-            <span style={companyInfoStyles.infoValue}>(814) 555-0125</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0128</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Employees</span>
@@ -323,12 +323,54 @@ const TutoringPage: React.FC = () => {
           </div>
         </div>
 
-        <div style={companyInfoStyles.reviewsSection}>
+        <div className="section">
+          <h3 className="section-title">About Our Services</h3>
+          <div style={{ maxWidth: '800px', lineHeight: 'var(--line-height-relaxed)' }}>
+            <p>Welcome to Creative Collective Tutoring Studio, where we provide expert tutoring and educational support services. Our team of experienced educators combines academic expertise with personalized teaching methods to help students achieve their goals.</p>
+            <p>Our comprehensive tutoring services include:</p>
+          </div>
+        </div>
+
+        <div className="section">
+          <h3 className="section-title">Our Services</h3>
+          <ul className="service-list">
+            {abctServices.map((service, index) => (
+              <li
+                key={index}
+                className={`service-list-item ${index === 0 ? 'popular' : ''}`}
+              >
+                <div className="service-list-item-checkbox">
+                  <input
+                    type="checkbox"
+                    id={`service-${index}`}
+                    checked={selectedServices.includes(service.name)}
+                    onChange={() => handleServiceToggle(service.name)}
+                    className="service-checkbox"
+                  />
+                  <div className="service-list-item-name">
+                    <label htmlFor={`service-${index}`}>{service.name}</label>
+                    {service.description && (
+                      <p className="service-list-item-description">{service.description}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="service-list-item-price">
+                  <span>{service.price}</span>
+                  <span>
+                    {service.price.replace('$', '')} points
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="reviews-section">
           <div
-            style={companyInfoStyles.reviewsHeader}
+            className="reviews-header"
             onClick={() => setShowReviews(!showReviews)}
           >
-            <h3 style={{ ...companyInfoStyles.reviewsTitle, color: '#ED8936' }}>Customer Reviews</h3>
+            <h3 className="reviews-title">Customer Reviews</h3>
             <button
               style={{
                 ...companyInfoStyles.toggleButton,
@@ -342,143 +384,80 @@ const TutoringPage: React.FC = () => {
             ...companyInfoStyles.reviewsGrid,
             ...(showReviews ? companyInfoStyles.reviewsGridOpen : {})
           }}>
-            <div style={companyInfoStyles.reviewItem}>
-              <div style={companyInfoStyles.reviewHeader}>
-                <div style={companyInfoStyles.reviewerName}>
-                  <span>Maria Garcia</span>
+            <div className="review-item">
+              <div className="review-header">
+                <div className="reviewer-name">
+                  <span>Green Earth Cafe</span>
                   <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
                 </div>
-                <span style={companyInfoStyles.reviewDate}>March 21, 2024</span>
+                <span className="review-date">March 20, 2024</span>
               </div>
-              <div style={companyInfoStyles.reviewRating}>
+              <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} style={companyInfoStyles.star}>★</span>
                 ))}
               </div>
-              <p style={companyInfoStyles.reviewText}>
-                "My daughter's math grades have improved significantly since starting with ABC Tutoring. The tutors are patient, knowledgeable, and really know how to explain concepts in a way that clicks."
+              <p className="review-text">
+                "The team at Creative Canvas transformed our cafe's branding. Their eco-friendly design approach perfectly captured our values, and the new look has significantly increased customer engagement."
               </p>
             </div>
 
-            <div style={companyInfoStyles.reviewItem}>
-              <div style={companyInfoStyles.reviewHeader}>
-                <div style={companyInfoStyles.reviewerName}>
-                  <span>David Chen</span>
+            <div className="review-item">
+              <div className="review-header">
+                <div className="reviewer-name">
+                  <span>TechStart Inc.</span>
                   <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
                 </div>
-                <span style={companyInfoStyles.reviewDate}>March 15, 2024</span>
+                <span className="review-date">March 14, 2024</span>
               </div>
-              <div style={companyInfoStyles.reviewRating}>
+              <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} style={companyInfoStyles.star}>★</span>
                 ))}
               </div>
-              <p style={companyInfoStyles.reviewText}>
-                "The SAT prep program was excellent. My son's score increased by 200 points after just two months of tutoring. The personalized study plan and practice tests were incredibly helpful."
+              <p className="review-text">
+                "Working with Creative Canvas on our website redesign was a game-changer. Their modern, user-friendly approach helped us increase our conversion rate by 40%. Highly recommend their services!"
               </p>
             </div>
 
-            <div style={companyInfoStyles.reviewItem}>
-              <div style={companyInfoStyles.reviewHeader}>
-                <div style={companyInfoStyles.reviewerName}>
-                  <span>Sarah Thompson</span>
+            <div className="review-item">
+              <div className="review-header">
+                <div className="reviewer-name">
+                  <span>Local Art Gallery</span>
                   <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
                 </div>
-                <span style={companyInfoStyles.reviewDate}>March 8, 2024</span>
+                <span className="review-date">March 7, 2024</span>
               </div>
-              <div style={companyInfoStyles.reviewRating}>
+              <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} style={companyInfoStyles.star}>★</span>
                 ))}
               </div>
-              <p style={companyInfoStyles.reviewText}>
-                "As a parent, I appreciate how ABC Tutoring keeps me informed of my child's progress. The tutors are professional, the scheduling is flexible, and the results speak for themselves."
+              <p className="review-text">
+                "The exhibition catalog design was stunning. They perfectly captured the essence of our artists' work while maintaining a clean, professional layout. The attention to detail was impressive."
               </p>
-            </div>
-            <div style={companyInfoStyles.tooltipContainer}>
-              <button
-                style={companyInfoStyles.writeReviewButton}
-                onClick={() => alert('Write Review functionality coming soon!')}
-                aria-label="Write Review"
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
-              >
-                Write Review
-              </button>
-              {showTooltip && (
-                <div style={companyInfoStyles.tooltip}>
-                  You need to have purchased a service from this provider before writing a review.
-                </div>
-              )}
             </div>
           </div>
         </div>
 
-        <div style={companyInfoStyles.reviewsSection}>
-          <div
-            style={companyInfoStyles.reviewsHeader}
-            onClick={() => setShowRewards(!showRewards)}
-          >
-            <h3 style={{ ...companyInfoStyles.reviewsTitle, color: '#ED8936' }}>Exclusive Rewards for Loyalty Members</h3>
-            <button
-              style={{
-                ...companyInfoStyles.toggleButton,
-                ...(showRewards ? companyInfoStyles.toggleButtonOpen : {})
-              }}
-            >
-              ▼
-            </button>
-          </div>
-          <div style={{
-            ...companyInfoStyles.reviewsGrid,
-            ...(showRewards ? companyInfoStyles.reviewsGridOpen : {})
-          }}>
-            <div style={companyInfoStyles.reviewItem}>
-              <div style={companyInfoStyles.reviewHeader}>
-                <div style={companyInfoStyles.reviewerName}>
-                  <span>Bronze Tier</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>5% Off</span>
-                </div>
-              </div>
-              <p style={companyInfoStyles.reviewText}>
-                "Get started with our loyalty program and enjoy 5% off all tutoring sessions. Perfect for students beginning their academic journey."
-              </p>
+        <div className="loyalty-section">
+          <h3>Exclusive Rewards for Loyalty Members</h3>
+          <div className="tiers-grid">
+            <div className="tier-card">
+              <h4>Bronze Tier</h4>
+              <p>Get started with our loyalty program and enjoy 5% off all tutoring services. Perfect for basic tutoring needs.</p>
             </div>
-
-            <div style={companyInfoStyles.reviewItem}>
-              <div style={companyInfoStyles.reviewHeader}>
-                <div style={companyInfoStyles.reviewerName}>
-                  <span>Silver Tier</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>10% Off</span>
-                </div>
-              </div>
-              <p style={companyInfoStyles.reviewText}>
-                "Unlock 10% off all services plus one free study materials package per month. Ideal for regular students."
-              </p>
+            <div className="tier-card">
+              <h4>Silver Tier</h4>
+              <p>Unlock 10% off all services plus one free consultation per month. Ideal for regular students.</p>
             </div>
-
-            <div style={companyInfoStyles.reviewItem}>
-              <div style={companyInfoStyles.reviewHeader}>
-                <div style={companyInfoStyles.reviewerName}>
-                  <span>Gold Tier</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>15% Off</span>
-                </div>
-              </div>
-              <p style={companyInfoStyles.reviewText}>
-                "Enjoy 15% off all services, monthly study materials, and extended session times. For dedicated learners."
-              </p>
+            <div className="tier-card">
+              <h4>Gold Tier</h4>
+              <p>Enjoy 15% off all services, monthly workshops, and priority scheduling. Perfect for dedicated learners.</p>
             </div>
-
-            <div style={companyInfoStyles.reviewItem}>
-              <div style={companyInfoStyles.reviewHeader}>
-                <div style={companyInfoStyles.reviewerName}>
-                  <span>Platinum Tier</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>20% Off</span>
-                </div>
-              </div>
-              <p style={companyInfoStyles.reviewText}>
-                "Our highest tier offers 20% off all services, unlimited study materials, priority scheduling, and personalized learning plans. For serious students."
-              </p>
+            <div className="tier-card">
+              <h4>Platinum Tier</h4>
+              <p>Get 20% off all services, unlimited consultations, and exclusive tutoring sessions. For serious students.</p>
             </div>
           </div>
         </div>
