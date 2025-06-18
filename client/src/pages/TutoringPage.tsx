@@ -107,7 +107,17 @@ const TutoringPage: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  <span className="service-list-item-price">{service.price}</span>
+                  <div className="service-list-item-price" style={{ textAlign: 'right', minWidth: 70 }}>
+                    <span>{service.price}</span>
+                    <span style={{
+                      color: '#ED8936',
+                      fontSize: '0.8em',
+                      display: 'block',
+                      marginTop: '2px'
+                    }}>
+                      {service.price.replace('$', '')} points
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -274,7 +284,10 @@ const TutoringPage: React.FC = () => {
           }}>
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>Maria Garcia</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Maria Garcia</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 21, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>
@@ -289,7 +302,10 @@ const TutoringPage: React.FC = () => {
 
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>David Chen</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>David Chen</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 15, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>
@@ -304,7 +320,10 @@ const TutoringPage: React.FC = () => {
 
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>Sarah Thompson</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Sarah Thompson</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 8, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>

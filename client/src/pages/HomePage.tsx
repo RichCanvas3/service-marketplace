@@ -1,6 +1,13 @@
 import React from 'react';
+import { useNotification } from '../context/NotificationContext';
 
 const HomePage: React.FC = () => {
+  const { showNotification } = useNotification();
+
+  const testNotification = () => {
+    showNotification('This is a test notification!', 'success');
+  };
+
   return (
     <div className="home-page">
       <h1>Welcome to Service Marketplace</h1>
@@ -30,6 +37,7 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </div>
+      <button onClick={testNotification}>Test Notification</button>
     </div>
   );
 };

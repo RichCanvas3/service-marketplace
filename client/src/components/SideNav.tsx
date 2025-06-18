@@ -1,22 +1,10 @@
 import '../custom-styles.css'
-import FilterButton from './FilterButton';
 import { useZipCode } from '../context/ZipCodeContext';
 import { useSearch } from '../context/SearchContext';
 
 const SideNav: React.FC = () => {
   const { zipCode, setZipCode } = useZipCode();
   const { searchQuery, setSearchQuery } = useSearch();
-
-  const filterButtons = [
-    'Landscaping',
-    'Transportation',
-    'Tutoring',
-    'Financial Services',
-    'Housekeeping',
-    'Athletic Training',
-    'Childcare',
-    'Professional Services'
-  ];
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -56,11 +44,6 @@ const SideNav: React.FC = () => {
         maxLength={5}
         pattern="[0-9]*"
       />
-
-      <p>Filters:</p>
-      {filterButtons.map((content) => (
-        <FilterButton key={content} name={content} />
-      ))}
     </div>
   );
 };

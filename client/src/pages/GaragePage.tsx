@@ -3,6 +3,7 @@ import ServiceList from '../components/ServiceList.tsx'
 import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
+import CreditCardForm from '../components/CreditCardForm';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import { companyInfoStyles } from '../styles/companyInfoStyles';
@@ -17,6 +18,7 @@ interface Service {
 const GaragePage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isCardFormOpen, setIsCardFormOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [preferredDate, setPreferredDate] = useState('');
@@ -73,9 +75,20 @@ const GaragePage: React.FC = () => {
   };
 
   const handleButton1Click = () => {
-    // Handle card payment
-    alert('Card payment selected');
+    setIsCardFormOpen(true);
+  };
+
+  const handleCardSubmit = (cardData: {
+    cardNumber: string;
+    cardName: string;
+    expiryDate: string;
+    cvv: string;
+  }) => {
+    // Here you would typically send the card data to your payment processor
+    console.log('Card data submitted:', cardData);
+    setIsCardFormOpen(false);
     handleCloseModal();
+    alert('Payment successful! Your booking has been confirmed.');
   };
 
   const handleButton2Click = () => {
@@ -108,7 +121,17 @@ const GaragePage: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  <span className="service-list-item-price">{service.price}</span>
+                  <div className="service-list-item-price" style={{ textAlign: 'right', minWidth: 70 }}>
+                    <span>{service.price}</span>
+                    <span style={{
+                      color: '#ED8936',
+                      fontSize: '0.8em',
+                      display: 'block',
+                      marginTop: '2px'
+                    }}>
+                      {service.price.replace('$', '')} points
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -275,7 +298,10 @@ const GaragePage: React.FC = () => {
           }}>
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>Robert Taylor</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Robert Taylor</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 19, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>
@@ -290,7 +316,10 @@ const GaragePage: React.FC = () => {
 
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>Sarah Williams</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Sarah Williams</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 13, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>
@@ -305,7 +334,10 @@ const GaragePage: React.FC = () => {
 
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>John Martinez</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>John Martinez</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 6, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>
@@ -384,6 +416,21 @@ const GaragePage: React.FC = () => {
       <InfoModal
         isOpen={isInfoModalOpen}
         onClose={() => setIsInfoModalOpen(false)}
+        title="Payment Information"
+      >
+        <div>
+          <p>Choose your preferred payment method:</p>
+          <ul>
+            <li>Card Payment: Secure credit/debit card processing</li>
+            <li>MetaMask: Pay using cryptocurrency</li>
+          </ul>
+        </div>
+      </InfoModal>
+
+      <CreditCardForm
+        isOpen={isCardFormOpen}
+        onClose={() => setIsCardFormOpen(false)}
+        onSubmit={handleCardSubmit}
       />
     </div>
   );

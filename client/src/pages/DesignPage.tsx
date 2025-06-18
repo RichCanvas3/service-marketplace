@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import Modal from '../components/Modal';
+import InfoModal from '../components/InfoModal';
+import CreditCardForm from '../components/CreditCardForm';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import { companyInfoStyles } from '../styles/companyInfoStyles';
@@ -32,6 +34,7 @@ interface EmployeesData {
 const DesignPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isCardFormOpen, setIsCardFormOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const ccdsServices = data.find(service => service.name === "Creative Collective Design Studio")?.services || [];
@@ -96,8 +99,20 @@ const DesignPage: React.FC = () => {
   };
 
   const handleButton1Click = () => {
-    console.log('Button 1 clicked');
-    // Add your button 1 logic here
+    setIsCardFormOpen(true);
+  };
+
+  const handleCardSubmit = (cardData: {
+    cardNumber: string;
+    cardName: string;
+    expiryDate: string;
+    cvv: string;
+  }) => {
+    // Here you would typically send the card data to your payment processor
+    console.log('Card data submitted:', cardData);
+    setIsCardFormOpen(false);
+    handleCloseModal();
+    alert('Payment successful! Your booking has been confirmed.');
   };
 
   const handleButton2Click = () => {
@@ -134,7 +149,17 @@ const DesignPage: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  <span className="service-list-item-price">{service.price}</span>
+                  <div className="service-list-item-price" style={{ textAlign: 'right', minWidth: 70 }}>
+                    <span>{service.price}</span>
+                    <span style={{
+                      color: '#ED8936',
+                      fontSize: '0.8em',
+                      display: 'block',
+                      marginTop: '2px'
+                    }}>
+                      {service.price.replace('$', '')} points
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -301,7 +326,10 @@ const DesignPage: React.FC = () => {
           }}>
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>Green Earth Cafe</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Green Earth Cafe</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 20, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>
@@ -316,7 +344,10 @@ const DesignPage: React.FC = () => {
 
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>TechStart Inc.</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>TechStart Inc.</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 14, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>
@@ -331,7 +362,10 @@ const DesignPage: React.FC = () => {
 
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>Local Art Gallery</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Local Art Gallery</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 7, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>
@@ -406,6 +440,26 @@ const DesignPage: React.FC = () => {
       >
         {renderStepContent()}
       </Modal>
+
+      <InfoModal
+        isOpen={isInfoModalOpen}
+        onClose={() => setIsInfoModalOpen(false)}
+        title="Payment Information"
+      >
+        <div>
+          <p>Choose your preferred payment method:</p>
+          <ul>
+            <li>Card Payment: Secure credit/debit card processing</li>
+            <li>MetaMask: Pay using cryptocurrency</li>
+          </ul>
+        </div>
+      </InfoModal>
+
+      <CreditCardForm
+        isOpen={isCardFormOpen}
+        onClose={() => setIsCardFormOpen(false)}
+        onSubmit={handleCardSubmit}
+      />
     </div>
   );
 };

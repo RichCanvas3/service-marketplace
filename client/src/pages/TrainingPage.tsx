@@ -103,7 +103,17 @@ const TrainingPage: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  <span className="service-list-item-price">{service.price}</span>
+                  <div className="service-list-item-price" style={{ textAlign: 'right', minWidth: 70 }}>
+                    <span>{service.price}</span>
+                    <span style={{
+                      color: '#ED8936',
+                      fontSize: '0.8em',
+                      display: 'block',
+                      marginTop: '2px'
+                    }}>
+                      {service.price.replace('$', '')} points
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -158,7 +168,7 @@ const TrainingPage: React.FC = () => {
                   );
                 })}
               </ul>
-              <h4>Session Details:</h4>
+              <h4>Appointment Details:</h4>
               <ul className="review-list">
                 <li className="review-item">
                   <span>Preferred Date</span>
@@ -166,7 +176,12 @@ const TrainingPage: React.FC = () => {
                 </li>
                 <li className="review-item">
                   <span>Preferred Time</span>
-                  <span>{preferredTime}</span>
+                  <span>
+                    {preferredTime === 'morning' ? 'Morning (8AM - 12PM)' :
+                     preferredTime === 'afternoon' ? 'Afternoon (12PM - 4PM)' :
+                     preferredTime === 'evening' ? 'Evening (4PM - 8PM)' :
+                     preferredTime}
+                  </span>
                 </li>
                 {specialInstructions && (
                   <li className="review-item">
@@ -174,6 +189,68 @@ const TrainingPage: React.FC = () => {
                     <span>{specialInstructions}</span>
                   </li>
                 )}
+              </ul>
+              <h4>Loyalty Tier Discount:</h4>
+              <ul className="review-list">
+                <li className="review-item">
+                  <span>Bronze</span>
+                  <span>5% off</span>
+                </li>
+                <li className="review-item">
+                  <span>Silver</span>
+                  <span>10% off</span>
+                </li>
+                <li className="review-item">
+                  <span>Gold</span>
+                  <span>15% off</span>
+                </li>
+                <li className="review-item">
+                  <span>Platinum</span>
+                  <span>20% off</span>
+                </li>
+                {(() => {
+                  const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
+                  const membershipLevel = mcoData.membershipLevel || 'Bronze';
+                  const discountPercentage = {
+                    'Bronze': 5,
+                    'Silver': 10,
+                    'Gold': 15,
+                    'Platinum': 20
+                  }[membershipLevel];
+
+                  const totalBeforeDiscount = selectedServices.reduce((total, serviceName) => {
+                    const service = datServices.find(s => s.name === serviceName);
+                    return total + (parseFloat(service?.price?.replace(/[^0-9.-]+/g, '') || '0'));
+                  }, 0);
+
+                  const discountAmount = (totalBeforeDiscount * discountPercentage) / 100;
+                  const totalAfterDiscount = totalBeforeDiscount - discountAmount;
+
+                  return (
+                    <>
+                      <li className="review-item" style={{ borderTop: '1px solid var(--hover-color)', marginTop: '8px', paddingTop: '8px' }}>
+                        <span>Your Tier ({membershipLevel})</span>
+                        <span>{discountPercentage}% off</span>
+                      </li>
+                      <li className="review-item" style={{
+                        backgroundColor: 'var(--card-bg)',
+                        fontWeight: 'bold',
+                        color: '#ED8936'
+                      }}>
+                        <span>Total with Loyalty Card</span>
+                        <span>${totalAfterDiscount.toFixed(2)}</span>
+                      </li>
+                      <li className="review-item" style={{
+                        backgroundColor: 'var(--card-bg)',
+                        fontWeight: 'bold',
+                        color: '#FFFFFF'
+                      }}>
+                        <span>Total with Debit/Credit Card</span>
+                        <span>${totalBeforeDiscount.toFixed(2)}</span>
+                      </li>
+                    </>
+                  );
+                })()}
               </ul>
               <div className="confirmation-message">
                 <p>Click 'Next' to proceed to payment options.</p>
@@ -266,7 +343,10 @@ const TrainingPage: React.FC = () => {
           }}>
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>Alex Rivera</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Alex Rivera</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 17, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>
@@ -281,7 +361,10 @@ const TrainingPage: React.FC = () => {
 
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>Rachel Kim</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Rachel Kim</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 11, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>
@@ -296,7 +379,10 @@ const TrainingPage: React.FC = () => {
 
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>Tom Anderson</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Tom Anderson</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 4, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>

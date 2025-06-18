@@ -9,6 +9,12 @@ interface ServiceCardProps {
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ url, name, linkTo, zipCode, tags }) => {
+  const handleTagClick = (e: React.MouseEvent, tag: string) => {
+    e.preventDefault(); // Prevent navigation when clicking tags
+    e.stopPropagation(); // Prevent event bubbling
+    // The tag click will be handled by the parent ServiceList component
+  };
+
   return (
     <a href={linkTo} className="service-card-link">
       <div className='service-card'>
@@ -26,7 +32,14 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ url, name, linkTo, zipCode, t
         </div>
         <div className="service-tags">
           {tags.map((tag, index) => (
-            <span key={index} className="service-tag">{tag}</span>
+            <span
+              key={index}
+              className="service-tag"
+              onClick={(e) => handleTagClick(e, tag)}
+              style={{ cursor: 'pointer' }}
+            >
+              {tag}
+            </span>
           ))}
         </div>
       </div>

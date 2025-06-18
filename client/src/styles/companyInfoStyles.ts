@@ -92,6 +92,14 @@ export const companyInfoStyles = {
     fontSize: '1rem',
     color: '#fff',
     fontWeight: '500',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  loyaltyLabel: {
+    color: '#ED8936',
+    fontSize: '0.8rem',
+    fontWeight: '500',
   },
   reviewDate: {
     fontSize: '0.8rem',

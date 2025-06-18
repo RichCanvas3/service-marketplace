@@ -1,20 +1,86 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../custom-styles.css';
+import serviceList from '../components/data/service-list.json';
 
 const LoyaltyCardPage: React.FC = () => {
+  const [joined, setJoined] = useState(false);
+
+  const handleJoinLoyalty = () => {
+    let mco = localStorage.getItem('mcoData');
+    let account = localStorage.getItem('walletAddress');
+    let mcoObj = mco ? JSON.parse(mco) : {};
+    if (mcoObj.loyaltyMember) {
+      setJoined(true);
+      return;
+    }
+    // Populate with default loyalty info
+    mcoObj = {
+      ...mcoObj,
+      userId: account || mcoObj.userId || '',
+      loyaltyMember: true,
+      membershipLevel: 'Bronze',
+      loyaltyPoints: 300,
+      rewards: [
+        { id: 1, name: '5% Off Next Service', points: 50 },
+        { id: 2, name: 'Free Consultation', points: 100 }
+      ],
+      pastTransactions: [
+        {
+          service: serviceList[0]?.name,
+          date: '2024-05-01',
+          amount: 120,
+          description: serviceList[0]?.services[0]?.name
+        },
+        {
+          service: serviceList[1]?.name,
+          date: '2024-05-15',
+          amount: 150,
+          description: serviceList[1]?.services[0]?.name
+        }
+      ],
+      lastUpdated: new Date().toISOString()
+    };
+    localStorage.setItem('mcoData', JSON.stringify(mcoObj));
+    setJoined(true);
+  };
+
   return (
     <div className="individual-page">
-      <div className="content">
-        <h1>The Service Marketplace & Loyalty Card</h1>
-        <h2>Spend crypto, earn everyday rewards.</h2>
+      <div className="content" style={{ maxWidth: 900, margin: '0 auto' }}>
+        <h1 style={{ textAlign: 'center' }}>Introducing the Service Marketplace Loyalty Program &  Card</h1>
+        <h2>Spend crypto, earn points, redeem for everyday rewards.</h2>
+
+        <button
+          style={{
+            backgroundColor: '#ED8936',
+            color: 'black',
+            border: 'none',
+            padding: '12px 24px',
+            borderRadius: '12px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            transition: 'all 0.3s ease',
+            width: 'fit-content',
+            margin: '20px 0',
+            fontSize: '16px'
+          }}
+          onClick={handleJoinLoyalty}
+          disabled={joined}
+        >
+          {joined ? "You're already a member!" : 'Get the Loyalty Card'}
+        </button>
+
+        {joined && <div style={{ color: '#4fd1c5', marginBottom: 16, fontWeight: 500 }}>Welcome to the Loyalty Program!</div>}
 
         <img src='/mm-card.png' alt='Service Marketplace & Loyalty Card' width={500} style={{ position: 'relative', marginRight: '0px', marginLeft: 'auto', marginBottom: '40px'}}/>
 
         <div className="loyalty-section">
           <h3>Overview</h3>
           <p>
-            <strong>Service Marketplace</strong> is a decentralized marketplace where local service providers can list their services and customers can easily discover, compare, and purchase those services using a stablecoin like <strong>USDC</strong>.
-          </p>
+            <strong>Service Marketplace</strong> is a decentralized marketplace where local service providers can list their services and customers can easily discover, compare, and purchase those services using their credit or debit card. </p>
+            <strong>The Loyalty Program</strong> is a free rewards program that gives customers the ability to purchase services using a stablecoin like <strong>USDC</strong> with their Loyalty Card, which is directly tied to their <strong>MetaMask Card</strong>, and earn exclusive rewards and discounts from service providers. The only requirement is that the user has a <strong>MetaMask Wallet</strong>, which they can create <a href="https://metamask.io/" target="_blank">here</a>.
+            <br /> <br />By having on-chain transactions, purchases can be verified and tracked, allowing for both customers and businesses to benefit by earning rewards and continuous business.
         </div>
 
         <div className="loyalty-section">
@@ -22,7 +88,7 @@ const LoyaltyCardPage: React.FC = () => {
           <ul>
             <li>Find and compare local services</li>
             <li>Purchase services using USDC</li>
-            <li>Earn and redeem rewards through the <strong>Service Marketplace Loyalty Card</strong>, which is tied to a user's <strong>MetaMask Card</strong></li>
+            <li>Earn and redeem rewards through the <strong>Service Marketplace Loyalty Program</strong>, which is tied to a user's <strong>MetaMask Card</strong></li>
           </ul>
         </div>
 

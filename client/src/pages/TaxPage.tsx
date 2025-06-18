@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
+import CreditCardForm from '../components/CreditCardForm';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import { companyInfoStyles } from '../styles/companyInfoStyles';
@@ -14,12 +15,13 @@ interface Service {
 
 const TaxPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isCardFormOpen, setIsCardFormOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [preferredDate, setPreferredDate] = useState('');
   const [preferredTime, setPreferredTime] = useState('');
   const [specialInstructions, setSpecialInstructions] = useState('');
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const rtsServices = data.find(service => service.name === "Rob's Tax Services")?.services || [];
@@ -66,8 +68,20 @@ const TaxPage: React.FC = () => {
   };
 
   const handleButton1Click = () => {
-    console.log('Button 1 clicked');
-    // Add your button 1 logic here
+    setIsCardFormOpen(true);
+  };
+
+  const handleCardSubmit = (cardData: {
+    cardNumber: string;
+    cardName: string;
+    expiryDate: string;
+    cvv: string;
+  }) => {
+    // Here you would typically send the card data to your payment processor
+    console.log('Card data submitted:', cardData);
+    setIsCardFormOpen(false);
+    handleCloseModal();
+    alert('Payment successful! Your booking has been confirmed.');
   };
 
   const handleButton2Click = () => {
@@ -104,7 +118,17 @@ const TaxPage: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  <span className="service-list-item-price">{service.price}</span>
+                  <div className="service-list-item-price" style={{ textAlign: 'right', minWidth: 70 }}>
+                    <span>{service.price}</span>
+                    <span style={{
+                      color: '#ED8936',
+                      fontSize: '0.8em',
+                      display: 'block',
+                      marginTop: '2px'
+                    }}>
+                      {service.price.replace('$', '')} points
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -179,6 +203,68 @@ const TaxPage: React.FC = () => {
                     <span>{specialInstructions}</span>
                   </li>
                 )}
+              </ul>
+              <h4>Loyalty Tier Discount:</h4>
+              <ul className="review-list">
+                <li className="review-item">
+                  <span>Bronze</span>
+                  <span>5% off</span>
+                </li>
+                <li className="review-item">
+                  <span>Silver</span>
+                  <span>10% off</span>
+                </li>
+                <li className="review-item">
+                  <span>Gold</span>
+                  <span>15% off</span>
+                </li>
+                <li className="review-item">
+                  <span>Platinum</span>
+                  <span>20% off</span>
+                </li>
+                {(() => {
+                  const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
+                  const membershipLevel = mcoData.membershipLevel || 'Bronze';
+                  const discountPercentage = {
+                    'Bronze': 5,
+                    'Silver': 10,
+                    'Gold': 15,
+                    'Platinum': 20
+                  }[membershipLevel];
+
+                  const totalBeforeDiscount = selectedServices.reduce((total, serviceName) => {
+                    const service = rtsServices.find(s => s.name === serviceName);
+                    return total + (parseFloat(service?.price?.replace(/[^0-9.-]+/g, '') || '0'));
+                  }, 0);
+
+                  const discountAmount = (totalBeforeDiscount * discountPercentage) / 100;
+                  const totalAfterDiscount = totalBeforeDiscount - discountAmount;
+
+                  return (
+                    <>
+                      <li className="review-item" style={{ borderTop: '1px solid var(--hover-color)', marginTop: '8px', paddingTop: '8px' }}>
+                        <span>Your Tier ({membershipLevel})</span>
+                        <span>{discountPercentage}% off</span>
+                      </li>
+                      <li className="review-item" style={{
+                        backgroundColor: 'var(--card-bg)',
+                        fontWeight: 'bold',
+                        color: '#ED8936'
+                      }}>
+                        <span>Total with Loyalty Card</span>
+                        <span>${totalAfterDiscount.toFixed(2)}</span>
+                      </li>
+                      <li className="review-item" style={{
+                        backgroundColor: 'var(--card-bg)',
+                        fontWeight: 'bold',
+                        color: '#FFFFFF'
+                      }}>
+                        <span>Total with Debit/Credit Card</span>
+                        <span>${totalBeforeDiscount.toFixed(2)}</span>
+                      </li>
+                    </>
+                  );
+                })()}
               </ul>
               <div className="confirmation-message">
                 <p>Click 'Next' to proceed to payment options.</p>
@@ -271,7 +357,10 @@ const TaxPage: React.FC = () => {
           }}>
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>David Thompson</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>David Thompson</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 18, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>
@@ -286,7 +375,10 @@ const TaxPage: React.FC = () => {
 
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>Lisa Martinez</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>Lisa Martinez</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 12, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>
@@ -301,7 +393,10 @@ const TaxPage: React.FC = () => {
 
             <div style={companyInfoStyles.reviewItem}>
               <div style={companyInfoStyles.reviewHeader}>
-                <span style={companyInfoStyles.reviewerName}>James Wilson</span>
+                <div style={companyInfoStyles.reviewerName}>
+                  <span>James Wilson</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                </div>
                 <span style={companyInfoStyles.reviewDate}>March 5, 2024</span>
               </div>
               <div style={companyInfoStyles.reviewRating}>
@@ -376,6 +471,26 @@ const TaxPage: React.FC = () => {
       >
         {renderStepContent()}
       </Modal>
+
+      <InfoModal
+        isOpen={isInfoModalOpen}
+        onClose={() => setIsInfoModalOpen(false)}
+        title="Payment Information"
+      >
+        <div>
+          <p>Choose your preferred payment method:</p>
+          <ul>
+            <li>Card Payment: Secure credit/debit card processing</li>
+            <li>MetaMask: Pay using cryptocurrency</li>
+          </ul>
+        </div>
+      </InfoModal>
+
+      <CreditCardForm
+        isOpen={isCardFormOpen}
+        onClose={() => setIsCardFormOpen(false)}
+        onSubmit={handleCardSubmit}
+      />
     </div>
   );
 };

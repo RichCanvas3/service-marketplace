@@ -13,32 +13,35 @@ import AccountPage from './pages/AccountPage';
 import { ZipCodeProvider } from './context/ZipCodeContext';
 import { SearchProvider } from './context/SearchContext';
 import SideNav from './components/SideNav';
+import { NotificationProvider } from './context/NotificationContext';
 
 const App: React.FC = () => {
   return (
-    <ZipCodeProvider>
-      <SearchProvider>
-        <div className='page-container'>
-          <SideNav />
-          <div className='content' style={{display: 'flex'}}>
-            <Router>
-              <Routes>
-                <Route path="/" element={<Root />} />
-                <Route path="/dhc" element={<CleaningPage />} />
-                <Route path="/rts" element={<TaxPage />} />
-                <Route path="/dat" element={<TrainingPage />} />
-                <Route path="/dc" element={<CateringPage />} />
-                <Route path="/mmg" element={<GaragePage />} />
-                <Route path="/abct" element={<TutoringPage />} />
-                <Route path="/ccds" element={<DesignPage />} />
-                <Route path="/loyalty-card" element={<LoyaltyCardPage />} />
-                <Route path="/account" element={<AccountPage />} />
-              </Routes>
-            </Router>
+    <NotificationProvider>
+      <ZipCodeProvider>
+        <SearchProvider>
+          <div className='page-container'>
+            <SideNav />
+            <div className='content' style={{display: 'flex'}}>
+              <Router>
+                <Routes>
+                  <Route path="/" element={<Root />} />
+                  <Route path="/dhc" element={<CleaningPage />} />
+                  <Route path="/rts" element={<TaxPage />} />
+                  <Route path="/dat" element={<TrainingPage />} />
+                  <Route path="/dc" element={<CateringPage />} />
+                  <Route path="/mmg" element={<GaragePage />} />
+                  <Route path="/abct" element={<TutoringPage />} />
+                  <Route path="/ccds" element={<DesignPage />} />
+                  <Route path="/loyalty-card" element={<LoyaltyCardPage />} />
+                  <Route path="/account" element={<AccountPage />} />
+                </Routes>
+              </Router>
+            </div>
           </div>
-        </div>
-      </SearchProvider>
-    </ZipCodeProvider>
+        </SearchProvider>
+      </ZipCodeProvider>
+    </NotificationProvider>
   );
 };
 

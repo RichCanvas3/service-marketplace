@@ -14,9 +14,11 @@ div.page-container {
   background-color: var(--primary-color);
   color: var(--text-color);
   display: flex;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   overflow: hidden;
+  box-sizing: border-box;
+  position: relative;
 }
 
 div.side-nav {
@@ -28,6 +30,7 @@ div.side-nav {
   overflow-y: auto;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   transition: var(--transition);
+  flex-shrink: 0;
 }
 
 div.content {
@@ -37,10 +40,12 @@ div.content {
   padding: 30px;
   min-height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
+  box-sizing: border-box;
 }
 
 /* Global Button Styling */
@@ -194,6 +199,8 @@ a.header-title:hover {
   position: relative;
   isolation: isolate;
   overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .content-heading {
@@ -354,7 +361,7 @@ a.header-title:hover {
 }
 
 .individual-page {
-  width: 90%;
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
@@ -363,6 +370,7 @@ a.header-title:hover {
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
+  box-sizing: border-box;
 }
 
 .individual-page img.service-card-image {
@@ -1059,4 +1067,141 @@ select.form-input {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+/* Credit Card Form Styles */
+.credit-card-form {
+  padding: 20px;
+}
+
+.credit-card-form .form-group {
+  margin-bottom: 20px;
+}
+
+.credit-card-form .form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.credit-card-form .form-row .form-group {
+  flex: 1;
+}
+
+.credit-card-form .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.credit-card-form .form-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--secondary-color);
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  font-size: 16px;
+  transition: var(--transition);
+}
+
+.credit-card-form .form-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(157, 140, 255, 0.2);
+}
+
+.credit-card-form label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+div.loyalty-section {
+  width: 100%;
+}
+
+/* Notification Styles */
+.notification-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.notification {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: slideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  gap: 12px;
+}
+
+.notification-message {
+  flex: 1;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.notification-close {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 0;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.notification-close:hover {
+  opacity: 1;
+}
+
+.notification-success {
+  background-color: #4caf50;
+}
+
+.notification-error {
+  background-color: #f44336;
+}
+
+.notification-info {
+  background-color: #2196f3;
+}
+
+.notification-warning {
+  background-color: #ff9800;
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
 }
