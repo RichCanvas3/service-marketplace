@@ -141,7 +141,10 @@ const DesignPage: React.FC = () => {
             </div>
             <ul className="service-list">
               {ccdsServices.map((service, index) => (
-                <li key={index} className="service-list-item">
+                <li
+                  key={index}
+                  className={`service-list-item ${index === 0 ? 'popular' : ''}`}
+                >
                   <div className="service-list-item-checkbox">
                     <input
                       type="checkbox"
@@ -157,14 +160,9 @@ const DesignPage: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  <div className="service-list-item-price" style={{ textAlign: 'right', minWidth: 70 }}>
+                  <div className="service-list-item-price">
                     <span>{service.price}</span>
-                    <span style={{
-                      color: '#ED8936',
-                      fontSize: '0.8em',
-                      display: 'block',
-                      marginTop: '2px'
-                    }}>
+                    <span>
                       {service.price.replace('$', '')} points
                     </span>
                   </div>
