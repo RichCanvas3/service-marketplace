@@ -371,6 +371,28 @@ const TrainingPage: React.FC = () => {
           </ul>
         </div>
 
+        <div className="loyalty-section">
+          <h3>Exclusive Rewards for Loyalty Members</h3>
+          <div className="tiers-grid">
+            <div className="tier-card">
+              <h4>Bronze Tier</h4>
+              <p>Get started with our loyalty program and enjoy 5% off all training services. Perfect for individual courses.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Silver Tier</h4>
+              <p>Unlock 10% off all services plus one free training consultation per month. Ideal for regular clients.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Gold Tier</h4>
+              <p>Enjoy 15% off all services, monthly workshops, and priority scheduling. Perfect for growing businesses.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Platinum Tier</h4>
+              <p>Get 20% off all services, unlimited workshops, and exclusive training sessions. For serious clients.</p>
+            </div>
+          </div>
+        </div>
+
         <div className="reviews-section">
           <div
             className="reviews-header"
@@ -393,10 +415,10 @@ const TrainingPage: React.FC = () => {
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>Green Earth Cafe</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Carlos Mendez</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Verified Customer</span>
                 </div>
-                <span className="review-date">March 20, 2024</span>
+                <span className="review-date">November 25, 2024</span>
               </div>
               <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
@@ -404,17 +426,17 @@ const TrainingPage: React.FC = () => {
                 ))}
               </div>
               <p className="review-text">
-                "The team at Creative Canvas transformed our cafe's branding. Their eco-friendly design approach perfectly captured our values, and the new look has significantly increased customer engagement."
+                "Doug completely transformed my fitness journey! I came to him overweight and unmotivated. His personalized training program and nutrition guidance helped me lose 40 pounds and gain incredible strength. He's patient, knowledgeable, and really cares about his clients' success. Best investment I've made in myself!"
               </p>
             </div>
 
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>TechStart Inc.</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Jennifer Taylor</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Gold Member</span>
                 </div>
-                <span className="review-date">March 14, 2024</span>
+                <span className="review-date">November 8, 2024</span>
               </div>
               <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
@@ -422,48 +444,29 @@ const TrainingPage: React.FC = () => {
                 ))}
               </div>
               <p className="review-text">
-                "Working with Creative Canvas on our website redesign was a game-changer. Their modern, user-friendly approach helped us increase our conversion rate by 40%. Highly recommend their services!"
+                "As a busy mom, I needed workouts that fit my schedule and addressed my post-pregnancy fitness goals. Doug's training sessions are efficient, effective, and he's great with my kids when they occasionally tag along. The group training sessions are fun and motivating too!"
               </p>
             </div>
 
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>Local Art Gallery</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Alex Thompson</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Silver Member</span>
                 </div>
-                <span className="review-date">March 7, 2024</span>
+                <span className="review-date">October 22, 2024</span>
               </div>
               <div className="review-rating">
-                {[...Array(5)].map((_, i) => (
+                {[...Array(4)].map((_, i) => (
                   <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+                {[...Array(1)].map((_, i) => (
+                  <span key={i} style={{ ...companyInfoStyles.star, opacity: 0.3 }}>★</span>
                 ))}
               </div>
               <p className="review-text">
-                "The exhibition catalog design was stunning. They perfectly captured the essence of our artists' work while maintaining a clean, professional layout. The attention to detail was impressive."
+                "Doug helped me train for my first marathon. His expertise in cardio and endurance training was exactly what I needed. The nutrition consultation was eye-opening too. I PR'd by 15 minutes! Only wish he had more evening time slots available."
               </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="loyalty-section">
-          <h3>Exclusive Rewards for Loyalty Members</h3>
-          <div className="tiers-grid">
-            <div className="tier-card">
-              <h4>Bronze Tier</h4>
-              <p>Get started with our loyalty program and enjoy 5% off all training services. Perfect for individual courses.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Silver Tier</h4>
-              <p>Unlock 10% off all services plus one free training consultation per month. Ideal for regular clients.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Gold Tier</h4>
-              <p>Enjoy 15% off all services, monthly workshops, and priority scheduling. Perfect for growing businesses.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Platinum Tier</h4>
-              <p>Get 20% off all services, unlimited workshops, and exclusive training sessions. For serious clients.</p>
             </div>
           </div>
         </div>

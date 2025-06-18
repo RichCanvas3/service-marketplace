@@ -379,6 +379,28 @@ const CateringPage: React.FC = () => {
           </ul>
         </div>
 
+        <div className="loyalty-section">
+          <h3>Exclusive Rewards for Loyalty Members</h3>
+          <div className="tiers-grid">
+            <div className="tier-card">
+              <h4>Bronze Tier</h4>
+              <p>Get started with our loyalty program and enjoy 5% off all catering services. Perfect for small events.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Silver Tier</h4>
+              <p>Unlock 10% off all services plus one free menu consultation per month. Ideal for regular clients.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Gold Tier</h4>
+              <p>Enjoy 15% off all services, monthly tastings, and priority scheduling. Perfect for growing businesses.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Platinum Tier</h4>
+              <p>Get 20% off all services, unlimited tastings, and exclusive chef's table experiences. For serious clients.</p>
+            </div>
+          </div>
+        </div>
+
         <div className="reviews-section">
           <div
             className="reviews-header"
@@ -401,10 +423,10 @@ const CateringPage: React.FC = () => {
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>Green Earth Cafe</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Jessica Martinez</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Verified Customer</span>
                 </div>
-                <span className="review-date">March 20, 2024</span>
+                <span className="review-date">December 2, 2024</span>
               </div>
               <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
@@ -412,17 +434,17 @@ const CateringPage: React.FC = () => {
                 ))}
               </div>
               <p className="review-text">
-                "The team at Creative Canvas transformed our cafe's branding. Their eco-friendly design approach perfectly captured our values, and the new look has significantly increased customer engagement."
+                "Diane catered our wedding and it was absolutely perfect! The food was delicious and beautifully presented. She worked with our dietary restrictions seamlessly and the service was flawless. Our guests are still talking about the amazing appetizers and desserts. Thank you for making our special day even more memorable!"
               </p>
             </div>
 
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>TechStart Inc.</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Robert Kim</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Gold Member</span>
                 </div>
-                <span className="review-date">March 14, 2024</span>
+                <span className="review-date">November 18, 2024</span>
               </div>
               <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
@@ -430,48 +452,29 @@ const CateringPage: React.FC = () => {
                 ))}
               </div>
               <p className="review-text">
-                "Working with Creative Canvas on our website redesign was a game-changer. Their modern, user-friendly approach helped us increase our conversion rate by 40%. Highly recommend their services!"
+                "We've used Diane's catering for multiple corporate events and she never disappoints. The lunch spreads are always fresh, varied, and accommodate all dietary needs. Her team is professional and the setup/cleanup is seamless. Our employees always look forward to catered meetings now!"
               </p>
             </div>
 
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>Local Art Gallery</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Amanda Foster</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Silver Member</span>
                 </div>
-                <span className="review-date">March 7, 2024</span>
+                <span className="review-date">October 30, 2024</span>
               </div>
               <div className="review-rating">
-                {[...Array(5)].map((_, i) => (
+                {[...Array(4)].map((_, i) => (
                   <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+                {[...Array(1)].map((_, i) => (
+                  <span key={i} style={{ ...companyInfoStyles.star, opacity: 0.3 }}>★</span>
                 ))}
               </div>
               <p className="review-text">
-                "The exhibition catalog design was stunning. They perfectly captured the essence of our artists' work while maintaining a clean, professional layout. The attention to detail was impressive."
+                "Hired Diane for my daughter's graduation party. The gourmet menu was a huge hit with both adults and kids. Everything was prepared fresh and tasted amazing. Only small issue was running a bit late on setup, but the quality more than made up for it. Will definitely book again!"
               </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="loyalty-section">
-          <h3>Exclusive Rewards for Loyalty Members</h3>
-          <div className="tiers-grid">
-            <div className="tier-card">
-              <h4>Bronze Tier</h4>
-              <p>Get started with our loyalty program and enjoy 5% off all catering services. Perfect for small events.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Silver Tier</h4>
-              <p>Unlock 10% off all services plus one free menu consultation per month. Ideal for regular clients.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Gold Tier</h4>
-              <p>Enjoy 15% off all services, monthly tastings, and priority scheduling. Perfect for growing businesses.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Platinum Tier</h4>
-              <p>Get 20% off all services, unlimited tastings, and exclusive chef's table experiences. For serious clients.</p>
             </div>
           </div>
         </div>

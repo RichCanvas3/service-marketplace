@@ -405,6 +405,28 @@ const DesignPage: React.FC = () => {
           </ul>
         </div>
 
+        <div className="loyalty-section">
+          <h3>Exclusive Rewards for Loyalty Members</h3>
+          <div className="tiers-grid">
+            <div className="tier-card">
+              <h4>Bronze Tier</h4>
+              <p>Get started with our loyalty program and enjoy 5% off all design services. Perfect for small projects.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Silver Tier</h4>
+              <p>Unlock 10% off all services plus one free design consultation per month. Ideal for regular clients.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Gold Tier</h4>
+              <p>Enjoy 15% off all services, monthly consultations, and priority scheduling. Perfect for growing businesses.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Platinum Tier</h4>
+              <p>Get 20% off all services, unlimited consultations, and exclusive design workshops. For serious businesses.</p>
+            </div>
+          </div>
+        </div>
+
         <div className="reviews-section">
           <div
             className="reviews-header"
@@ -427,10 +449,10 @@ const DesignPage: React.FC = () => {
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>Green Earth Cafe</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Elena Vasquez</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Verified Customer</span>
                 </div>
-                <span className="review-date">March 20, 2024</span>
+                <span className="review-date">December 5, 2024</span>
               </div>
               <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
@@ -438,17 +460,17 @@ const DesignPage: React.FC = () => {
                 ))}
               </div>
               <p className="review-text">
-                "The team at Creative Canvas transformed our cafe's branding. Their eco-friendly design approach perfectly captured our values, and the new look has significantly increased customer engagement."
+                "Creative Canvas completely transformed our restaurant's brand identity! The new logo, menu design, and marketing materials are stunning. Their creative vision and attention to detail exceeded our expectations. Customer feedback has been overwhelmingly positive since the rebrand!"
               </p>
             </div>
 
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>TechStart Inc.</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>James Mitchell</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Gold Member</span>
                 </div>
-                <span className="review-date">March 14, 2024</span>
+                <span className="review-date">November 22, 2024</span>
               </div>
               <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
@@ -456,48 +478,29 @@ const DesignPage: React.FC = () => {
                 ))}
               </div>
               <p className="review-text">
-                "Working with Creative Canvas on our website redesign was a game-changer. Their modern, user-friendly approach helped us increase our conversion rate by 40%. Highly recommend their services!"
+                "Working with Creative Canvas on our startup's website was incredible. They took our rough ideas and created a sleek, modern design that perfectly captures our vision. The user experience is seamless and our conversion rates have increased by 60% since launch!"
               </p>
             </div>
 
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>Local Art Gallery</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Sophie Anderson</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Platinum Member</span>
                 </div>
-                <span className="review-date">March 7, 2024</span>
+                <span className="review-date">November 5, 2024</span>
               </div>
               <div className="review-rating">
-                {[...Array(5)].map((_, i) => (
+                {[...Array(4)].map((_, i) => (
                   <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+                {[...Array(1)].map((_, i) => (
+                  <span key={i} style={{ ...companyInfoStyles.star, opacity: 0.3 }}>★</span>
                 ))}
               </div>
               <p className="review-text">
-                "The exhibition catalog design was stunning. They perfectly captured the essence of our artists' work while maintaining a clean, professional layout. The attention to detail was impressive."
+                "Creative Canvas designed our wedding invitations and they were absolutely beautiful! The custom illustrations and elegant typography made them truly special. Our guests are still complimenting them. The only issue was a slight delay in delivery, but the quality made up for it."
               </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="loyalty-section">
-          <h3>Exclusive Rewards for Loyalty Members</h3>
-          <div className="tiers-grid">
-            <div className="tier-card">
-              <h4>Bronze Tier</h4>
-              <p>Get started with our loyalty program and enjoy 5% off all design services. Perfect for small projects.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Silver Tier</h4>
-              <p>Unlock 10% off all services plus one free design consultation per month. Ideal for regular clients.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Gold Tier</h4>
-              <p>Enjoy 15% off all services, monthly consultations, and priority scheduling. Perfect for growing businesses.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Platinum Tier</h4>
-              <p>Get 20% off all services, unlimited consultations, and exclusive design workshops. For serious businesses.</p>
             </div>
           </div>
         </div>

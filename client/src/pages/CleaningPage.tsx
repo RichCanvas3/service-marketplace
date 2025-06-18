@@ -398,6 +398,28 @@ const CleaningPage: React.FC = () => {
           </ul>
         </div>
 
+        <div className="loyalty-section">
+          <h3>Exclusive Rewards for Loyalty Members</h3>
+          <div className="tiers-grid">
+            <div className="tier-card">
+              <h4>Bronze Tier</h4>
+              <p>Get started with our loyalty program and enjoy 5% off all cleaning services. Perfect for small spaces.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Silver Tier</h4>
+              <p>Unlock 10% off all services plus one free deep cleaning per month. Ideal for regular clients.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Gold Tier</h4>
+              <p>Enjoy 15% off all services, monthly deep cleanings, and priority scheduling. Perfect for growing businesses.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Platinum Tier</h4>
+              <p>Get 20% off all services, unlimited deep cleanings, and exclusive eco-friendly products. For serious clients.</p>
+            </div>
+          </div>
+        </div>
+
         <div className="reviews-section">
           <div
             className="reviews-header"
@@ -420,10 +442,10 @@ const CleaningPage: React.FC = () => {
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>Green Earth Cafe</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Sarah Johnson</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Verified Customer</span>
                 </div>
-                <span className="review-date">March 20, 2024</span>
+                <span className="review-date">November 15, 2024</span>
               </div>
               <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
@@ -431,35 +453,38 @@ const CleaningPage: React.FC = () => {
                 ))}
               </div>
               <p className="review-text">
-                "The team at Creative Canvas transformed our cafe's branding. Their eco-friendly design approach perfectly captured our values, and the new look has significantly increased customer engagement."
+                "Daisy's team transformed my home! Their eco-friendly products were perfect for my family with young kids. They paid attention to every detail - from baseboards to ceiling fans. The weekly maintenance service has been a game-changer for our busy household. Highly recommend!"
               </p>
             </div>
 
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>TechStart Inc.</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Michael Chen</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Gold Member</span>
                 </div>
-                <span className="review-date">March 14, 2024</span>
+                <span className="review-date">October 28, 2024</span>
               </div>
               <div className="review-rating">
-                {[...Array(5)].map((_, i) => (
+                {[...Array(4)].map((_, i) => (
                   <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+                {[...Array(1)].map((_, i) => (
+                  <span key={i} style={{ ...companyInfoStyles.star, opacity: 0.3 }}>★</span>
                 ))}
               </div>
               <p className="review-text">
-                "Working with Creative Canvas on our website redesign was a game-changer. Their modern, user-friendly approach helped us increase our conversion rate by 40%. Highly recommend their services!"
+                "Been using Daisy's services for 6 months now. The deep cleaning they did before I moved in was exceptional - got my security deposit back in full! The team is always punctual and professional. Only minor issue was one missed window, but they came back to fix it immediately."
               </p>
             </div>
 
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>Local Art Gallery</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Emily Rodriguez</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Silver Member</span>
                 </div>
-                <span className="review-date">March 7, 2024</span>
+                <span className="review-date">October 12, 2024</span>
               </div>
               <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
@@ -467,30 +492,26 @@ const CleaningPage: React.FC = () => {
                 ))}
               </div>
               <p className="review-text">
-                "The exhibition catalog design was stunning. They perfectly captured the essence of our artists' work while maintaining a clean, professional layout. The attention to detail was impressive."
+                "As a pet owner, finding cleaners who are comfortable with animals and use pet-safe products was crucial. Daisy's team exceeded my expectations! They even gave my dog treats and made sure all cleaning products were pet-friendly. My house has never been cleaner!"
               </p>
             </div>
-          </div>
-        </div>
 
-        <div className="loyalty-section">
-          <h3>Exclusive Rewards for Loyalty Members</h3>
-          <div className="tiers-grid">
-            <div className="tier-card">
-              <h4>Bronze Tier</h4>
-              <p>Get started with our loyalty program and enjoy 5% off all cleaning services. Perfect for small spaces.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Silver Tier</h4>
-              <p>Unlock 10% off all services plus one free deep cleaning per month. Ideal for regular clients.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Gold Tier</h4>
-              <p>Enjoy 15% off all services, monthly deep cleanings, and priority scheduling. Perfect for growing businesses.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Platinum Tier</h4>
-              <p>Get 20% off all services, unlimited deep cleanings, and exclusive eco-friendly products. For serious clients.</p>
+            <div className="review-item">
+              <div className="review-header">
+                <div className="reviewer-name">
+                  <span>David Thompson</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Platinum Member</span>
+                </div>
+                <span className="review-date">September 25, 2024</span>
+              </div>
+              <div className="review-rating">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+              </div>
+              <p className="review-text">
+                "Absolutely outstanding service! The move-out cleaning package saved me so much stress during my relocation. They handled everything from carpet cleaning to appliance deep-clean. The before/after photos they provided were impressive. Worth every penny!"
+              </p>
             </div>
           </div>
         </div>

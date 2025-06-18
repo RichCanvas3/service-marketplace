@@ -375,6 +375,27 @@ const TaxPage: React.FC = () => {
             ))}
           </ul>
         </div>
+        <div className="loyalty-section">
+          <h3>Exclusive Rewards for Loyalty Members</h3>
+          <div className="tiers-grid">
+            <div className="tier-card">
+              <h4>Bronze Tier</h4>
+              <p>Get started with our loyalty program and enjoy 5% off all tax services. Perfect for basic tax preparation.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Silver Tier</h4>
+              <p>Unlock 10% off all services plus one free tax consultation per month. Ideal for regular clients.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Gold Tier</h4>
+              <p>Enjoy 15% off all services, monthly consultations, and priority scheduling. Perfect for growing businesses.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Platinum Tier</h4>
+              <p>Get 20% off all services, unlimited consultations, and exclusive tax planning sessions. For serious clients.</p>
+            </div>
+          </div>
+        </div>
 
         <div className="reviews-section">
           <div
@@ -398,10 +419,10 @@ const TaxPage: React.FC = () => {
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>Green Earth Cafe</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Lisa Wang</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Verified Customer</span>
                 </div>
-                <span className="review-date">March 20, 2024</span>
+                <span className="review-date">November 20, 2024</span>
               </div>
               <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
@@ -409,17 +430,17 @@ const TaxPage: React.FC = () => {
                 ))}
               </div>
               <p className="review-text">
-                "The team at Creative Canvas transformed our cafe's branding. Their eco-friendly design approach perfectly captured our values, and the new look has significantly increased customer engagement."
+                "Rob saved me thousands on my taxes this year! As a small business owner, I was overwhelmed with deductions and paperwork. His expertise in business tax planning helped me identify write-offs I never knew existed. Professional, thorough, and always available to answer questions. Best decision I made for my business!"
               </p>
             </div>
 
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>TechStart Inc.</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Mark Stevens</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Platinum Member</span>
                 </div>
-                <span className="review-date">March 14, 2024</span>
+                <span className="review-date">October 15, 2024</span>
               </div>
               <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
@@ -427,48 +448,29 @@ const TaxPage: React.FC = () => {
                 ))}
               </div>
               <p className="review-text">
-                "Working with Creative Canvas on our website redesign was a game-changer. Their modern, user-friendly approach helped us increase our conversion rate by 40%. Highly recommend their services!"
+                "Been working with Rob for 3 years now for both personal and business taxes. His strategic tax planning sessions have been invaluable. He helps me plan year-round, not just during tax season. The peace of mind knowing my taxes are handled correctly is worth every penny."
               </p>
             </div>
 
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>Local Art Gallery</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Patricia Davis</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Gold Member</span>
                 </div>
-                <span className="review-date">March 7, 2024</span>
+                <span className="review-date">September 28, 2024</span>
               </div>
               <div className="review-rating">
-                {[...Array(5)].map((_, i) => (
+                {[...Array(4)].map((_, i) => (
                   <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+                {[...Array(1)].map((_, i) => (
+                  <span key={i} style={{ ...companyInfoStyles.star, opacity: 0.3 }}>★</span>
                 ))}
               </div>
               <p className="review-text">
-                "The exhibition catalog design was stunning. They perfectly captured the essence of our artists' work while maintaining a clean, professional layout. The attention to detail was impressive."
+                "Rob handled my complex divorce-related tax situation with great care and expertise. He explained everything clearly and made sure I understood all my options. The process was much smoother than I expected. Only wish I had found him sooner!"
               </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="loyalty-section">
-          <h3>Exclusive Rewards for Loyalty Members</h3>
-          <div className="tiers-grid">
-            <div className="tier-card">
-              <h4>Bronze Tier</h4>
-              <p>Get started with our loyalty program and enjoy 5% off all tax services. Perfect for basic tax preparation.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Silver Tier</h4>
-              <p>Unlock 10% off all services plus one free tax consultation per month. Ideal for regular clients.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Gold Tier</h4>
-              <p>Enjoy 15% off all services, monthly consultations, and priority scheduling. Perfect for growing businesses.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Platinum Tier</h4>
-              <p>Get 20% off all services, unlimited consultations, and exclusive tax planning sessions. For serious clients.</p>
             </div>
           </div>
         </div>

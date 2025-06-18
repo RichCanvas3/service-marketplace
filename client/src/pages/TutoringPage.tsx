@@ -365,6 +365,28 @@ const TutoringPage: React.FC = () => {
           </ul>
         </div>
 
+        <div className="loyalty-section">
+          <h3>Exclusive Rewards for Loyalty Members</h3>
+          <div className="tiers-grid">
+            <div className="tier-card">
+              <h4>Bronze Tier</h4>
+              <p>Get started with our loyalty program and enjoy 5% off all tutoring services. Perfect for basic tutoring needs.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Silver Tier</h4>
+              <p>Unlock 10% off all services plus one free consultation per month. Ideal for regular students.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Gold Tier</h4>
+              <p>Enjoy 15% off all services, monthly workshops, and priority scheduling. Perfect for dedicated learners.</p>
+            </div>
+            <div className="tier-card">
+              <h4>Platinum Tier</h4>
+              <p>Get 20% off all services, unlimited consultations, and exclusive tutoring sessions. For serious students.</p>
+            </div>
+          </div>
+        </div>
+
         <div className="reviews-section">
           <div
             className="reviews-header"
@@ -387,10 +409,10 @@ const TutoringPage: React.FC = () => {
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>Green Earth Cafe</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Rachel Johnson</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Verified Customer</span>
                 </div>
-                <span className="review-date">March 20, 2024</span>
+                <span className="review-date">November 30, 2024</span>
               </div>
               <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
@@ -398,17 +420,17 @@ const TutoringPage: React.FC = () => {
                 ))}
               </div>
               <p className="review-text">
-                "The team at Creative Canvas transformed our cafe's branding. Their eco-friendly design approach perfectly captured our values, and the new look has significantly increased customer engagement."
+                "Susan helped my daughter raise her math grade from a C to an A in just one semester! Her patient teaching style and ability to explain complex concepts in simple terms made all the difference. My daughter actually looks forward to math now. Incredible tutor!"
               </p>
             </div>
 
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>TechStart Inc.</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Kevin Park</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Silver Member</span>
                 </div>
-                <span className="review-date">March 14, 2024</span>
+                <span className="review-date">November 12, 2024</span>
               </div>
               <div className="review-rating">
                 {[...Array(5)].map((_, i) => (
@@ -416,48 +438,29 @@ const TutoringPage: React.FC = () => {
                 ))}
               </div>
               <p className="review-text">
-                "Working with Creative Canvas on our website redesign was a game-changer. Their modern, user-friendly approach helped us increase our conversion rate by 40%. Highly recommend their services!"
+                "Susan's SAT prep sessions were phenomenal! She helped me improve my score by 200 points. Her strategies for tackling different question types and time management were game-changers. The practice tests and personalized feedback were incredibly valuable. Got into my dream college!"
               </p>
             </div>
 
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>Local Art Gallery</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Loyalty Program Member</span>
+                  <span>Maria Gonzalez</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Gold Member</span>
                 </div>
-                <span className="review-date">March 7, 2024</span>
+                <span className="review-date">October 18, 2024</span>
               </div>
               <div className="review-rating">
-                {[...Array(5)].map((_, i) => (
+                {[...Array(4)].map((_, i) => (
                   <span key={i} style={companyInfoStyles.star}>★</span>
+                ))}
+                {[...Array(1)].map((_, i) => (
+                  <span key={i} style={{ ...companyInfoStyles.star, opacity: 0.3 }}>★</span>
                 ))}
               </div>
               <p className="review-text">
-                "The exhibition catalog design was stunning. They perfectly captured the essence of our artists' work while maintaining a clean, professional layout. The attention to detail was impressive."
+                "Susan's Spanish tutoring helped my son catch up with his class after we moved from a different state. Her bilingual approach and cultural insights made learning engaging. The progress was remarkable. Only minor issue was scheduling conflicts during exam weeks."
               </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="loyalty-section">
-          <h3>Exclusive Rewards for Loyalty Members</h3>
-          <div className="tiers-grid">
-            <div className="tier-card">
-              <h4>Bronze Tier</h4>
-              <p>Get started with our loyalty program and enjoy 5% off all tutoring services. Perfect for basic tutoring needs.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Silver Tier</h4>
-              <p>Unlock 10% off all services plus one free consultation per month. Ideal for regular students.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Gold Tier</h4>
-              <p>Enjoy 15% off all services, monthly workshops, and priority scheduling. Perfect for dedicated learners.</p>
-            </div>
-            <div className="tier-card">
-              <h4>Platinum Tier</h4>
-              <p>Get 20% off all services, unlimited consultations, and exclusive tutoring sessions. For serious students.</p>
             </div>
           </div>
         </div>
