@@ -335,13 +335,19 @@ const DesignPage: React.FC = () => {
 
   return (
     <div className="individual-page">
-      <h2>Creative Collective Design Studio</h2>
-
-      <img
-        className='service-card-image'
-        src='/images/design.jpg'
-        alt="Creative Collective Design Studio"
-      />
+      <div className="hero-section">
+        <div className="hero-image-container">
+          <img
+            className="hero-image"
+            src="/images/design.jpg"
+            alt="Creative Collective Design Studio"
+          />
+          <div className="hero-content">
+            <h2 className="hero-title">Creative Collective Design Studio</h2>
+            <p className="hero-tagline">Transform your vision into stunning reality with our expert design services</p>
+          </div>
+        </div>
+      </div>
 
       <div style={companyInfoStyles.companyInfo}>
         <div style={companyInfoStyles.infoGrid}>

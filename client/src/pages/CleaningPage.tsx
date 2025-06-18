@@ -326,19 +326,25 @@ const CleaningPage: React.FC = () => {
 
   return (
     <div className="individual-page">
-      <h2>Daisy's Home Cleaning Page</h2>
-
-      <img
-        className='service-card-image'
-        src='/images/cleaning.jpg'
-        alt="Daisy's Home Cleaning Service"
-      />
+      <div className="hero-section">
+        <div className="hero-image-container">
+          <img
+            className="hero-image"
+            src="/images/cleaning.jpg"
+            alt="Sparkle & Shine Cleaning Services"
+          />
+          <div className="hero-content">
+            <h2 className="hero-title">Daisy's Home Cleaning</h2>
+            <p className="hero-tagline">Experience the difference with our professional cleaning solutions</p>
+          </div>
+        </div>
+      </div>
 
       <div style={companyInfoStyles.companyInfo}>
         <div style={companyInfoStyles.infoGrid}>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Address</span>
-            <span style={companyInfoStyles.infoValue}>123 Maple Street, Erie, CO 16501</span>
+            <span style={companyInfoStyles.infoValue}>123 Main Street, Erie, CO 16501</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Phone</span>
@@ -512,7 +518,7 @@ const CleaningPage: React.FC = () => {
       </div>
 
       <div style={{ maxWidth: '800px', lineHeight: '1.6', width: '100%' }}>
-        <p>Welcome to Daisy's Home Cleaning Service, where we bring sparkle and shine to every corner of your home. With over a decade of experience in professional home cleaning, we understand that a clean home is more than just appearance – it's about creating a healthy, comfortable space for you and your loved ones.</p>
+        <p>Welcome to Daisy's Home Cleaning, where we bring sparkle and shine to every corner of your home. With over a decade of experience in professional home cleaning, we understand that a clean home is more than just appearance – it's about creating a healthy, comfortable space for you and your loved ones.</p>
 
         <p>Our comprehensive cleaning services include:</p>
 

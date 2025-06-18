@@ -299,23 +299,29 @@ const TrainingPage: React.FC = () => {
 
   return (
     <div className="individual-page">
-      <h2>Doug's Athletic Training</h2>
-
-      <img
-        className='service-card-image'
-        src='/images/training.jpeg'
-        alt="Doug's Athletic Training"
-      />
+      <div className="hero-section">
+        <div className="hero-image-container">
+          <img
+            className="hero-image"
+            src="/images/training.jpeg"
+            alt="Peak Performance Training"
+          />
+          <div className="hero-content">
+            <h2 className="hero-title">Doug's Athletic Training</h2>
+            <p className="hero-tagline">Elevate your fitness journey with personalized training programs</p>
+          </div>
+        </div>
+      </div>
 
       <div style={companyInfoStyles.companyInfo}>
         <div style={companyInfoStyles.infoGrid}>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Address</span>
-            <span style={companyInfoStyles.infoValue}>789 Cedar Lane, Erie, CO 16501</span>
+            <span style={companyInfoStyles.infoValue}>456 Oak Avenue, Erie, CO 16501</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Phone</span>
-            <span style={companyInfoStyles.infoValue}>(814) 555-0125</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0124</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Employees</span>

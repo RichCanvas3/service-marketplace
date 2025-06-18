@@ -307,19 +307,25 @@ const GaragePage: React.FC = () => {
 
   return (
     <div className="individual-page">
-      <h2>Mike's Mobile Garage</h2>
-
-      <img
-        className='service-card-image'
-        src='/images/mechanic.jpg'
-        alt="Mike's Mobile Garage"
-      />
+      <div className="hero-section">
+        <div className="hero-image-container">
+          <img
+            className="hero-image"
+            src="/images/mechanic.jpg"
+            alt="Auto Excellence Garage"
+          />
+          <div className="hero-content">
+            <h2 className="hero-title">Mike's Mobile Garage</h2>
+            <p className="hero-tagline">Professional auto repair and maintenance services you can trust</p>
+          </div>
+        </div>
+      </div>
 
       <div style={companyInfoStyles.companyInfo}>
         <div style={companyInfoStyles.infoGrid}>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Address</span>
-            <span style={companyInfoStyles.infoValue}>654 Pine Street, Erie, CO 16501</span>
+            <span style={companyInfoStyles.infoValue}>654 Maple Drive, Erie, CO 16501</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Phone</span>

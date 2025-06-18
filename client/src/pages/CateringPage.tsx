@@ -307,23 +307,29 @@ const CateringPage: React.FC = () => {
 
   return (
     <div className="individual-page">
-      <h2>Diane's Catering</h2>
-
-      <img
-        className='service-card-image'
-        src='/images/catering.jpg'
-        alt="Diane's Catering"
-      />
+      <div className="hero-section">
+        <div className="hero-image-container">
+          <img
+            className="hero-image"
+            src="/images/catering.jpg"
+            alt="Gourmet Delights Catering"
+          />
+          <div className="hero-content">
+            <h2 className="hero-title">Diane's Catering</h2>
+            <p className="hero-tagline">Elevate your events with our exquisite culinary experiences</p>
+          </div>
+        </div>
+      </div>
 
       <div style={companyInfoStyles.companyInfo}>
         <div style={companyInfoStyles.infoGrid}>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Address</span>
-            <span style={companyInfoStyles.infoValue}>321 Elm Street, Erie, CO 16501</span>
+            <span style={companyInfoStyles.infoValue}>987 Cedar Lane, Erie, CO 16501</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Phone</span>
-            <span style={companyInfoStyles.infoValue}>(814) 555-0126</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0128</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Employees</span>

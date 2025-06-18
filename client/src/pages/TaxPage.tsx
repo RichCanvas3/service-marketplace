@@ -304,23 +304,29 @@ const TaxPage: React.FC = () => {
 
   return (
     <div className="individual-page">
-      <h2>Rob's Tax Services</h2>
-
-      <img
-        className='service-card-image'
-        src='/images/tax-services.jpg'
-        alt="Rob's Tax Services"
-      />
+      <div className="hero-section">
+        <div className="hero-image-container">
+          <img
+            className="hero-image"
+            src="/images/tax-services.jpg"
+            alt="Precision Tax Solutions"
+          />
+          <div className="hero-content">
+            <h2 className="hero-title">Rob's Tax Services</h2>
+            <p className="hero-tagline">Expert tax services to maximize your returns and minimize stress</p>
+          </div>
+        </div>
+      </div>
 
       <div style={companyInfoStyles.companyInfo}>
         <div style={companyInfoStyles.infoGrid}>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Address</span>
-            <span style={companyInfoStyles.infoValue}>456 Oak Avenue, Erie, CO 16501</span>
+            <span style={companyInfoStyles.infoValue}>321 Elm Street, Erie, CO 16501</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Phone</span>
-            <span style={companyInfoStyles.infoValue}>(814) 555-0124</span>
+            <span style={companyInfoStyles.infoValue}>(814) 555-0126</span>
           </div>
           <div style={companyInfoStyles.infoItem}>
             <span style={companyInfoStyles.infoLabel}>Employees</span>
