@@ -118,7 +118,7 @@ const LoyaltyCardPage: React.FC = () => {
               }
             }}
           >
-            {joined ? "✓ You're already a member!" : 'Get the Loyalty Card'}
+            {joined ? "✓ You're a member!" : 'Get the Loyalty Card'}
           </button>
 
           {joined && (
