@@ -367,7 +367,6 @@ const DesignPage: React.FC = () => {
           <h3 className="section-title">About Our Services</h3>
           <div style={{ maxWidth: '800px', lineHeight: 'var(--line-height-relaxed)' }}>
             <p>Welcome to Creative Collective Design Studio, where we transform your vision into stunning reality. Our team of expert designers combines creativity with technical expertise to deliver exceptional design solutions for your business.</p>
-            <p>Our comprehensive design services include:</p>
           </div>
         </div>
 

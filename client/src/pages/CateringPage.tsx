@@ -341,7 +341,6 @@ const CateringPage: React.FC = () => {
           <h3 className="section-title">About Our Services</h3>
           <div style={{ maxWidth: '800px', lineHeight: 'var(--line-height-relaxed)' }}>
             <p>Welcome to Creative Collective Catering Studio, where we create memorable culinary experiences for your events. Our team of expert chefs and event specialists combines creativity with exceptional service to deliver unforgettable catering solutions.</p>
-            <p>Our comprehensive catering services include:</p>
           </div>
         </div>
 

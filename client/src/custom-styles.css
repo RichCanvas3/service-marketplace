@@ -1593,6 +1593,10 @@ div.loyalty-section {
   margin-top: var(--spacing-md);
 }
 
+.review-list {
+  padding-left: 0px;
+}
+
 .review-item {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 16px;

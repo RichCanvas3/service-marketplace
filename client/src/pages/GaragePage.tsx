@@ -341,7 +341,6 @@ const GaragePage: React.FC = () => {
           <h3 className="section-title">About Our Services</h3>
           <div style={{ maxWidth: '800px', lineHeight: 'var(--line-height-relaxed)' }}>
             <p>Welcome to Creative Collective Garage Studio, where we provide expert automotive services for your vehicle. Our team of certified mechanics combines technical expertise with customer-focused service to keep your vehicle running smoothly.</p>
-            <p>Our comprehensive garage services include:</p>
           </div>
         </div>
 

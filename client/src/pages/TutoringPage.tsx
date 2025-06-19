@@ -327,7 +327,6 @@ const TutoringPage: React.FC = () => {
           <h3 className="section-title">About Our Services</h3>
           <div style={{ maxWidth: '800px', lineHeight: 'var(--line-height-relaxed)' }}>
             <p>Welcome to Creative Collective Tutoring Studio, where we provide expert tutoring and educational support services. Our team of experienced educators combines academic expertise with personalized teaching methods to help students achieve their goals.</p>
-            <p>Our comprehensive tutoring services include:</p>
           </div>
         </div>
 

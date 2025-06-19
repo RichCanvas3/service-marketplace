@@ -248,7 +248,7 @@ const AccountPage: React.FC = () => {
               </div>
               <div style={{ width: '100%', margin: '12px 0', background: '#fff2', height: 1, borderRadius: 1 }} />
               <div style={{ width: '100%', marginBottom: 8 }}>
-                <div style={{ fontWeight: 600, marginBottom: 4, color: '#a78bfa', fontSize: 16 }}>Account ID</div>
+                <div style={{ fontWeight: 600, marginBottom: 4, color: '#a78bfa', fontSize: 16 }}>MetaMask Account ID</div>
                 <div style={{ fontFamily: 'monospace', fontSize: 15, color: '#e0e0e0', background: '#18181b', borderRadius: 8, padding: '6px 10px', wordBreak: 'break-all' }}>{mcoData.userId}</div>
               </div>
               <div style={{ width: '100%', marginBottom: 8 }}>
@@ -270,6 +270,39 @@ const AccountPage: React.FC = () => {
                       🎁 {r.name} <span style={{ fontSize: 13, color: '#a16207', marginLeft: 6 }}>({r.points} pts)</span>
                     </div>
                   )) : <span style={{ color: '#bdbdbd' }}>No rewards yet</span>}
+                </div>
+              </div>
+              <div style={{ width: '100%', marginBottom: 8 }}>
+                <div style={{ fontWeight: 600, marginBottom: 4, color: '#a78bfa', fontSize: 16 }}>Linked Payment Method</div>
+                <div style={{
+                  background: '#18181b',
+                  borderRadius: 10,
+                  padding: '12px 16px',
+                  color: '#e0e0e0',
+                  fontSize: 15,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  border: '1px solid #2d3748'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{
+                      background: 'linear-gradient(135deg, #4338ca, #6366f1)',
+                      borderRadius: 6,
+                      padding: '6px 10px',
+                      color: 'white',
+                      fontSize: 13,
+                      fontWeight: 600
+                    }}>VISA</div>
+                    <div>
+                      <div style={{ fontWeight: 600 }}>•••• •••• •••• 4892</div>
+                      <div style={{ fontSize: 13, color: '#9ca3af' }}>Personal Card</div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ color: '#34d399', fontWeight: 600, fontSize: 16 }}>$247.85</div>
+                    <div style={{ fontSize: 13, color: '#9ca3af' }}>Available Balance</div>
+                  </div>
                 </div>
               </div>
               <div style={{ width: '100%', marginBottom: 8 }}>
