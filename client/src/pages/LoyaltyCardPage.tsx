@@ -36,6 +36,12 @@ const LoyaltyCardPage: React.FC = () => {
           date: '2024-05-15',
           amount: 150,
           description: serviceList[1]?.services[0]?.name
+        },
+        {
+          service: serviceList[1]?.name,
+          date: '2024-05-15',
+          amount: 150,
+          description: serviceList[1]?.services[0]?.name
         }
       ],
       lastUpdated: new Date().toISOString()

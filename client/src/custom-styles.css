@@ -606,11 +606,6 @@ a.header-title:hover {
   gap: 8px;
 }
 
-.service-list-item-name label::before {
-  content: '✨';
-  font-size: 1.2rem;
-}
-
 .service-list-item-description {
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
@@ -679,11 +674,6 @@ a.header-title:hover {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-}
-
-.service-list-item-price span:last-child::before {
-  content: '🎯';
-  font-size: 0.9rem;
 }
 
 .service-card-actions {

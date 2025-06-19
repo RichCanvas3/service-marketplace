@@ -11,6 +11,24 @@ const AccountPage: React.FC = () => {
   const [preferredName, setPreferredName] = useState<string>('');
   const [saveMsg, setSaveMsg] = useState<string>('');
   const [mcoData, setMcoData] = useState<any>(null);
+  const [ethBalance, setEthBalance] = useState<string>('0.0000');
+
+  const getEthBalance = async () => {
+    if (window.ethereum && account) {
+      try {
+        const balance = await window.ethereum.request({
+          method: 'eth_getBalance',
+          params: [account, 'latest']
+        });
+        // Convert from wei to ETH
+        const ethValue = parseInt(balance, 16) / Math.pow(10, 18);
+        setEthBalance(ethValue.toFixed(4));
+      } catch (error) {
+        console.error('Error getting balance:', error);
+        setEthBalance('Error');
+      }
+    }
+  };
 
   useEffect(() => {
     const getNetwork = async () => {
@@ -39,8 +57,9 @@ const AccountPage: React.FC = () => {
     };
 
     getNetwork();
+    getEthBalance();
 
-    // Listen for network changes
+    // Listen for network changes and account changes
     if (window.ethereum) {
       window.ethereum.on('chainChanged', (chainId: string) => {
         switch (chainId) {
@@ -56,6 +75,13 @@ const AccountPage: React.FC = () => {
           default:
             setNetwork(`Unknown Network (${chainId})`);
         }
+        // Refresh balance when network changes
+        getEthBalance();
+      });
+
+      window.ethereum.on('accountsChanged', () => {
+        // Refresh balance when account changes
+        getEthBalance();
       });
     }
 
@@ -70,6 +96,7 @@ const AccountPage: React.FC = () => {
     return () => {
       if (window.ethereum) {
         window.ethereum.removeListener('chainChanged', () => {});
+        window.ethereum.removeListener('accountsChanged', () => {});
       }
     };
   }, []);
@@ -242,7 +269,7 @@ const AccountPage: React.FC = () => {
               <div style={{ display: 'flex', gap: 24, marginBottom: 8 }}>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontSize: 32, fontWeight: 700, color: '#fbbf24' }}>★</div>
-                  <div style={{ fontSize: 18, fontWeight: 600 }}>{mcoData.loyaltyPoints}</div>
+                  <div style={{ fontSize: 64, fontWeight: 600 }}>{mcoData.loyaltyPoints}</div>
                   <div style={{ fontSize: 13, color: '#bdbdbd' }}>Points</div>
                 </div>
               </div>
@@ -272,8 +299,41 @@ const AccountPage: React.FC = () => {
                   )) : <span style={{ color: '#bdbdbd' }}>No rewards yet</span>}
                 </div>
               </div>
-              <div style={{ width: '100%', marginBottom: 8 }}>
-                <div style={{ fontWeight: 600, marginBottom: 4, color: '#a78bfa', fontSize: 16 }}>Linked Payment Method</div>
+                            <div style={{ width: '100%', marginBottom: 8 }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: 4
+                }}>
+                  <div style={{ fontWeight: 600, color: '#a78bfa', fontSize: 16 }}>Linked Payment Methods</div>
+                  <button
+                    onClick={getEthBalance}
+                    style={{
+                      background: 'transparent',
+                      border: '1px solid #a78bfa',
+                      color: '#a78bfa',
+                      borderRadius: 6,
+                      padding: '4px 8px',
+                      fontSize: 12,
+                      cursor: 'pointer',
+                      fontWeight: 500,
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.target as HTMLButtonElement).style.backgroundColor = '#a78bfa';
+                      (e.target as HTMLButtonElement).style.color = '#232323';
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.target as HTMLButtonElement).style.backgroundColor = 'transparent';
+                      (e.target as HTMLButtonElement).style.color = '#a78bfa';
+                    }}
+                  >
+                    Refresh ETH
+                  </button>
+                </div>
+
+                {/* VISA Card */}
                 <div style={{
                   background: '#18181b',
                   borderRadius: 10,
@@ -283,7 +343,8 @@ const AccountPage: React.FC = () => {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  border: '1px solid #2d3748'
+                  border: '1px solid #2d3748',
+                  marginBottom: 8
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{
@@ -304,9 +365,116 @@ const AccountPage: React.FC = () => {
                     <div style={{ fontSize: 13, color: '#9ca3af' }}>Available Balance</div>
                   </div>
                 </div>
+
+                {/* MetaMask Wallet */}
+                <div style={{
+                  background: '#18181b',
+                  borderRadius: 10,
+                  padding: '12px 16px',
+                  color: '#e0e0e0',
+                  fontSize: 15,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  border: '1px solid #2d3748'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{
+                      background: 'linear-gradient(135deg, #627eea, #8b9aeb)',
+                      borderRadius: 6,
+                      padding: '6px 10px',
+                      color: 'white',
+                      fontSize: 13,
+                      fontWeight: 600
+                    }}>ETH</div>
+                    <div>
+                      <div style={{ fontWeight: 600 }}>MetaMask Wallet</div>
+                      <div style={{ fontSize: 13, color: '#9ca3af' }}>{account ? `${account.slice(0, 6)}...${account.slice(-4)}` : 'Not Connected'}</div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ color: '#34d399', fontWeight: 600, fontSize: 16 }}>{ethBalance} ETH</div>
+                    <div style={{ fontSize: 13, color: '#9ca3af' }}>Available Balance</div>
+                  </div>
+                </div>
               </div>
               <div style={{ width: '100%', marginBottom: 8 }}>
-                <div style={{ fontWeight: 600, marginBottom: 4, color: '#a78bfa', fontSize: 16 }}>Past Transactions</div>
+                <div style={{ fontWeight: 600, marginBottom: 4, color: '#a78bfa', fontSize: 16 }}>Referral Bonuses</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {/* Completed Referral */}
+                  <div style={{
+                    background: '#18181b',
+                    borderRadius: 10,
+                    padding: '12px 16px',
+                    color: '#e0e0e0',
+                    fontSize: 15,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    border: '1px solid #34d399'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <div style={{
+                        background: '#34d399',
+                        borderRadius: '50%',
+                        width: 8,
+                        height: 8
+                      }}></div>
+                      <div>
+                        <div style={{ fontWeight: 600, color: '#f7fafc' }}>Friend Referral Complete</div>
+                        <div style={{ fontSize: 13, color: '#9ca3af' }}>John Smith purchased a service via your referral</div>
+                      </div>
+                    </div>
+                    <div style={{ color: '#34d399', fontWeight: 600, fontSize: 16 }}>+$10.00</div>
+                  </div>
+
+                  {/* Pending Referral */}
+                  <div style={{
+                    background: '#18181b',
+                    borderRadius: 10,
+                    padding: '12px 16px',
+                    color: '#e0e0e0',
+                    fontSize: 15,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    border: '1px solid #fbbf24'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <div style={{
+                        background: '#fbbf24',
+                        borderRadius: '50%',
+                        width: 8,
+                        height: 8
+                      }}></div>
+                      <div>
+                        <div style={{ fontWeight: 600, color: '#f7fafc' }}>Referral Pending</div>
+                        <div style={{ fontSize: 13, color: '#9ca3af' }}>Sarah Johnson - awaiting first purchase</div>
+                      </div>
+                    </div>
+                    <div style={{ color: '#fbbf24', fontWeight: 600, fontSize: 16 }}>+$10.00</div>
+                  </div>
+
+                  {/* Total Counter */}
+                  <div style={{
+                    background: 'linear-gradient(135deg, #a78bfa, #9f7aea)',
+                    borderRadius: 10,
+                    padding: '12px 16px',
+                    color: 'white',
+                    fontSize: 15,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginTop: 4,
+                    boxShadow: '0 4px 12px rgba(167, 139, 250, 0.3)'
+                  }}>
+                    <div style={{ fontWeight: 600, fontSize: 16 }}>Total Referral Points</div>
+                    <div style={{ fontWeight: 700, fontSize: 18 }}>$10.00</div>
+                  </div>
+                </div>
+              </div>
+              <div style={{ width: '100%', marginBottom: 8 }}>
+                <div style={{ fontWeight: 600, marginBottom: 4, color: '#a78bfa', fontSize: 16 }}>My Past Transactions</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {mcoData.pastTransactions && mcoData.pastTransactions.length > 0 ? mcoData.pastTransactions.map((t: any, i: number) => (
                     <div key={i} style={{
