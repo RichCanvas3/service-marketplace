@@ -100,6 +100,7 @@ const TrainingPage: React.FC = () => {
               >
                 Learn more
               </Link>
+              .
             </div>
             <h3>Step 1: Select Services</h3>
             <ul className="service-list">
@@ -217,7 +218,7 @@ const TrainingPage: React.FC = () => {
                     'Silver': 10,
                     'Gold': 15,
                     'Platinum': 20
-                  }[membershipLevel];
+                                     }[membershipLevel as 'Bronze' | 'Silver' | 'Gold' | 'Platinum'];
 
                   const totalBeforeDiscount = selectedServices.reduce((total, serviceName) => {
                     const service = datServices.find(s => s.name === serviceName);
@@ -313,6 +314,28 @@ const TrainingPage: React.FC = () => {
         </div>
       </div>
 
+        {/* Book Services Button - Prominent Position */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          margin: '32px 0',
+          padding: '0 20px'
+        }}>
+          <button
+            className="service-button"
+            onClick={() => setIsModalOpen(true)}
+            style={{
+              fontSize: '18px',
+              padding: '16px 32px',
+              fontWeight: '700',
+              boxShadow: '0 8px 16px rgba(237, 137, 54, 0.3)',
+              transform: 'scale(1.05)'
+            }}
+          >
+            💪 Book Doug's Athletic Training
+          </button>
+        </div>
+
       <div style={companyInfoStyles.companyInfo}>
         <div style={companyInfoStyles.infoGrid}>
           <div style={companyInfoStyles.infoItem}>
@@ -327,10 +350,34 @@ const TrainingPage: React.FC = () => {
             <span style={companyInfoStyles.infoLabel}>Employees</span>
             <span style={companyInfoStyles.infoValue}>{employees.training.length} Team Members</span>
           </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>KYB Credibility</span>
+            <span style={{
+              ...companyInfoStyles.infoValue,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <span style={{
+                background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                color: 'white',
+                padding: '4px 12px',
+                borderRadius: '20px',
+                fontSize: '14px',
+                fontWeight: '600',
+                boxShadow: '0 2px 4px rgba(34, 197, 94, 0.3)'
+              }}>91.7/100</span>
+              <span style={{
+                fontSize: '12px',
+                color: '#22c55e',
+                fontWeight: '500'
+              }}>✓ Verified</span>
+            </span>
+          </div>
         </div>
 
         <div className="section">
-          <h3 className="section-title">About Our Services</h3>
+          <h3 className="section-title">About Us</h3>
           <div style={{ maxWidth: '800px', lineHeight: 'var(--line-height-relaxed)' }}>
             <p>Welcome to Creative Collective Training Studio, where we provide professional development and skill enhancement programs. Our team of expert trainers combines industry knowledge with engaging teaching methods to deliver exceptional learning experiences.</p>
           </div>
@@ -490,9 +537,7 @@ const TrainingPage: React.FC = () => {
         <p>Serving the Erie area and surrounding communities, we're dedicated to helping you achieve your fitness goals through expert guidance and motivation. Ready to start your transformation?</p>
       </div>
 
-      <button className="service-button" onClick={() => setIsModalOpen(true)}>
-        Book Training
-      </button>
+
 
       <Modal
         isOpen={isModalOpen}

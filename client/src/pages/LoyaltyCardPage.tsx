@@ -19,29 +19,28 @@ const LoyaltyCardPage: React.FC = () => {
       userId: account || mcoObj.userId || '',
       loyaltyMember: true,
       membershipLevel: 'Bronze',
-      loyaltyPoints: 300,
+      loyaltyPoints: 370,
       rewards: [
-        { id: 1, name: '5% Off Next Service', points: 50 },
-        { id: 2, name: 'Free Consultation', points: 100 }
+        { id: 1, name: '5% Off Next House Cleaning', summary: 'Reward for writing a review and referring a friend', points: 100 }
       ],
       pastTransactions: [
         {
           service: serviceList[0]?.name,
-          date: '2024-05-01',
+          date: '2024-05-15',
           amount: 120,
           description: serviceList[0]?.services[0]?.name
         },
         {
           service: serviceList[1]?.name,
-          date: '2024-05-15',
+          date: '2024-03-12',
           amount: 150,
           description: serviceList[1]?.services[0]?.name
         },
         {
-          service: serviceList[1]?.name,
-          date: '2024-05-15',
-          amount: 150,
-          description: serviceList[1]?.services[0]?.name
+          service: serviceList[2]?.name,
+          date: '2024-01-22',
+          amount: 100,
+          description: serviceList[2]?.services[1]?.name
         }
       ],
       lastUpdated: new Date().toISOString()

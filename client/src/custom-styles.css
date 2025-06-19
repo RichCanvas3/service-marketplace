@@ -330,7 +330,6 @@ a.header-title:hover {
   margin: 0 auto;
   place-content: center;
   align-items: start;
-  transform: translateX(-150px);
 }
 
 .service-tags {

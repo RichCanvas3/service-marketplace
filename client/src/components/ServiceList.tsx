@@ -54,12 +54,12 @@ const ServiceList: React.FC<SearchProps> = ({ searchQuery }) => {
   return (
     <div>
       <div className="filter-tags" style={{
-        display: 'flex',
+        display: 'none',
         flexWrap: 'wrap',
         gap: '12px',
         marginBottom: '24px',
         padding: '0 40px',
-        width: '100%'
+        width: 'auto%'
       }}>
         {allTags.map((tag) => (
           <span

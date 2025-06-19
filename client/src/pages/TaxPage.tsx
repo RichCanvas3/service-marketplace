@@ -107,6 +107,7 @@ const TaxPage: React.FC = () => {
               <Link to="/loyalty-card" style={{ color: '#ED8936', textDecoration: 'underline' }}>
                 Learn more
               </Link>
+              .
             </div>
             <ul className="service-list">
               {rtsServices.map((service, index) => (
@@ -222,7 +223,7 @@ const TaxPage: React.FC = () => {
                     'Silver': 10,
                     'Gold': 15,
                     'Platinum': 20
-                  }[membershipLevel];
+                                     }[membershipLevel as 'Bronze' | 'Silver' | 'Gold' | 'Platinum'];
 
                   const totalBeforeDiscount = selectedServices.reduce((total, serviceName) => {
                     const service = rtsServices.find(s => s.name === serviceName);
@@ -318,6 +319,28 @@ const TaxPage: React.FC = () => {
         </div>
       </div>
 
+        {/* Book Services Button - Prominent Position */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          margin: '32px 0',
+          padding: '0 20px'
+        }}>
+          <button
+            className="service-button"
+            onClick={() => setIsModalOpen(true)}
+            style={{
+              fontSize: '18px',
+              padding: '16px 32px',
+              fontWeight: '700',
+              boxShadow: '0 8px 16px rgba(237, 137, 54, 0.3)',
+              transform: 'scale(1.05)'
+            }}
+          >
+            📋 Book Rob's Tax Services
+          </button>
+        </div>
+
       <div style={companyInfoStyles.companyInfo}>
         <div style={companyInfoStyles.infoGrid}>
           <div style={companyInfoStyles.infoItem}>
@@ -332,10 +355,34 @@ const TaxPage: React.FC = () => {
             <span style={companyInfoStyles.infoLabel}>Employees</span>
             <span style={companyInfoStyles.infoValue}>{employees.tax.length} Team Members</span>
           </div>
+          <div style={companyInfoStyles.infoItem}>
+            <span style={companyInfoStyles.infoLabel}>KYB Credibility</span>
+            <span style={{
+              ...companyInfoStyles.infoValue,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <span style={{
+                background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                color: 'white',
+                padding: '4px 12px',
+                borderRadius: '20px',
+                fontSize: '14px',
+                fontWeight: '600',
+                boxShadow: '0 2px 4px rgba(34, 197, 94, 0.3)'
+              }}>97.8/100</span>
+              <span style={{
+                fontSize: '12px',
+                color: '#22c55e',
+                fontWeight: '500'
+              }}>✓ Verified</span>
+            </span>
+          </div>
         </div>
 
         <div className="section">
-          <h3 className="section-title">About Our Services</h3>
+          <h3 className="section-title">About Us</h3>
           <div style={{ maxWidth: '800px', lineHeight: 'var(--line-height-relaxed)' }}>
             <p>Welcome to Creative Collective Tax Studio, where we provide expert tax preparation and planning services. Our team of certified tax professionals combines technical expertise with personalized service to help you navigate complex tax situations.</p>
           </div>
@@ -494,9 +541,7 @@ const TaxPage: React.FC = () => {
         <p>Serving the Erie area and surrounding communities, we're committed to helping you navigate the complexities of tax planning and preparation. Ready to optimize your tax strategy?</p>
       </div>
 
-      <button className="service-button" onClick={() => setIsModalOpen(true)}>
-        Book Consultation
-      </button>
+
 
       <Modal
         isOpen={isModalOpen}
