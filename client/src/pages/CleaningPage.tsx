@@ -315,7 +315,6 @@ const CleaningPage: React.FC = () => {
                 >
                   Pay with Loyalty Card
                 </button>
-                <a href="#" className="help-link" onClick={handleInfoClick}>What is this?</a>
               </div>
             </div>
           </div>
