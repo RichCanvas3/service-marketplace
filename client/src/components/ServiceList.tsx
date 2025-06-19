@@ -13,8 +13,14 @@ const ServiceList: React.FC<SearchProps> = ({ searchQuery }) => {
   const [filteredServices, setFilteredServices] = useState(data);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  // Get all unique tags from services
-  const allTags = Array.from(new Set(data.flatMap(service => service.tags)));
+  // Get all unique tags from services, filtered and sorted alphabetically
+  const allTags = Array.from(
+    new Set(
+      data
+        .flatMap(service => service.tags)
+        .filter(tag => tag && tag.trim().length > 0)
+    )
+  ).sort((a, b) => a.localeCompare(b));
 
   const handleTagClick = (tag: string) => {
     setSelectedTags(prev =>
@@ -50,20 +56,42 @@ const ServiceList: React.FC<SearchProps> = ({ searchQuery }) => {
       <div className="filter-tags" style={{
         display: 'flex',
         flexWrap: 'wrap',
-        gap: '8px',
-        marginBottom: '20px',
+        gap: '12px',
+        marginBottom: '24px',
         padding: '0 40px',
         width: '100%'
       }}>
-        {allTags.map((tag, index) => (
+        {allTags.map((tag) => (
           <span
-            key={index}
+            key={tag}
             className="service-tag"
             style={{
               cursor: 'pointer',
-              backgroundColor: selectedTags.includes(tag) ? 'var(--accent-color-secondary)' : 'var(--accent-color)'
+              padding: '8px 16px',
+              borderRadius: '20px',
+              fontSize: '14px',
+              fontWeight: '500',
+              border: '2px solid transparent',
+              transition: 'all 0.2s ease',
+              backgroundColor: selectedTags.includes(tag)
+                ? 'var(--accent-color-secondary)'
+                : 'var(--accent-color)',
+              transform: selectedTags.includes(tag) ? 'scale(1.05)' : 'scale(1)',
+              boxShadow: selectedTags.includes(tag)
+                ? '0 2px 8px rgba(0,0,0,0.15)'
+                : '0 1px 3px rgba(0,0,0,0.1)'
             }}
             onClick={() => handleTagClick(tag)}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.05)';
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = selectedTags.includes(tag) ? 'scale(1.05)' : 'scale(1)';
+              e.currentTarget.style.boxShadow = selectedTags.includes(tag)
+                ? '0 2px 8px rgba(0,0,0,0.15)'
+                : '0 1px 3px rgba(0,0,0,0.1)';
+            }}
           >
             {tag}
           </span>
