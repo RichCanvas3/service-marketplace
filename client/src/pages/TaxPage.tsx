@@ -351,13 +351,6 @@ const TaxPage: React.FC = () => {
                 className={`service-list-item ${index === 0 ? 'popular' : ''}`}
               >
                 <div className="service-list-item-checkbox">
-                  <input
-                    type="checkbox"
-                    id={`service-${index}`}
-                    checked={selectedServices.includes(service.name)}
-                    onChange={() => handleServiceToggle(service.name)}
-                    className="service-checkbox"
-                  />
                   <div className="service-list-item-name">
                     <label htmlFor={`service-${index}`}>{service.name}</label>
                     {service.description && (
@@ -420,7 +413,7 @@ const TaxPage: React.FC = () => {
               <div className="review-header">
                 <div className="reviewer-name">
                   <span>Lisa Wang</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Verified Customer</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Bronze Member</span>
                 </div>
                 <span className="review-date">November 20, 2024</span>
               </div>

@@ -354,13 +354,6 @@ const GaragePage: React.FC = () => {
                 className={`service-list-item ${index === 0 ? 'popular' : ''}`}
               >
                 <div className="service-list-item-checkbox">
-                  <input
-                    type="checkbox"
-                    id={`service-${index}`}
-                    checked={selectedServices.includes(service.name)}
-                    onChange={() => handleServiceToggle(service.name)}
-                    className="service-checkbox"
-                  />
                   <div className="service-list-item-name">
                     <label htmlFor={`service-${index}`}>{service.name}</label>
                     {service.description && (
@@ -424,7 +417,7 @@ const GaragePage: React.FC = () => {
               <div className="review-header">
                 <div className="reviewer-name">
                   <span>Steve Richardson</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Verified Customer</span>
+                  <span style={companyInfoStyles.loyaltyLabel}>Bronze Member</span>
                 </div>
                 <span className="review-date">December 1, 2024</span>
               </div>

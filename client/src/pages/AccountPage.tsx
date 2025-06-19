@@ -220,7 +220,7 @@ const AccountPage: React.FC = () => {
               marginBottom: 32,
               color: '#fff',
               width: '100%',
-              maxWidth: 520,
+              maxWidth: 750,
               boxShadow: '0 6px 32px 0 rgba(80,60,180,0.18)',
               display: 'flex',
               flexDirection: 'column',
@@ -293,7 +293,6 @@ const AccountPage: React.FC = () => {
                   )) : <span style={{ color: '#bdbdbd' }}>No transactions yet</span>}
                 </div>
               </div>
-              <div style={{ fontSize: 12, color: '#bdbdbd', marginTop: 10 }}>Last updated: {new Date(mcoData.lastUpdated).toLocaleString()}</div>
             </div>
           ) : (
             <div style={{ color: '#aaa', background: '#232323', borderRadius: 16, padding: 24, marginTop: 16, fontSize: 16, maxWidth: 420, textAlign: 'center' }}>
