@@ -262,18 +262,49 @@ a.header-title:hover {
 
 .service-card-content {
   display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+}
+
+.service-card-header {
+  display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 10px;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.service-name-and-location {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.service-card-header h3 {
+  margin: 0;
+  padding: 0;
+  line-height: 1.3;
+}
+
+.service-zip-badge {
+  width: fit-content;
+}
+
+.kyb-credibility-badge {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.service-card-info {
+  margin: 0;
 }
 
 .service-zip {
-  background-color: var(--secondary-color);
-  padding: 6px 12px;
-  border-radius: 8px;
+  color: #888;
   font-size: 14px;
   margin: 0;
-  color: var(--text-color);
   font-weight: 500;
 }
 

@@ -4,6 +4,7 @@
     "name": "Daisy's Home Cleaning",
     "linkTo": "/dhc",
     "zipCode": "80516",
+    "kybCredibilityScore": 94.2,
     "tags": ["residential", "eco-friendly", "deep-clean", "weekly", "sanitizing"],
     "services": [
       {
@@ -33,6 +34,7 @@
     "name": "Rob's Tax Services",
     "linkTo": "/rts",
     "zipCode": "80516",
+    "kybCredibilityScore": 97.8,
     "tags": ["accounting", "business", "personal", "consulting", "planning"],
     "services": [
       {
@@ -57,6 +59,7 @@
     "name": "Doug's Athletic Training",
     "linkTo": "/dat",
     "zipCode": "80516",
+    "kybCredibilityScore": 91.7,
     "tags": ["fitness", "strength", "cardio", "personal", "nutrition"],
     "services": [
       {
@@ -81,6 +84,7 @@
     "name": "Diane's Catering",
     "linkTo": "/dc",
     "zipCode": "80026",
+    "kybCredibilityScore": 95.1,
     "tags": ["events", "corporate", "weddings", "gourmet", "custom"],
     "services": [
       {
@@ -105,6 +109,7 @@
     "name": "Mike's Mobile Garage",
     "linkTo": "/mmg",
     "zipCode": "80496",
+    "kybCredibilityScore": 93.5,
     "tags": ["automotive", "repairs", "mobile", "diagnostic", "maintenance"],
     "services": [
       {
@@ -129,6 +134,7 @@
     "name": "ABC Tutoring",
     "linkTo": "/abct",
     "zipCode": "80510",
+    "kybCredibilityScore": 96.3,
     "tags": ["mathematics", "science", "english", "test-prep", "homework"],
     "services": [
       {
@@ -153,6 +159,7 @@
     "name": "Creative Collective Design Studio",
     "linkTo": "/ccds",
     "zipCode": "80523",
+    "kybCredibilityScore": 87.4,
     "tags": ["branding", "digital", "print", "web", "packaging"],
     "services": [
       {

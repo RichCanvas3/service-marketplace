@@ -106,6 +106,7 @@ const ServiceList: React.FC<SearchProps> = ({ searchQuery }) => {
             linkTo={service.linkTo}
             zipCode={service.zipCode}
             tags={service.tags}
+            kybCredibilityScore={service.kybCredibilityScore}
           />
         ))}
       </div>
