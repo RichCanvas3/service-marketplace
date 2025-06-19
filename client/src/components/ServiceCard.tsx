@@ -18,10 +18,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ url, name, linkTo, zipCode, t
 
   // Function to get color based on credibility score
   const getCredibilityColor = (score: number) => {
-    if (score >= 90) return { primary: '#22c55e', secondary: '#16a34a' }; // Green
-    if (score >= 80) return { primary: '#eab308', secondary: '#ca8a04' }; // Yellow
-    if (score >= 70) return { primary: '#f97316', secondary: '#ea580c' }; // Orange
-    return { primary: '#ef4444', secondary: '#dc2626' }; // Red
+    if (score >= 90) return { primary: '#22c55e', secondary: '#16a34a', name: 'Excellent' }; // Green
+    if (score >= 80) return { primary: '#eab308', secondary: '#ca8a04', name: 'Very Good' }; // Yellow
+    if (score >= 70) return { primary: '#f97316', secondary: '#ea580c', name: 'Good' }; // Orange
+    return { primary: '#ef4444', secondary: '#dc2626', name: 'Fair' }; // Red
   };
 
   const credibilityColors = getCredibilityColor(kybCredibilityScore);
@@ -29,46 +29,43 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ url, name, linkTo, zipCode, t
   return (
     <a href={linkTo} className="service-card-link">
       <div className='service-card'>
-        <img
-          className='service-card-image'
-          src={url}
-          loading="lazy"
-          width={600}
-          height={400}
-          alt={`${name} service`}
-        />
+        <div className="service-card-image-container">
+          <img
+            className='service-card-image'
+            src={url}
+            loading="lazy"
+            width={600}
+            height={400}
+            alt={`${name} service`}
+          />
+          <div className="service-card-overlay">
+            <div className="service-card-gradient"></div>
+          </div>
+        </div>
+
         <div className="service-card-content">
           <div className="service-card-header">
             <div className="service-name-and-location">
-              <h3><b>{name}</b></h3>
-              <div className="service-zip-badge" style={{
-                backgroundColor: '#2a2a2a',
-                color: '#ccc',
-                padding: '4px 8px',
-                borderRadius: '8px',
-                fontSize: '12px',
-                fontWeight: '500',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px',
-                marginTop: '4px',
-                border: '1px solid #404040'
-              }}>
-                📍 {zipCode}
+              <h3 className="service-card-title">{name}</h3>
+              <div className="service-location-badge">
+                <span className="location-icon">📍</span>
+                <span className="location-text">{zipCode}</span>
               </div>
             </div>
-            <div className="kyb-credibility-badge" style={{
-              background: `linear-gradient(135deg, ${credibilityColors.primary}, ${credibilityColors.secondary})`,
-              color: 'white',
-              padding: '4px 8px',
-              borderRadius: '12px',
-              fontSize: '12px',
-              fontWeight: '600',
-              boxShadow: `0 2px 4px rgba(${credibilityColors.primary === '#22c55e' ? '34, 197, 94' : credibilityColors.primary === '#eab308' ? '234, 179, 8' : credibilityColors.primary === '#f97316' ? '249, 115, 22' : '239, 68, 68'}, 0.3)`,
-              whiteSpace: 'nowrap',
-              display: 'inline-block'
-            }}>
-              {kybCredibilityScore}/100
+
+            <div className="service-credibility-container">
+              <div className="kyb-credibility-badge" style={{
+                background: `linear-gradient(135deg, ${credibilityColors.primary}, ${credibilityColors.secondary})`,
+                boxShadow: `0 4px 12px rgba(${credibilityColors.primary === '#22c55e' ? '34, 197, 94' : credibilityColors.primary === '#eab308' ? '234, 179, 8' : credibilityColors.primary === '#f97316' ? '249, 115, 22' : '239, 68, 68'}, 0.3)`
+              }}>
+                <span className="score-number">{kybCredibilityScore}</span>
+                <span className="score-label">/100</span>
+              </div>
+              <div className="credibility-label" style={{
+                color: credibilityColors.primary
+              }}>
+                {credibilityColors.name}
+              </div>
             </div>
           </div>
 
