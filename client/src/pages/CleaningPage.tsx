@@ -111,13 +111,13 @@ const CleaningPage: React.FC = () => {
     console.log('Card data submitted:', cardData);
     setIsCardFormOpen(false);
     handleCloseModal();
-    showNotification('Request sent!', 'success');
+    showNotification('Service request sent!', 'success');
   };
 
   const handleButton2Click = () => {
     console.log('Loyalty card payment clicked');
     handleCloseModal();
-    showNotification('Request sent!', 'success');
+    showNotification('Service request sent!', 'success');
   };
 
   const renderStepContent = () => {

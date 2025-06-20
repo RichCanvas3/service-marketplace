@@ -62,9 +62,6 @@ const Notification: React.FC<NotificationProps> = ({
         <div className="notification-text">
           <span className="notification-message">{message}</span>
         </div>
-        <button className="notification-close" onClick={handleClose}>
-          <span className="close-icon">×</span>
-        </button>
       </div>
       <div className="notification-progress">
         <div
