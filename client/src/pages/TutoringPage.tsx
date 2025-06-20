@@ -5,6 +5,7 @@ import employees from '../components/data/employees.json';
 import { companyInfoStyles } from '../styles/companyInfoStyles';
 import '../custom-styles.css'
 import { Link } from 'react-router-dom';
+import { useNotification } from '../context/NotificationContext';
 
 interface Service {
   name: string;
@@ -13,6 +14,7 @@ interface Service {
 }
 
 const TutoringPage: React.FC = () => {
+  const { showNotification } = useNotification();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
@@ -71,13 +73,15 @@ const TutoringPage: React.FC = () => {
   };
 
   const handleButton1Click = () => {
-    console.log('Button 1 clicked');
-    // Add your button 1 logic here
+    console.log('Credit card payment clicked');
+    handleCloseModal();
+    showNotification('Request sent!', 'success');
   };
 
   const handleButton2Click = () => {
-    console.log('Button 2 clicked');
-    // Add your button 2 logic here
+    console.log('Loyalty card payment clicked');
+    handleCloseModal();
+    showNotification('Request sent!', 'success');
   };
 
   const handleInfoClick = (e: React.MouseEvent) => {
@@ -260,26 +264,10 @@ const TutoringPage: React.FC = () => {
             <h3>Step 4: Choose Payment Method</h3>
             <div className="payment-section">
               <div className="payment-options">
-                <button className="service-button" onClick={handleButton1Click}>
+                <button className="payment-card-button" onClick={handleButton1Click}>
                   Pay with Card
                 </button>
-                <button
-                  onClick={handleButton2Click}
-                  style={{
-                    backgroundColor: '#ED8936',
-                    color: 'white',
-                    border: 'none',
-                    padding: '12px 24px',
-                    borderRadius: '12px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                    transition: 'all 0.3s ease',
-                    width: 'fit-content',
-                    margin: '20px 0',
-                    fontSize: '16px'
-                  }}
-                >
+                <button className="payment-loyalty-button" onClick={handleButton2Click}>
                   Pay with Loyalty Card
                 </button>
               </div>
@@ -325,7 +313,7 @@ const TutoringPage: React.FC = () => {
             transform: 'scale(1.05)'
           }}
         >
-          📚 Book ABC Tutoring
+          Book ABC Tutoring
         </button>
       </div>
 

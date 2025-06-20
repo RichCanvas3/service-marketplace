@@ -599,9 +599,7 @@ a.header-title:hover {
 }
 
 .service-tag {
-  background: linear-gradient(135deg,
-    var(--accent-color) 0%,
-    var(--accent-color-secondary) 100%);
+  background: var(--accent-color);
   color: var(--primary-color);
   padding: 4px 8px;
   border-radius: 14px;
@@ -638,9 +636,7 @@ a.header-title:hover {
 }
 
 .service-tag:hover {
-  background: linear-gradient(135deg,
-    var(--accent-color-secondary) 0%,
-    #FF6B6B 100%);
+  background: var(--accent-color-secondary);
   color: var(--primary-color);
   box-shadow: 0 4px 12px rgba(157, 140, 255, 0.3);
   border-color: rgba(255, 107, 107, 0.4);
@@ -860,6 +856,17 @@ a.header-title:hover {
   overflow-y: auto;
   max-height: calc(90vh - 160px);
   background: rgba(255, 255, 255, 0.02);
+}
+
+.modal-body h3 {
+  margin: 0 0 24px 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-color-secondary) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.025em;
 }
 
 .service-list {
@@ -1414,67 +1421,90 @@ a.header-title:hover {
 .schedule-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 16px 24px;
+  gap: 24px;
+  padding: 0;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
 }
 
 .form-group label {
   color: var(--text-color);
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.025em;
 }
 
 .form-input {
-  background-color: var(--card-bg);
-  border: 1px solid var(--hover-color);
-  border-radius: 8px;
-  padding: 12px;
+  background: linear-gradient(135deg,
+    rgba(157, 140, 255, 0.05) 0%,
+    rgba(79, 209, 197, 0.05) 100%);
+  border: 1px solid rgba(157, 140, 255, 0.2);
+  border-radius: 16px;
+  padding: 16px 20px;
   color: var(--text-color);
-  font-size: 14px;
-  transition: var(--transition);
+  font-size: 15px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .form-input:focus {
-  border-color: var(--accent-color-secondary);
+  border-color: var(--accent-color);
   outline: none;
+  box-shadow:
+    0 0 0 3px rgba(157, 140, 255, 0.2),
+    0 8px 25px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg,
+    rgba(157, 140, 255, 0.1) 0%,
+    rgba(79, 209, 197, 0.1) 100%);
+  transform: translateY(-2px);
 }
 
 .form-input::placeholder {
-  color: var(--text-color);
-  opacity: 0.6;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 textarea.form-input {
   font-family: inherit;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1.6;
   color: var(--text-color);
-  background-color: var(--input-bg);
-  border: 1px solid var(--hover-color);
-  border-radius: 12px;
-  padding: 12px 16px;
+  background: linear-gradient(135deg,
+    rgba(157, 140, 255, 0.05) 0%,
+    rgba(79, 209, 197, 0.05) 100%);
+  border: 1px solid rgba(157, 140, 255, 0.2);
+  border-radius: 16px;
+  padding: 16px 20px;
   resize: none;
-  min-height: 100px;
+  min-height: 120px;
   width: 100%;
   box-sizing: border-box;
-  transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 textarea.form-input::placeholder {
-  color: var(--text-color);
-  opacity: 0.6;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 textarea.form-input:focus {
   outline: none;
-  border-color: var(--accent-color-secondary);
-  box-shadow: 0 0 0 2px rgba(79, 209, 197, 0.2);
+  border-color: var(--accent-color);
+  box-shadow:
+    0 0 0 3px rgba(157, 140, 255, 0.2),
+    0 8px 25px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg,
+    rgba(157, 140, 255, 0.1) 0%,
+    rgba(79, 209, 197, 0.1) 100%);
+  transform: translateY(-2px);
 }
 
 .review-section {
@@ -1511,10 +1541,6 @@ textarea.form-input:focus {
   gap: 12px;
 }
 
-.reviews-title::before {
-  content: "⭐";
-  font-size: 1.2em;
-}
 
 /* Individual Review Items */
 .review-item {
@@ -1989,12 +2015,121 @@ textarea.form-input:focus {
 .payment-section {
   display: flex;
   flex-direction: column;
+  gap: 24px;
 }
 
 .payment-options {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 20px;
+}
+
+/* Enhanced Payment Buttons */
+.payment-card-button {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 4px 12px rgba(59, 130, 246, 0.3),
+    0 0 0 1px rgba(59, 130, 246, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  min-width: 200px;
+  text-align: center;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.payment-card-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent);
+  transition: all 0.6s ease;
+}
+
+.payment-card-button:hover::before {
+  left: 100%;
+}
+
+.payment-card-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow:
+    0 8px 25px rgba(59, 130, 246, 0.4),
+    0 0 0 1px rgba(59, 130, 246, 0.3);
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+}
+
+.payment-card-button:active {
+  transform: translateY(0) scale(0.98);
+  transition: all 0.1s ease;
+}
+
+.payment-loyalty-button {
+  background: linear-gradient(135deg, #ED8936, #DD6B20);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 4px 12px rgba(237, 137, 54, 0.3),
+    0 0 0 1px rgba(237, 137, 54, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  min-width: 200px;
+  text-align: center;
+  border: 1px solid rgba(237, 137, 54, 0.2);
+}
+
+.payment-loyalty-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent);
+  transition: all 0.6s ease;
+}
+
+.payment-loyalty-button:hover::before {
+  left: 100%;
+}
+
+.payment-loyalty-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow:
+    0 8px 25px rgba(237, 137, 54, 0.4),
+    0 0 0 1px rgba(237, 137, 54, 0.3);
+  background: linear-gradient(135deg, #D69E2E, #C05621);
+}
+
+.payment-loyalty-button:active {
+  transform: translateY(0) scale(0.98);
+  transition: all 0.1s ease;
 }
 
 /* Credit Card Form Styles */
@@ -2410,6 +2545,80 @@ div.loyalty-section {
 
 .review-list {
   padding-left: 0px;
+  list-style: none;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Modal Review Items (Step 3) */
+.modal-body .review-list .review-item {
+  background: linear-gradient(135deg,
+    rgba(157, 140, 255, 0.05) 0%,
+    rgba(79, 209, 197, 0.05) 100%);
+  border: 1px solid rgba(157, 140, 255, 0.2);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0;
+}
+
+.modal-body .review-list .review-item:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(157, 140, 255, 0.3);
+  border-color: rgba(157, 140, 255, 0.4);
+  background: linear-gradient(135deg,
+    rgba(157, 140, 255, 0.1) 0%,
+    rgba(79, 209, 197, 0.1) 100%);
+}
+
+.modal-body .review-list .review-item span:first-child {
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.modal-body .review-list .review-item span:last-child {
+  color: var(--accent-color);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* Modal Review Section Headers */
+.modal-body .review-section h4 {
+  margin: 24px 0 16px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-color);
+  letter-spacing: 0.025em;
+}
+
+/* Confirmation Message */
+.confirmation-message {
+  background: linear-gradient(135deg,
+    rgba(79, 209, 197, 0.1) 0%,
+    rgba(157, 140, 255, 0.1) 100%);
+  border: 1px solid rgba(79, 209, 197, 0.3);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.confirmation-message p {
+  margin: 0;
+  color: var(--accent-color-secondary);
+  font-weight: 500;
+  font-size: 15px;
 }
 
 .review-item {
