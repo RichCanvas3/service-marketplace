@@ -457,8 +457,8 @@ a.header-title:hover {
   align-items: center;
   gap: 4px;
   color: white;
-  padding: 8px 12px;
-  border-radius: 16px;
+  padding: 2px 10px;
+  border-radius: 6px;
   font-weight: 700;
   white-space: nowrap;
   transition: all 0.3s ease;

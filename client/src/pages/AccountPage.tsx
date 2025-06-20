@@ -139,6 +139,14 @@ const AccountPage: React.FC = () => {
     return address ? `${address.slice(0, 5)}...` : '';
   };
 
+  // Function to get color based on KYC credibility score
+  const getKycCredibilityColor = (score: number) => {
+    if (score >= 90) return { primary: '#22c55e', secondary: '#16a34a', name: 'Excellent' }; // Green
+    if (score >= 80) return { primary: '#eab308', secondary: '#ca8a04', name: 'Very Good' }; // Yellow
+    if (score >= 70) return { primary: '#f97316', secondary: '#ea580c', name: 'Good' }; // Orange
+    return { primary: '#ef4444', secondary: '#dc2626', name: 'Fair' }; // Red
+  };
+
   // Use preferred name if available, otherwise fallback to address
   const accountButtonLabel = preferredName && preferredName.trim() !== ''
     ? preferredName
@@ -150,8 +158,35 @@ const AccountPage: React.FC = () => {
         <Link to="/loyalty-card">
           <button className="loyalty-card-button">Loyalty Card</button>
         </Link>
-        <button className="connect-wallet-button" style={{ cursor: 'default' }}>
-          {accountButtonLabel}
+        <button
+          className="connect-wallet-button"
+          style={{
+            cursor: 'default',
+            display: 'flex',
+            alignItems: 'center',
+            gap: mcoData?.kycCredibilityScore ? '8px' : '0px',
+            padding: mcoData?.kycCredibilityScore ? '12px 16px' : '16px 32px'
+          }}
+        >
+          <span>{accountButtonLabel}</span>
+          {mcoData?.kycCredibilityScore && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                background: `linear-gradient(135deg, ${getKycCredibilityColor(mcoData.kycCredibilityScore).primary}, ${getKycCredibilityColor(mcoData.kycCredibilityScore).secondary})`,
+                padding: '4px 8px',
+                borderRadius: '12px',
+                fontSize: '12px',
+                fontWeight: '700',
+                color: 'white',
+                boxShadow: `0 2px 8px rgba(${getKycCredibilityColor(mcoData.kycCredibilityScore).primary === '#22c55e' ? '34, 197, 94' : getKycCredibilityColor(mcoData.kycCredibilityScore).primary === '#eab308' ? '234, 179, 8' : getKycCredibilityColor(mcoData.kycCredibilityScore).primary === '#f97316' ? '249, 115, 22' : '239, 68, 68'}, 0.3)`
+              }}
+            >
+              <span>{mcoData.kycCredibilityScore}</span>
+            </div>
+          )}
         </button>
       </div>
       <div className="content" style={{ width: '100%', maxWidth: 900, margin: '0 auto', padding: '0 20px', boxSizing: 'border-box' }}>
@@ -239,7 +274,6 @@ const AccountPage: React.FC = () => {
                 alignItems: 'center',
                 gap: 8
               }}>
-                <span>👤</span>
                 Preferred Name (optional)
               </label>
               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
@@ -371,7 +405,6 @@ const AccountPage: React.FC = () => {
                 gap: 8,
                 marginBottom: 4
               }}>
-                <span style={{ fontSize: 16 }}>🏠</span>
                 <span style={{
                   color: '#e2e8f0',
                   fontWeight: 600,
@@ -409,7 +442,6 @@ const AccountPage: React.FC = () => {
                 alignItems: 'center',
                 gap: 8
               }}>
-                <span style={{ fontSize: 16 }}>🌐</span>
                 <span style={{
                   color: '#e2e8f0',
                   fontWeight: 600,
@@ -428,6 +460,381 @@ const AccountPage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* KYC Credibility Section */}
+        {mcoData?.kycCredibilityScore && (
+          <div style={{
+            background: 'linear-gradient(135deg, #18181b, #27272a)',
+            borderRadius: 20,
+            padding: '24px 28px',
+            marginBottom: 32,
+            border: '1px solid #3f3f46',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+            width: '100%'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              marginBottom: 20
+            }}>
+              <h3 style={{
+                margin: 0,
+                fontSize: 20,
+                fontWeight: 600,
+                color: '#f7fafc',
+                letterSpacing: 0.5
+              }}>Your KYC Credibility Score</h3>
+            </div>
+
+            {/* Main Score Display */}
+            <div style={{
+              background: '#0f0f23',
+              borderRadius: 16,
+              padding: '24px',
+              border: '1px solid #2d3748',
+              marginBottom: 20,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: 20
+            }}>
+              <div style={{ flex: 1, minWidth: 200 }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 12,
+                  marginBottom: 8
+                }}>
+                  <div style={{
+                    background: `linear-gradient(135deg, ${getKycCredibilityColor(mcoData.kycCredibilityScore).primary}, ${getKycCredibilityColor(mcoData.kycCredibilityScore).secondary})`,
+                    borderRadius: 12,
+                    padding: '8px 16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    boxShadow: `0 4px 12px rgba(${getKycCredibilityColor(mcoData.kycCredibilityScore).primary === '#22c55e' ? '34, 197, 94' : getKycCredibilityColor(mcoData.kycCredibilityScore).primary === '#eab308' ? '234, 179, 8' : getKycCredibilityColor(mcoData.kycCredibilityScore).primary === '#f97316' ? '249, 115, 22' : '239, 68, 68'}, 0.3)`
+                  }}>
+                    <span style={{
+                      fontSize: 24,
+                      fontWeight: 800,
+                      color: 'white'
+                    }}>{mcoData.kycCredibilityScore}</span>
+                    <span style={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: 'white',
+                      opacity: 0.8
+                    }}>/100</span>
+                  </div>
+                  <div>
+                    <div style={{
+                      fontSize: 18,
+                      fontWeight: 700,
+                      color: getKycCredibilityColor(mcoData.kycCredibilityScore).primary,
+                      marginBottom: 2
+                    }}>
+                      {getKycCredibilityColor(mcoData.kycCredibilityScore).name}
+                    </div>
+                    <div style={{
+                      fontSize: 13,
+                      color: '#9ca3af'
+                    }}>
+                      Identity Verification Status
+                    </div>
+                  </div>
+                </div>
+                <div style={{
+                  fontSize: 14,
+                  color: '#e2e8f0',
+                  lineHeight: 1.5
+                }}>
+                  Your KYC score reflects your identity verification level and transaction history. A higher score increases trust with service providers.
+                </div>
+              </div>
+
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 8,
+                minWidth: 120
+              }}>
+                <div style={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: '50%',
+                  background: `conic-gradient(${getKycCredibilityColor(mcoData.kycCredibilityScore).primary} ${mcoData.kycCredibilityScore * 3.6}deg, #2d3748 0deg)`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative'
+                }}>
+                  <div style={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: '50%',
+                    background: '#0f0f23',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: getKycCredibilityColor(mcoData.kycCredibilityScore).primary
+                  }}>
+                    {mcoData.kycCredibilityScore}%
+                  </div>
+                </div>
+                <div style={{
+                  fontSize: 12,
+                  color: '#9ca3af',
+                  textAlign: 'center'
+                }}>
+                  Credibility Level
+                </div>
+              </div>
+            </div>
+
+            {/* Verification Details */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: 16
+            }}>
+              {/* Identity Verification */}
+              <div style={{
+                background: '#0f0f23',
+                borderRadius: 12,
+                padding: '16px 20px',
+                border: '1px solid #2d3748'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  marginBottom: 8
+                }}>
+                  <span style={{
+                    color: '#e2e8f0',
+                    fontWeight: 600,
+                    fontSize: 14
+                  }}>Identity Verification</span>
+                </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  marginBottom: 4
+                }}>
+                  <div style={{
+                    background: getKycCredibilityColor(mcoData.kycCredibilityScore).primary,
+                    color: 'white',
+                    borderRadius: 8,
+                    padding: '4px 8px',
+                    fontSize: 12,
+                    fontWeight: 600
+                  }}>
+                    {mcoData.kycVerificationLevel || 'Verified'}
+                  </div>
+                </div>
+                <div style={{
+                  fontSize: 13,
+                  color: '#9ca3af'
+                }}>
+                  Government ID and address verified
+                </div>
+              </div>
+
+              {/* Transaction History */}
+              <div style={{
+                background: '#0f0f23',
+                borderRadius: 12,
+                padding: '16px 20px',
+                border: '1px solid #2d3748'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  marginBottom: 8
+                }}>
+                  <span style={{
+                    color: '#e2e8f0',
+                    fontWeight: 600,
+                    fontSize: 14
+                  }}>Transaction History</span>
+                </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  marginBottom: 4
+                }}>
+                  <div style={{
+                    background: '#22c55e',
+                    color: 'white',
+                    borderRadius: 8,
+                    padding: '4px 8px',
+                    fontSize: 12,
+                    fontWeight: 600
+                  }}>
+                    Clean Record
+                  </div>
+                </div>
+                <div style={{
+                  fontSize: 13,
+                  color: '#9ca3af'
+                }}>
+                  No disputes or fraudulent activity
+                </div>
+              </div>
+
+              {/* Account Security */}
+              <div style={{
+                background: '#0f0f23',
+                borderRadius: 12,
+                padding: '16px 20px',
+                border: '1px solid #2d3748'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  marginBottom: 8
+                }}>
+                  <span style={{
+                    color: '#e2e8f0',
+                    fontWeight: 600,
+                    fontSize: 14
+                  }}>Account Security</span>
+                </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  marginBottom: 4
+                }}>
+                  <div style={{
+                    background: '#22c55e',
+                    color: 'white',
+                    borderRadius: 8,
+                    padding: '4px 8px',
+                    fontSize: 12,
+                    fontWeight: 600
+                  }}>
+                    Enhanced
+                  </div>
+                </div>
+                <div style={{
+                  fontSize: 13,
+                  color: '#9ca3af'
+                }}>
+                  2FA enabled, secure wallet connection
+                </div>
+              </div>
+
+              {/* Last Updated */}
+              <div style={{
+                background: '#0f0f23',
+                borderRadius: 12,
+                padding: '16px 20px',
+                border: '1px solid #2d3748'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  marginBottom: 8
+                }}>
+                  <span style={{
+                    color: '#e2e8f0',
+                    fontWeight: 600,
+                    fontSize: 14
+                  }}>Last Updated</span>
+                </div>
+                <div style={{
+                  color: '#4fd1c5',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  marginBottom: 4
+                }}>
+                  {new Date(mcoData.kycLastUpdated || Date.now()).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </div>
+                <div style={{
+                  fontSize: 13,
+                  color: '#9ca3af'
+                }}>
+                  Verification status current
+                </div>
+              </div>
+            </div>
+
+            {/* Improve Score Section */}
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.05))',
+              borderRadius: 12,
+              padding: '20px',
+              border: '1px solid rgba(139, 92, 246, 0.2)',
+              marginTop: 20
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                marginBottom: 12
+              }}>
+                <span style={{
+                  color: '#a78bfa',
+                  fontWeight: 600,
+                  fontSize: 16
+                }}>
+                  How to Improve Your Score
+                </span>
+              </div>
+              <div style={{
+                fontSize: 14,
+                color: '#e2e8f0',
+                lineHeight: 1.5,
+                marginBottom: 12
+              }}>
+                Increase your KYC credibility score by completing more verifications and maintaining a positive transaction history.
+              </div>
+              <div style={{
+                display: 'flex',
+                gap: 12,
+                flexWrap: 'wrap'
+              }}>
+                <button style={{
+                  background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 12px rgba(139, 92, 246, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                }}
+                >
+                  Complete Phone Verification
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Loyalty Card Section */}
         <div style={{
@@ -498,7 +905,7 @@ const AccountPage: React.FC = () => {
                   boxShadow: '0 2px 8px rgba(192, 192, 192, 0.1)'
                 }}>
                   <div style={{
-                    fontSize: 12,
+                    fontSize: 14,
                     color: '#e2e8f0',
                     textAlign: 'center',
                     display: 'flex',
@@ -584,72 +991,23 @@ const AccountPage: React.FC = () => {
               </div>
 
               {/* Points Redemption Section */}
+
               <div style={{ width: '100%', marginBottom: 12 }}>
                 <div style={{
                   fontWeight: 600,
                   marginBottom: 8,
                   color: '#a78bfa',
-                  fontSize: 14,
+                  fontSize: 24,
                   display: 'flex',
                   alignItems: 'center',
                   gap: 6
                 }}>
-                  <span>🎁</span>
-                  <span>Redeem Points</span>
+                  <span>Rewards & Benefits</span>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
 
-                  {/* Service Discounts */}
-                  <div style={{
-                    background: '#18181b',
-                    borderRadius: 10,
-                    padding: '14px 16px',
-                    color: '#e0e0e0',
-                    fontSize: 15,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    border: '1px solid #22c55e',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
-                    (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 16px rgba(34, 197, 94, 0.2)';
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-                    (e.currentTarget as HTMLElement).style.boxShadow = 'none';
-                  }}
-                  onClick={() => alert('$5 off service coupon redeemed! Check your coupons section.')}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <div style={{
-                        background: '#22c55e',
-                        borderRadius: '50%',
-                        width: 32,
-                        height: 32,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: 16
-                      }}>💵</div>
-                      <div>
-                        <div style={{ fontWeight: 600, color: '#f7fafc' }}>$5 Off Any Service</div>
-                        <div style={{ fontSize: 13, color: '#9ca3af' }}>Apply to your next booking</div>
-                      </div>
-                    </div>
-                    <div style={{
-                      background: 'linear-gradient(135deg, #22c55e, #16a34a)',
-                      borderRadius: 8,
-                      padding: '6px 12px',
-                      color: '#1a1a1a',
-                      fontSize: 13,
-                      fontWeight: 600
-                    }}>
-                      100 pts
-                    </div>
-                  </div>
+                <div style={{ fontWeight: 600, marginBottom: 12, color: '#e2e8f0', fontSize: 14 }}>Redeem Your Points</div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
 
                   {/* Premium Service Discount */}
                   <div style={{
@@ -807,183 +1165,11 @@ const AccountPage: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Insufficient Points Notice */}
-                  {parseInt(mcoData.loyaltyPoints) < 750 && (
-                    <div style={{
-                      background: 'linear-gradient(135deg, #374151, #4b5563)',
-                      borderRadius: 10,
-                      padding: '12px 16px',
-                      color: '#9ca3af',
-                      fontSize: 14,
-                      textAlign: 'center',
-                      border: '1px dashed #6b7280',
-                      marginTop: 8
-                    }}>
-                      <span style={{ fontSize: 16, marginRight: 8 }}>ℹ️</span>
-                      You need more points to unlock higher-tier rewards. Keep using our services to earn more!
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div style={{ width: '100%', margin: '12px 0', background: '#fff2', height: 1, borderRadius: 1 }} />
-
-              {/* Account & Payment Methods Section */}
-              <div style={{ width: '100%', marginBottom: 16 }}>
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: 12
-                }}>
-                  <div style={{
-                    fontWeight: 600,
-                    color: '#a78bfa',
-                    fontSize: 16,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8
-                  }}>
-                    <span>💳</span>
-                    <span>Account & Payment Methods</span>
-                  </div>
-                  <button
-                    onClick={getEthBalance}
-                    style={{
-                      background: 'transparent',
-                      border: '1px solid #a78bfa',
-                      color: '#a78bfa',
-                      borderRadius: 6,
-                      padding: '4px 8px',
-                      fontSize: 12,
-                      cursor: 'pointer',
-                      fontWeight: 500,
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.target as HTMLButtonElement).style.backgroundColor = '#a78bfa';
-                      (e.target as HTMLButtonElement).style.color = '#232323';
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.target as HTMLButtonElement).style.backgroundColor = 'transparent';
-                      (e.target as HTMLButtonElement).style.color = '#a78bfa';
-                    }}
-                  >
-                    Refresh ETH
-                  </button>
-                </div>
-
-                {/* MetaMask Account ID */}
-                <div style={{
-                  background: '#18181b',
-                  borderRadius: 10,
-                  padding: '12px 16px',
-                  color: '#e0e0e0',
-                  fontSize: 15,
-                  border: '1px solid #2d3748',
-                  marginBottom: 8
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{
-                      background: 'linear-gradient(135deg, #a78bfa, #9333ea)',
-                      borderRadius: 6,
-                      padding: '6px 10px',
-                      color: 'white',
-                      fontSize: 13,
-                      fontWeight: 600
-                    }}>ID</div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 600, marginBottom: 2 }}>MetaMask Account ID</div>
-                      <div style={{
-                        fontFamily: 'monospace',
-                        fontSize: 13,
-                        color: '#9ca3af',
-                        wordBreak: 'break-all'
-                      }}>{mcoData.userId}</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* VISA Card */}
-                <div style={{
-                  background: '#18181b',
-                  borderRadius: 10,
-                  padding: '12px 16px',
-                  color: '#e0e0e0',
-                  fontSize: 15,
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  border: '1px solid #2d3748',
-                  marginBottom: 8
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{
-                      background: 'linear-gradient(135deg, #4338ca, #6366f1)',
-                      borderRadius: 6,
-                      padding: '6px 10px',
-                      color: 'white',
-                      fontSize: 13,
-                      fontWeight: 600
-                    }}>VISA</div>
-                    <div>
-                      <div style={{ fontWeight: 600 }}>•••• •••• •••• 4892</div>
-                      <div style={{ fontSize: 13, color: '#9ca3af' }}>Personal Card</div>
-                    </div>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ color: '#34d399', fontWeight: 600, fontSize: 16 }}>$247.85</div>
-                    <div style={{ fontSize: 13, color: '#9ca3af' }}>Available Balance</div>
-                  </div>
-                </div>
-
-                {/* MetaMask Wallet */}
-                <div style={{
-                  background: '#18181b',
-                  borderRadius: 10,
-                  padding: '12px 16px',
-                  color: '#e0e0e0',
-                  fontSize: 15,
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  border: '1px solid #2d3748'
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{
-                      background: 'linear-gradient(135deg, #627eea, #8b9aeb)',
-                      borderRadius: 6,
-                      padding: '6px 10px',
-                      color: 'white',
-                      fontSize: 13,
-                      fontWeight: 600
-                    }}>ETH</div>
-                    <div>
-                      <div style={{ fontWeight: 600 }}>MetaMask Wallet</div>
-                      <div style={{ fontSize: 13, color: '#9ca3af' }}>{account ? `${account.slice(0, 6)}...${account.slice(-4)}` : 'Not Connected'}</div>
-                    </div>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ color: '#34d399', fontWeight: 600, fontSize: 16 }}>{ethBalance} ETH</div>
-                    <div style={{ fontSize: 13, color: '#9ca3af' }}>Available Balance</div>
-                  </div>
                 </div>
               </div>
 
               {/* Rewards & Bonuses Section */}
               <div style={{ width: '100%', marginBottom: 32 }}>
-                <div style={{
-                  fontWeight: 600,
-                  marginBottom: 16,
-                  color: '#a78bfa',
-                  fontSize: 16,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8
-                }}>
-                  <span>🏆</span>
-                  <span>Rewards & Bonuses</span>
-                </div>
 
                 {/* Earned Rewards */}
                 <div style={{ marginBottom: 24 }}>
@@ -1110,7 +1296,7 @@ const AccountPage: React.FC = () => {
                         <div style={{ fontSize: 13, color: '#9ca3af' }}>John Smith purchased a service from Daisy's Home Cleaning via your referral</div>
                       </div>
                     </div>
-                    <div style={{ color: '#34d399', fontWeight: 600, fontSize: 16 }}>+$10.00</div>
+                    <div style={{ color: '#34d399', fontWeight: 600, fontSize: 16 }}>10 points</div>
                   </div>
 
                   {/* Pending Referral */}
@@ -1137,42 +1323,15 @@ const AccountPage: React.FC = () => {
                         <div style={{ fontSize: 13, color: '#9ca3af' }}>Sarah Johnson - awaiting first purchase from Rob's Tax Services</div>
                       </div>
                     </div>
-                    <div style={{ color: '#fbbf24', fontWeight: 600, fontSize: 16 }}>+$10.00</div>
+                    <div style={{ color: '#fbbf24', fontWeight: 600, fontSize: 16 }}>15 points</div>
                   </div>
 
-                  {/* Total Counter */}
-                  <div style={{
-                    background: 'linear-gradient(135deg, #a78bfa, #9f7aea)',
-                    borderRadius: 10,
-                    padding: '12px 16px',
-                    color: 'white',
-                    fontSize: 15,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginTop: 4,
-                    boxShadow: '0 4px 12px rgba(167, 139, 250, 0.3)'
-                  }}>
-                    <div style={{ fontWeight: 600, fontSize: 16 }}>Total Referral Points</div>
-                    <div style={{ fontWeight: 700, fontSize: 18 }}>$10.00</div>
-                  </div>
                 </div>
               </div>
 
               {/* Past Transactions & Activities Section */}
+
               <div style={{ width: '100%', marginBottom: 32 }}>
-                <div style={{
-                  fontWeight: 600,
-                  marginBottom: 16,
-                  color: '#a78bfa',
-                  fontSize: 16,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8
-                }}>
-                  <span>📋</span>
-                  <span>Past Transactions & Member Benefits</span>
-                </div>
 
                 {/* Exclusive Member Coupons */}
                 <div style={{ marginBottom: 24 }}>
@@ -1198,7 +1357,7 @@ const AccountPage: React.FC = () => {
                         height: 8
                       }}></div>
                       <div>
-                        <div style={{ fontWeight: 600, color: '#f7fafc' }}>🏠 Return Customer Special - Daisy's Home Cleaning</div>
+                        <div style={{ fontWeight: 600, color: '#f7fafc' }}>Return Customer Special - Daisy's Home Cleaning</div>
                         <div style={{ fontSize: 13, color: '#9ca3af' }}>25% off your next deep cleaning service</div>
                         <div style={{ fontSize: 12, color: '#0ea5e9', marginTop: 2 }}>Valid until: Dec 31, 2024 • Code: LOYAL25</div>
                       </div>
@@ -1232,119 +1391,29 @@ const AccountPage: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* Tax Service Coupon */}
-                  <div style={{
-                    background: '#18181b',
-                    borderRadius: 10,
-                    padding: '12px 16px',
-                    color: '#e0e0e0',
-                    fontSize: 15,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    border: '1px solid #f59e0b'
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <div style={{
-                        background: '#f59e0b',
-                        borderRadius: '50%',
-                        width: 8,
-                        height: 8
-                      }}></div>
-                      <div>
-                        <div style={{ fontWeight: 600, color: '#f7fafc' }}>📋 Loyal Client Discount - Rob's Tax Services</div>
-                        <div style={{ fontSize: 13, color: '#9ca3af' }}>$50 off your next tax consultation or business filing</div>
-                        <div style={{ fontSize: 12, color: '#f59e0b', marginTop: 2 }}>Valid until: Mar 15, 2025 • Code: TAXVIP50</div>
-                      </div>
-                    </div>
-                    <button
-                      style={{
-                        background: 'transparent',
-                        color: '#f59e0b',
-                        border: '1px solid #f59e0b',
-                        padding: '6px 12px',
-                        borderRadius: 6,
-                        fontSize: 12,
-                        fontWeight: 500,
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.target as HTMLButtonElement).style.backgroundColor = '#f59e0b';
-                        (e.target as HTMLButtonElement).style.color = '#232323';
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.target as HTMLButtonElement).style.backgroundColor = 'transparent';
-                        (e.target as HTMLButtonElement).style.color = '#f59e0b';
-                      }}
-                      onClick={() => {
-                        navigator.clipboard.writeText('TAXVIP50');
-                        alert('Coupon code copied to clipboard!');
-                      }}
-                    >
-                      Copy Code
-                    </button>
-                  </div>
-
-                  {/* Training Service Coupon */}
-                  <div style={{
-                    background: '#18181b',
-                    borderRadius: 10,
-                    padding: '12px 16px',
-                    color: '#e0e0e0',
-                    fontSize: 15,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    border: '1px solid #22c55e'
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <div style={{
-                        background: '#22c55e',
-                        borderRadius: '50%',
-                        width: 8,
-                        height: 8
-                      }}></div>
-                      <div>
-                        <div style={{ fontWeight: 600, color: '#f7fafc' }}>💪 Member Exclusive - Doug's Athletic Training</div>
-                        <div style={{ fontSize: 13, color: '#9ca3af' }}>Buy one training session, get one free (equal or lesser value)</div>
-                        <div style={{ fontSize: 12, color: '#22c55e', marginTop: 2 }}>Valid until: Jan 31, 2025 • Code: TRAIN2FOR1</div>
-                      </div>
-                    </div>
-                    <button
-                      style={{
-                        background: 'transparent',
-                        color: '#22c55e',
-                        border: '1px solid #22c55e',
-                        padding: '6px 12px',
-                        borderRadius: 6,
-                        fontSize: 12,
-                        fontWeight: 500,
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.target as HTMLButtonElement).style.backgroundColor = '#22c55e';
-                        (e.target as HTMLButtonElement).style.color = '#232323';
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.target as HTMLButtonElement).style.backgroundColor = 'transparent';
-                        (e.target as HTMLButtonElement).style.color = '#22c55e';
-                      }}
-                      onClick={() => {
-                        navigator.clipboard.writeText('TRAIN2FOR1');
-                        alert('Coupon code copied to clipboard!');
-                      }}
-                    >
-                      Copy Code
-                    </button>
-                  </div>
                 </div>
                 </div>
 
-                {/* Past Transactions */}
+              <div style={{ width: '100%', margin: '12px 0', background: '#fff2', height: 1, borderRadius: 1 }} />
+
+                {/* Past Transactions & History */}
+
+                <div style={{
+                  fontWeight: 600,
+                  marginBottom: 16,
+                  color: '#a78bfa',
+                  fontSize: 24,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8
+                }}>
+                  <span>Past Transactions & History</span>
+                </div>
+
                 <div style={{ marginBottom: 24 }}>
-                  <div style={{ fontWeight: 600, marginBottom: 12, color: '#e2e8f0', fontSize: 14 }}>Past Transactions</div>
+
+
+                  <div style={{ fontWeight: 600, marginBottom: 12, color: '#e2e8f0', fontSize: 14 }}>Past Transactions (3) </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {mcoData.pastTransactions && mcoData.pastTransactions.length > 0 ? mcoData.pastTransactions.map((t: any, i: number) => (
                       <div key={i} style={{
@@ -1364,9 +1433,10 @@ const AccountPage: React.FC = () => {
                           gap: 2,
                           flex: 1
                         }}>
-                          <div style={{ fontWeight: 600, color: '#fbbf24' }}>{t.service}</div>
+                          <div style={{ fontSize: '16px', fontWeight: 600, color: '#fbbf24' }}>{t.service}</div>
                           <div style={{ fontSize: 13, color: '#a78bfa' }}>{t.date}</div>
-                          <div>{t.description} <span style={{ color: '#34d399', fontWeight: 600 }}>${t.amount}</span></div>
+                          <div>{t.description} <span style={{ color: '#34d399', fontWeight: 600 }}>{t.amount} USDC</span></div>
+                          <div><span style={{ fontSize: '12px', color: '#a78bfa', fontWeight: 600 }}>Paid with MetaMask Card and USDC</span></div>
                         </div>
                         <div style={{ marginLeft: 16 }}>
                           {i === 0 ? (
@@ -1416,7 +1486,7 @@ const AccountPage: React.FC = () => {
                                 alert(`Write a review for ${t.service}`);
                               }}
                             >
-                              ✏️ Write Review
+                              Write Review
                             </button>
                           )}
                         </div>
@@ -1425,6 +1495,157 @@ const AccountPage: React.FC = () => {
                   </div>
                 </div>
                               </div>
+
+              <div style={{ width: '100%', margin: '12px 0', background: '#fff2', height: 1, borderRadius: 1 }} />
+
+
+                {/* Account Settings */}
+
+              <div style={{ width: '100%' }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: 12
+                }}>
+                  <div style={{
+                    fontWeight: 600,
+                    color: '#a78bfa',
+                    fontSize: 24,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8
+                  }}>
+                    <span>Account Settings</span>
+                  </div>
+                  <button
+                    onClick={getEthBalance}
+                    style={{
+                      background: 'transparent',
+                      border: '1px solid #a78bfa',
+                      color: '#a78bfa',
+                      borderRadius: 6,
+                      padding: '4px 8px',
+                      fontSize: 12,
+                      cursor: 'pointer',
+                      fontWeight: 500,
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.target as HTMLButtonElement).style.backgroundColor = '#a78bfa';
+                      (e.target as HTMLButtonElement).style.color = '#232323';
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.target as HTMLButtonElement).style.backgroundColor = 'transparent';
+                      (e.target as HTMLButtonElement).style.color = '#a78bfa';
+                    }}
+                  >
+                    Refresh ETH
+                  </button>
+                </div>
+
+                {/* MetaMask Account ID */}
+                <div style={{
+                  background: '#18181b',
+                  borderRadius: 10,
+                  padding: '12px 16px',
+                  color: '#e0e0e0',
+                  fontSize: 15,
+                  border: '1px solid #2d3748',
+                  marginBottom: 8
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{
+                      background: 'linear-gradient(135deg, #a78bfa, #9333ea)',
+                      borderRadius: 6,
+                      padding: '6px 10px',
+                      color: 'white',
+                      fontSize: 13,
+                      fontWeight: 600
+                    }}>ID</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 600, marginBottom: 2 }}>MetaMask Account ID</div>
+                      <div style={{
+                        fontFamily: 'monospace',
+                        fontSize: 13,
+                        color: '#9ca3af',
+                        wordBreak: 'break-all'
+                      }}>{mcoData.userId}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* VISA Card */}
+                <div style={{
+                  background: '#18181b',
+                  borderRadius: 10,
+                  padding: '12px 16px',
+                  color: '#e0e0e0',
+                  fontSize: 15,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  border: '1px solid #2d3748',
+                  marginBottom: 8
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{
+                      background: 'linear-gradient(135deg, #4338ca, #6366f1)',
+                      borderRadius: 6,
+                      padding: '6px 10px',
+                      color: 'white',
+                      fontSize: 13,
+                      fontWeight: 600
+                    }}>VISA</div>
+                    <div>
+                      <div style={{ fontWeight: 600 }}>•••• •••• •••• 4892</div>
+                      <div style={{ fontSize: 13, color: '#9ca3af' }}>Personal Card</div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ color: '#34d399', fontWeight: 600, fontSize: 16 }}>$247.85</div>
+                    <div style={{ fontSize: 13, color: '#9ca3af' }}>Available Balance</div>
+                  </div>
+                </div>
+
+                {/* MetaMask Wallet */}
+                <div style={{
+                  background: '#18181b',
+                  borderRadius: 10,
+                  padding: '12px 16px',
+                  color: '#e0e0e0',
+                  fontSize: 15,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  border: '1px solid #2d3748'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{
+                      background: 'linear-gradient(135deg, #627eea, #8b9aeb)',
+                      borderRadius: 6,
+                      padding: '6px 10px',
+                      color: 'white',
+                      fontSize: 13,
+                      fontWeight: 600
+                    }}>ETH</div>
+                    <div>
+                      <div style={{ fontWeight: 600 }}>MetaMask Wallet</div>
+                      <div style={{ fontSize: 13, color: '#9ca3af' }}>{account ? `${account.slice(0, 6)}...${account.slice(-4)}` : 'Not Connected'}</div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ color: '#34d399', fontWeight: 600, fontSize: 16 }}>{ethBalance} ETH</div>
+                    <div style={{ fontSize: 13, color: '#9ca3af' }}>Available Balance</div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
+
               </div>
             </div>
           ) : (

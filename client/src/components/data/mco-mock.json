@@ -3,5 +3,8 @@
   "loyaltyMember": false,
   "loyaltyPoints": 0,
   "membershipLevel": "Bronze",
-  "lastUpdated": "2024-06-01T12:00:00Z"
+  "lastUpdated": "2024-06-01T12:00:00Z",
+  "kycCredibilityScore": 91,
+  "kycVerificationLevel": "Verified",
+  "kycLastUpdated": "2024-11-15T14:30:00Z"
 }

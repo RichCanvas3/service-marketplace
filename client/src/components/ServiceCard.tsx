@@ -18,10 +18,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ url, name, linkTo, zipCode, t
 
   // Function to get color based on credibility score
   const getCredibilityColor = (score: number) => {
-    if (score >= 90) return { primary: '#22c55e', secondary: '#16a34a', name: 'Excellent' }; // Green
-    if (score >= 80) return { primary: '#eab308', secondary: '#ca8a04', name: 'Very Good' }; // Yellow
-    if (score >= 70) return { primary: '#f97316', secondary: '#ea580c', name: 'Good' }; // Orange
-    return { primary: '#ef4444', secondary: '#dc2626', name: 'Fair' }; // Red
+    if (score >= 90) return { primary: '#22c55e', secondary: '#16a34a', name: '' }; // Green
+    if (score >= 80) return { primary: '#eab308', secondary: '#ca8a04', name: '' }; // Yellow
+    if (score >= 70) return { primary: '#f97316', secondary: '#ea580c', name: '' }; // Orange
+    return { primary: '#ef4444', secondary: '#dc2626', name: '' }; // Red
   };
 
   const credibilityColors = getCredibilityColor(kybCredibilityScore);
@@ -59,7 +59,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ url, name, linkTo, zipCode, t
                 boxShadow: `0 4px 12px rgba(${credibilityColors.primary === '#22c55e' ? '34, 197, 94' : credibilityColors.primary === '#eab308' ? '234, 179, 8' : credibilityColors.primary === '#f97316' ? '249, 115, 22' : '239, 68, 68'}, 0.3)`
               }}>
                 <span className="score-number">{kybCredibilityScore}</span>
-                <span className="score-label">/100</span>
               </div>
               <div className="credibility-label" style={{
                 color: credibilityColors.primary

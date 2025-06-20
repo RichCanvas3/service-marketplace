@@ -92,6 +92,14 @@ const RootPage: React.FC = () => {
     return `${address.slice(0, 5)}...`;
   };
 
+  // Function to get color based on KYC credibility score
+  const getKycCredibilityColor = (score: number) => {
+    if (score >= 90) return { primary: '#22c55e', secondary: '#16a34a', name: 'Excellent' }; // Green
+    if (score >= 80) return { primary: '#eab308', secondary: '#ca8a04', name: 'Very Good' }; // Yellow
+    if (score >= 70) return { primary: '#f97316', secondary: '#ea580c', name: 'Good' }; // Orange
+    return { primary: '#ef4444', secondary: '#dc2626', name: 'Fair' }; // Red
+  };
+
   const handleWalletClick = () => {
     if (account) {
       navigate('/account');
@@ -116,8 +124,32 @@ const RootPage: React.FC = () => {
         <button
           className="connect-wallet-button"
           onClick={handleWalletClick}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: account && mcoData?.kycCredibilityScore ? '8px' : '0px',
+            padding: account && mcoData?.kycCredibilityScore ? '12px 16px' : '16px 32px'
+          }}
         >
-          {accountButtonLabel}
+          <span>{accountButtonLabel}</span>
+          {account && mcoData?.kycCredibilityScore && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                background: `linear-gradient(135deg, ${getKycCredibilityColor(mcoData.kycCredibilityScore).primary}, ${getKycCredibilityColor(mcoData.kycCredibilityScore).secondary})`,
+                padding: '4px 8px',
+                borderRadius: '12px',
+                fontSize: '12px',
+                fontWeight: '700',
+                color: 'white',
+                boxShadow: `0 2px 8px rgba(${getKycCredibilityColor(mcoData.kycCredibilityScore).primary === '#22c55e' ? '34, 197, 94' : getKycCredibilityColor(mcoData.kycCredibilityScore).primary === '#eab308' ? '234, 179, 8' : getKycCredibilityColor(mcoData.kycCredibilityScore).primary === '#f97316' ? '249, 115, 22' : '239, 68, 68'}, 0.3)`
+              }}
+            >
+              <span>{mcoData.kycCredibilityScore}</span>
+            </div>
+          )}
         </button>
       </div>
       <h2 className="content-heading">
