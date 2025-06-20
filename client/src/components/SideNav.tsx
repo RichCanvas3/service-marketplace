@@ -35,7 +35,7 @@ const SideNav: React.FC = () => {
               </div>
             </div>
             <h2>Service Marketplace</h2>
-            <div className="header-subtitle">Find & Connect Locally</div>
+            <div className="header-subtitle">Where Blockchain Meets Your Neighborhood</div>
           </div>
         </a>
       </div>
@@ -46,7 +46,6 @@ const SideNav: React.FC = () => {
       {/* Search Section */}
       <div className="nav-section">
         <div className="section-header">
-          <span className="section-icon">🔍</span>
           <h3 className="section-title">Search Services</h3>
         </div>
         <div className="input-group">
@@ -70,7 +69,6 @@ const SideNav: React.FC = () => {
       {/* Location Section */}
       <div className="nav-section">
         <div className="section-header">
-          <span className="section-icon">📍</span>
           <h3 className="section-title">Location</h3>
         </div>
         <div className="input-group">

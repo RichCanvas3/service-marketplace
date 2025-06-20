@@ -513,8 +513,8 @@ const AccountPage: React.FC = () => {
               <div style={{ display: 'flex', gap: 16, marginBottom: 6 }}>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontSize: 24, fontWeight: 700, color: '#fbbf24' }}>★</div>
-                  <div style={{ fontSize: 48, fontWeight: 600 }}>{mcoData.loyaltyPoints}</div>
-                  <div style={{ fontSize: 12, color: '#bdbdbd' }}>Current Points</div>
+                  <div style={{ fontSize: 72, fontWeight: 600 }}>{mcoData.loyaltyPoints}</div>
+                  <div style={{ fontSize: 12, color: '#bdbdbd' }}>Points</div>
                 </div>
               </div>
 
@@ -546,7 +546,7 @@ const AccountPage: React.FC = () => {
                     fontSize: 12,
                     color: '#9ca3af',
                     fontWeight: 500
-                  }}>Total Accumulated</div>
+                  }}>Total Points Accumulated</div>
                   <div style={{
                     fontSize: 10,
                     color: '#6b7280',
@@ -574,7 +574,7 @@ const AccountPage: React.FC = () => {
                     fontSize: 12,
                     color: '#9ca3af',
                     fontWeight: 500
-                  }}>Total Redeemed</div>
+                  }}>Total Points Redeemed</div>
                   <div style={{
                     fontSize: 10,
                     color: '#6b7280',

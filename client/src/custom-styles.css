@@ -63,7 +63,7 @@ div.content {
   background-color: var(--primary-color);
   color: var(--text-color);
   width: calc(100% - 320px);
-  padding: 30px;
+  padding: 30px 0 30px 30px;
   min-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
@@ -307,8 +307,7 @@ a.header-title:hover {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 20px;
-  padding-bottom: 80px;
+  padding: 20px 0 80px 20px;
   height: 100%;
   position: relative;
   isolation: isolate;
@@ -320,17 +319,37 @@ a.header-title:hover {
 .content-heading {
   position: sticky;
   top: 0;
-  margin: 0 0 30px 40px;
+  margin: 0 0 40px 40px;
   text-align: left;
   align-self: flex-start;
-  background-color: var(--primary-color);
-  padding: 30px 0;
+  background: linear-gradient(135deg,
+    var(--primary-color) 0%,
+    rgba(26, 26, 26, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(157, 140, 255, 0.1);
+  padding: 45px 0 50px 0;
   width: 100%;
-  z-index: 1;
-  font-size: 2rem;
-  font-weight: 600;
-  letter-spacing: -0.5px;
+  z-index: 10;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -1px;
+  background-image: linear-gradient(135deg,
+    #9D8CFF 0%,
+    #4FD1C5 50%,
+    #FF6B6B 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--text-color);
+  filter: drop-shadow(0 0 15px rgba(157, 140, 255, 0.4));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: visible;
 }
+
+
 
 .search-input, .zip-input {
   background: linear-gradient(135deg,
@@ -585,8 +604,8 @@ a.header-title:hover {
     var(--accent-color-secondary) 100%);
   color: var(--primary-color);
   padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 9px;
+  border-radius: 14px;
+  font-size: 10px;
   font-weight: 600;
   text-transform: capitalize;
   letter-spacing: 0.2px;
@@ -623,7 +642,6 @@ a.header-title:hover {
     var(--accent-color-secondary) 0%,
     #FF6B6B 100%);
   color: var(--primary-color);
-  transform: translateY(-2px) scale(1.05);
   box-shadow: 0 4px 12px rgba(157, 140, 255, 0.3);
   border-color: rgba(255, 107, 107, 0.4);
 }

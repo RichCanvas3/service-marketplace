@@ -498,27 +498,6 @@ const CleaningPage: React.FC = () => {
             <div className="review-item">
               <div className="review-header">
                 <div className="reviewer-name">
-                  <span>Michael Chen</span>
-                  <span style={companyInfoStyles.loyaltyLabel}>Gold Member</span>
-                </div>
-                <span className="review-date">October 28, 2024</span>
-              </div>
-              <div className="review-rating">
-                {[...Array(4)].map((_, i) => (
-                  <span key={i} style={companyInfoStyles.star}>★</span>
-                ))}
-                {[...Array(1)].map((_, i) => (
-                  <span key={i} style={{ ...companyInfoStyles.star, opacity: 0.3 }}>★</span>
-                ))}
-              </div>
-              <p className="review-text">
-                "Been using Daisy's services for 6 months now. The deep cleaning they did before I moved in was exceptional - got my security deposit back in full! The team is always punctual and professional. Only minor issue was one missed window, but they came back to fix it immediately."
-              </p>
-            </div>
-
-            <div className="review-item">
-              <div className="review-header">
-                <div className="reviewer-name">
                   <span>Emily Rodriguez</span>
                   <span style={companyInfoStyles.loyaltyLabel}>Silver Member</span>
                 </div>
