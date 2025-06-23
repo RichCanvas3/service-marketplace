@@ -1,9 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../custom-styles.css';
 import serviceList from '../components/data/service-list.json';
+import mcoMockData from '../components/data/mco-mock.json';
 
 const LoyaltyCardPage: React.FC = () => {
   const [joined, setJoined] = useState(false);
+
+  // Check membership status on component mount
+  useEffect(() => {
+    const checkMembershipStatus = () => {
+      // First check localStorage
+      const mcoData = localStorage.getItem('mcoData');
+      if (mcoData) {
+        const mcoObj = JSON.parse(mcoData);
+        if (mcoObj.loyaltyMember) {
+          setJoined(true);
+          return;
+        }
+      }
+
+      // If not in localStorage, check mock data
+      if (mcoMockData.loyaltyMember) {
+        setJoined(true);
+        // Optionally, you could also save this to localStorage here
+        // localStorage.setItem('mcoData', JSON.stringify(mcoMockData));
+      }
+    };
+
+    checkMembershipStatus();
+  }, []);
 
   const handleJoinLoyalty = () => {
     let mco = localStorage.getItem('mcoData');

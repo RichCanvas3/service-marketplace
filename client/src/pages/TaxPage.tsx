@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
+import mcoMockData from '../components/data/mco-mock.json';
 import { companyInfoStyles } from '../styles/companyInfoStyles';
 import '../custom-styles.css'
 import { Link } from 'react-router-dom';
@@ -28,9 +29,32 @@ const TaxPage: React.FC = () => {
   const [showReviews, setShowReviews] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isLoyaltyMember, setIsLoyaltyMember] = useState(false);
   const rtsServices = data.find(service => service.name === "Rob's Tax Services")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
+
+  // Check membership status on component mount
+  useEffect(() => {
+    const checkMembershipStatus = () => {
+      // First check localStorage
+      const mcoData = localStorage.getItem('mcoData');
+      if (mcoData) {
+        const mcoObj = JSON.parse(mcoData);
+        if (mcoObj.loyaltyMember) {
+          setIsLoyaltyMember(true);
+          return;
+        }
+      }
+
+      // If not in localStorage, check mock data
+      if (mcoMockData.loyaltyMember) {
+        setIsLoyaltyMember(true);
+      }
+    };
+
+    checkMembershipStatus();
+  }, []);
 
   const handleServiceToggle = (serviceName: string) => {
     setSelectedServices(prev =>
@@ -85,13 +109,13 @@ const TaxPage: React.FC = () => {
     console.log('Card data submitted:', cardData);
     setIsCardFormOpen(false);
     handleCloseModal();
-    showNotification('Service request sent!', 'success');
+    showNotification('Request for service sent!', 'success');
   };
 
   const handleButton2Click = () => {
     console.log('Loyalty card payment clicked');
     handleCloseModal();
-    showNotification('Service request sent!', 'success');
+    showNotification('Request for service sent!', 'success');
   };
 
   const handleInfoClick = (e: React.MouseEvent) => {
@@ -277,7 +301,7 @@ const TaxPage: React.FC = () => {
                 <button className="payment-card-button" onClick={handleButton1Click}>
                   Pay with Card
                 </button>
-                <button className="payment-loyalty-button" onClick={handleButton2Click}>
+                <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
                   Pay with Loyalty Card
                 </button>
               </div>

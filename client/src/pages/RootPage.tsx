@@ -119,7 +119,7 @@ const RootPage: React.FC = () => {
     <div className="root-page-container">
       <div className="top-buttons">
         <Link to="/loyalty-card">
-          <button className="loyalty-card-button">Loyalty Card</button>
+          <button className="loyalty-card-button">Loyalty Program</button>
         </Link>
         <button
           className="connect-wallet-button"

@@ -57,6 +57,8 @@ div.side-nav {
   flex-shrink: 0;
   border-right: 1px solid rgba(157, 140, 255, 0.2);
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 div.content {
@@ -306,8 +308,8 @@ a.header-title:hover {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: 20px 0 80px 20px;
+  align-items: center;
+  padding: 20px 0 80px 0;
   height: 100%;
   position: relative;
   isolation: isolate;
@@ -319,17 +321,18 @@ a.header-title:hover {
 .content-heading {
   position: sticky;
   top: 0;
-  margin: 0 0 40px 40px;
-  text-align: left;
-  align-self: flex-start;
+  margin: 0 0 40px 0;
+  text-align: center;
+  align-self: center;
   background: linear-gradient(135deg,
     var(--primary-color) 0%,
     rgba(26, 26, 26, 0.95) 100%);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(157, 140, 255, 0.1);
-  padding: 45px 0 50px 0;
+  padding: 45px 40px 50px 40px;
   width: 100%;
+  max-width: 1600px;
   z-index: 10;
   font-size: 2.5rem;
   font-weight: 700;
@@ -347,6 +350,7 @@ a.header-title:hover {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: visible;
+  box-sizing: border-box;
 }
 
 
@@ -561,25 +565,122 @@ a.header-title:hover {
   padding: 40px;
   padding-bottom: 80px;
   width: 100%;
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
   place-content: center;
   align-items: start;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
+/* Extra large screens */
+@media (min-width: 1600px) {
+  .service-grid {
+    max-width: 1800px;
+    gap: 50px;
+    padding: 50px;
+  }
+}
+
+/* Large screens */
+@media (max-width: 1400px) {
+  .service-grid {
+    max-width: 1200px;
+    gap: 35px;
+    padding: 35px;
+  }
+}
+
+/* Medium-large screens */
 @media (max-width: 1200px) {
   .service-grid {
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 30px;
     padding: 30px;
+    max-width: 1000px;
   }
 }
 
+/* Medium screens */
+@media (max-width: 900px) {
+  .service-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    padding: 25px;
+    max-width: 800px;
+  }
+}
+
+/* Small-medium screens */
 @media (max-width: 800px) {
   .service-grid {
     grid-template-columns: 1fr;
     gap: 24px;
     padding: 20px;
+    max-width: 600px;
+  }
+}
+
+/* Small screens */
+@media (max-width: 600px) {
+  .service-grid {
+    padding: 16px;
+    gap: 20px;
+    max-width: 100%;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .service-grid {
+    padding: 12px;
+    gap: 16px;
+  }
+}
+
+/* Responsive content heading */
+@media (max-width: 1200px) {
+  .content-heading {
+    font-size: 2.2rem;
+    padding: 35px 30px 40px 30px;
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 900px) {
+  .content-heading {
+    font-size: 2rem;
+    padding: 30px 25px 35px 25px;
+    max-width: 800px;
+  }
+}
+
+@media (max-width: 600px) {
+  .content-heading {
+    font-size: 1.8rem;
+    padding: 25px 20px 30px 20px;
+    letter-spacing: -0.5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-heading {
+    font-size: 1.6rem;
+    padding: 20px 16px 25px 16px;
+    letter-spacing: -0.3px;
+  }
+}
+
+/* Responsive root page container */
+@media (max-width: 600px) {
+  .root-page-container {
+    padding: 15px 0 60px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .root-page-container {
+    padding: 10px 0 50px 0;
   }
 }
 
@@ -1294,6 +1395,7 @@ a.header-title:hover {
     rgba(157, 140, 255, 0.05) 0%,
     rgba(79, 209, 197, 0.02) 100%);
   border-top: 1px solid rgba(157, 140, 255, 0.1);
+  flex-shrink: 0;
 }
 
 .footer-content {
@@ -1328,6 +1430,14 @@ a.header-title:hover {
 
 .footer-links span {
   color: rgba(245, 245, 245, 0.4);
+}
+
+/* Nav content wrapper to push footer to bottom */
+.nav-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 }
 
 .modal-steps {
@@ -2202,6 +2312,30 @@ textarea.form-input:focus {
 .payment-loyalty-button:active {
   transform: translateY(0) scale(0.98);
   transition: all 0.1s ease;
+}
+
+/* Disabled state for payment loyalty button */
+.payment-loyalty-button:disabled {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  color: #9ca3af;
+  cursor: not-allowed;
+  box-shadow:
+    0 2px 6px rgba(107, 114, 128, 0.2),
+    0 0 0 1px rgba(107, 114, 128, 0.1);
+  transform: none;
+  opacity: 0.6;
+}
+
+.payment-loyalty-button:disabled::before {
+  display: none;
+}
+
+.payment-loyalty-button:disabled:hover {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  transform: none;
+  box-shadow:
+    0 2px 6px rgba(107, 114, 128, 0.2),
+    0 0 0 1px rgba(107, 114, 128, 0.1);
 }
 
 /* Credit Card Form Styles */

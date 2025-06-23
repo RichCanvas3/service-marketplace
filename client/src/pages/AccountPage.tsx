@@ -913,7 +913,7 @@ const AccountPage: React.FC = () => {
                     justifyContent: 'center',
                     gap: 6
                   }}>
-                    <span>Spend <strong style={{ color: '#c0c0c0' }}>130 points</strong> by <strong style={{ color: '#c0c0c0' }}>March 15, 2025</strong> and become <strong style={{ color: '#c0c0c0' }}>Silver Tier</strong></span>
+                    <span>Spend <strong style={{ color: '#c0c0c0' }}>120 points</strong> by <strong style={{ color: '#c0c0c0' }}>March 15, 2025</strong> and become <strong style={{ color: '#c0c0c0' }}>Silver Tier</strong></span>
                   </div>
                 </div>
               )}
@@ -921,7 +921,7 @@ const AccountPage: React.FC = () => {
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontSize: 24, fontWeight: 700, color: '#fbbf24' }}>★</div>
                   <div style={{ fontSize: 72, fontWeight: 600 }}>{mcoData.loyaltyPoints}</div>
-                  <div style={{ fontSize: 12, color: '#bdbdbd' }}>Points</div>
+                  <div style={{ fontSize: 12, color: '#bdbdbd' }}>Current Points</div>
                 </div>
               </div>
 
@@ -1009,58 +1009,6 @@ const AccountPage: React.FC = () => {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
 
-                  {/* Premium Service Discount */}
-                  <div style={{
-                    background: '#18181b',
-                    borderRadius: 10,
-                    padding: '14px 16px',
-                    color: '#e0e0e0',
-                    fontSize: 15,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    border: '1px solid #a78bfa',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
-                    (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 16px rgba(167, 139, 250, 0.2)';
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-                    (e.currentTarget as HTMLElement).style.boxShadow = 'none';
-                  }}
-                  onClick={() => alert('$15 off premium service coupon redeemed! Check your coupons section.')}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <div style={{
-                        background: '#a78bfa',
-                        borderRadius: '50%',
-                        width: 32,
-                        height: 32,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: 16
-                      }}>⭐</div>
-                      <div>
-                        <div style={{ fontWeight: 600, color: '#f7fafc' }}>$15 Off Premium Services</div>
-                        <div style={{ fontSize: 13, color: '#9ca3af' }}>Valid for Design, Tax, or Training services</div>
-                      </div>
-                    </div>
-                    <div style={{
-                      background: 'linear-gradient(135deg, #a78bfa, #9333ea)',
-                      borderRadius: 8,
-                      padding: '6px 12px',
-                      color: '#1a1a1a',
-                      fontSize: 13,
-                      fontWeight: 600
-                    }}>
-                      200 pts
-                    </div>
-                  </div>
-
                   {/* Free Service */}
                   <div style={{
                     background: '#18181b',
@@ -1071,7 +1019,7 @@ const AccountPage: React.FC = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    border: '1px solid #fbbf24',
+                    border: '1px solid #ff5733',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
                   }}
@@ -1087,7 +1035,7 @@ const AccountPage: React.FC = () => {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                       <div style={{
-                        background: '#fbbf24',
+                        background: '#ff5733',
                         borderRadius: '50%',
                         width: 32,
                         height: 32,
@@ -1095,14 +1043,14 @@ const AccountPage: React.FC = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontSize: 16
-                      }}>🎉</div>
+                      }}>🏋️‍♂️</div>
                       <div>
-                        <div style={{ fontWeight: 600, color: '#f7fafc' }}>Free Basic Cleaning (3 hours)</div>
-                        <div style={{ fontSize: 13, color: '#9ca3af' }}>Complete house cleaning service</div>
+                        <div style={{ fontWeight: 600, color: '#f7fafc' }}>Free Personal Training Session (1 hour)</div>
+                        <div style={{ fontSize: 13, color: '#9ca3af' }}>Complete one-on-one personalized training</div>
                       </div>
                     </div>
                     <div style={{
-                      background: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
+                      background: 'linear-gradient(135deg, #ff5733, #ff5733)',
                       borderRadius: 8,
                       padding: '6px 12px',
                       color: '#1a1a1a',
@@ -1123,7 +1071,7 @@ const AccountPage: React.FC = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    border: '1px solid #ef4444',
+                    border: '1px solid #0096FF',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
                   }}
@@ -1139,7 +1087,7 @@ const AccountPage: React.FC = () => {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                       <div style={{
-                        background: '#ef4444',
+                        background: '#0096FF',
                         borderRadius: '50%',
                         width: 32,
                         height: 32,
@@ -1147,21 +1095,21 @@ const AccountPage: React.FC = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontSize: 16
-                      }}>🎁</div>
+                      }}>💲</div>
                       <div>
-                        <div style={{ fontWeight: 600, color: '#f7fafc' }}>$25 Gift Card</div>
-                        <div style={{ fontSize: 13, color: '#9ca3af' }}>Share with friends or use later</div>
+                        <div style={{ fontWeight: 600, color: '#f7fafc' }}>Redeem for USDC (3%)</div>
+                        <div style={{ fontSize: 13, color: '#9ca3af' }}>Redeem points for USDC</div>
                       </div>
                     </div>
                     <div style={{
-                      background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                      background: 'linear-gradient(135deg, #0096FF, #0096FF)',
                       borderRadius: 8,
                       padding: '6px 12px',
                       color: 'white',
                       fontSize: 13,
                       fontWeight: 600
                     }}>
-                      750 pts
+                      11.4 USDC
                     </div>
                   </div>
 
@@ -1236,7 +1184,7 @@ const AccountPage: React.FC = () => {
                             fontWeight: 600,
                             boxShadow: `0 2px 4px rgba(${scheme.accent === '#fbbf24' ? '251, 191, 36' : scheme.accent === '#34d399' ? '52, 211, 153' : scheme.accent === '#a78bfa' ? '167, 139, 250' : scheme.accent === '#f472b6' ? '244, 114, 182' : '6, 182, 212'}, 0.3)`
                           }}>
-                            {r.points} pts
+                            Redeem
                           </div>
                           <div style={{
                             color: scheme.accent,
@@ -1292,7 +1240,7 @@ const AccountPage: React.FC = () => {
                         height: 8
                       }}></div>
                       <div>
-                        <div style={{ fontWeight: 600, color: '#f7fafc' }}>Friend Referral Complete</div>
+                        <div style={{ fontWeight: 600, color: '#f7fafc' }}>Referral Complete</div>
                         <div style={{ fontSize: 13, color: '#9ca3af' }}>John Smith purchased a service from Daisy's Home Cleaning via your referral</div>
                       </div>
                     </div>

@@ -1,7 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import ServiceList from '../components/ServiceList.tsx'
+import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
+import InfoModal from '../components/InfoModal';
+import CreditCardForm from '../components/CreditCardForm';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
+import mcoMockData from '../components/data/mco-mock.json';
 import { companyInfoStyles } from '../styles/companyInfoStyles';
 import '../custom-styles.css'
 import { Link } from 'react-router-dom';
@@ -16,6 +21,7 @@ interface Service {
 const TutoringPage: React.FC = () => {
   const { showNotification } = useNotification();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [subject, setSubject] = useState('');
@@ -23,13 +29,35 @@ const TutoringPage: React.FC = () => {
   const [preferredTime, setPreferredTime] = useState('');
   const [gradeLevel, setGradeLevel] = useState('');
   const [specialInstructions, setSpecialInstructions] = useState('');
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
-  const abctServices = data.find(service => service.name === "ABC Tutoring")?.services || [];
+  const [isLoyaltyMember, setIsLoyaltyMember] = useState(false);
+  const tutoringServices = data.find(service => service.name === "ABC Tutoring")?.services || [];
   const isStep1Valid = selectedServices.length > 0;
   const isStep2Valid = preferredDate && preferredTime;
+
+  // Check membership status on component mount
+  useEffect(() => {
+    const checkMembershipStatus = () => {
+      // First check localStorage
+      const mcoData = localStorage.getItem('mcoData');
+      if (mcoData) {
+        const mcoObj = JSON.parse(mcoData);
+        if (mcoObj.loyaltyMember) {
+          setIsLoyaltyMember(true);
+          return;
+        }
+      }
+
+      // If not in localStorage, check mock data
+      if (mcoMockData.loyaltyMember) {
+        setIsLoyaltyMember(true);
+      }
+    };
+
+    checkMembershipStatus();
+  }, []);
 
   const handleServiceToggle = (serviceName: string) => {
     setSelectedServices(prev =>
@@ -46,7 +74,7 @@ const TutoringPage: React.FC = () => {
       setCurrentStep(4);
     } else if (currentStep === 4) {
       // Handle form submission
-      const selectedServiceDetails = abctServices
+      const selectedServiceDetails = tutoringServices
         .filter(service => selectedServices.includes(service.name))
         .map(service => `${service.name} (${service.price})`);
 
@@ -75,13 +103,13 @@ const TutoringPage: React.FC = () => {
   const handleButton1Click = () => {
     console.log('Credit card payment clicked');
     handleCloseModal();
-    showNotification('Service request sent!', 'success');
+    showNotification('Request for service sent!', 'success');
   };
 
   const handleButton2Click = () => {
     console.log('Loyalty card payment clicked');
     handleCloseModal();
-    showNotification('Service request sent!', 'success');
+    showNotification('Request for service sent!', 'success');
   };
 
   const handleInfoClick = (e: React.MouseEvent) => {
@@ -103,7 +131,7 @@ const TutoringPage: React.FC = () => {
               .
             </div>
             <ul className="service-list">
-              {abctServices.map((service, index) => (
+              {tutoringServices.map((service, index) => (
                 <li key={index} className="service-list-item">
                   <div className="service-list-item-checkbox">
                     <input
@@ -175,7 +203,7 @@ const TutoringPage: React.FC = () => {
               <h4>Selected Services:</h4>
               <ul className="review-list">
                 {selectedServices.map((serviceName, index) => {
-                  const service = abctServices.find(s => s.name === serviceName);
+                  const service = tutoringServices.find(s => s.name === serviceName);
                   return (
                     <li key={index} className="review-item">
                       <span>{service?.name}</span>
@@ -219,7 +247,7 @@ const TutoringPage: React.FC = () => {
                                      }[membershipLevel as 'Bronze' | 'Silver' | 'Gold' | 'Platinum'];
 
                   const totalBeforeDiscount = selectedServices.reduce((total, serviceName) => {
-                    const service = abctServices.find(s => s.name === serviceName);
+                    const service = tutoringServices.find(s => s.name === serviceName);
                     return total + (parseFloat(service?.price?.replace(/[^0-9.-]+/g, '') || '0'));
                   }, 0);
 
@@ -267,7 +295,7 @@ const TutoringPage: React.FC = () => {
                 <button className="payment-card-button" onClick={handleButton1Click}>
                   Pay with Card
                 </button>
-                <button className="payment-loyalty-button" onClick={handleButton2Click}>
+                <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
                   Pay with Loyalty Card
                 </button>
               </div>
@@ -367,7 +395,7 @@ const TutoringPage: React.FC = () => {
         <div className="section">
           <h3 className="section-title">Our Services</h3>
           <ul className="service-list">
-            {abctServices.map((service, index) => (
+            {tutoringServices.map((service, index) => (
               <li
                 key={index}
                 className={`service-list-item ${index === 0 ? 'popular' : ''}`}
@@ -517,8 +545,6 @@ const TutoringPage: React.FC = () => {
 
         <p>Serving the Erie area and surrounding communities, we're committed to helping students achieve academic excellence through personalized tutoring and support. Ready to boost your academic performance?</p>
       </div>
-
-
 
       <Modal
         isOpen={isModalOpen}
