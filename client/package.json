@@ -13,7 +13,7 @@
     "@blockchain-lab-um/masca-connector": "^1.4.0",
     "@heroicons/react": "^2.2.0",
     "@mcp/shared": "workspace:*",
-    "@metamask/delegation-toolkit": "^0.11.0",
+    "@metamask/delegation-toolkit": "^0.12.0",
     "@veramo/core": "^6.0.0",
     "@veramo/credential-w3c": "^6.0.0",
     "@veramo/did-manager": "^6.0.0",

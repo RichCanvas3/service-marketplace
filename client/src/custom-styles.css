@@ -2923,3 +2923,378 @@ div.loyalty-section {
     grid-template-columns: 1fr;
   }
 }
+
+/* Payment Processing Styles */
+.payment-section {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.payment-processing {
+  text-align: center;
+  padding: 30px;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.countdown {
+  margin: 20px 0;
+}
+
+.countdown-circle {
+  width: 80px;
+  height: 80px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  background: rgba(255, 255, 255, 0.1);
+  animation: pulse 1s infinite;
+}
+
+.countdown-number {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.payment-complete {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.final-actions {
+  margin-top: 20px;
+}
+
+/* Service Contract Modal Styles */
+.step-content {
+  padding: 20px 0;
+}
+
+.service-summary {
+  background: rgba(157, 140, 255, 0.1);
+  border: 1px solid rgba(157, 140, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.service-summary h4 {
+  color: var(--accent-color);
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.service-summary p {
+  margin: 8px 0;
+  color: var(--text-color);
+}
+
+.service-summary ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.service-summary li {
+  color: var(--text-color);
+  margin: 5px 0;
+}
+
+.wallet-connection {
+  text-align: center;
+  padding: 30px 20px;
+  background: rgba(79, 209, 197, 0.1);
+  border: 1px solid rgba(79, 209, 197, 0.2);
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.wallet-connected {
+  text-align: center;
+  padding: 20px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.wallet-connected p {
+  color: #22c55e;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.contract-details {
+  padding: 20px 0;
+}
+
+.contract-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(157, 140, 255, 0.2);
+}
+
+.contract-header h4 {
+  color: var(--accent-color);
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.contract-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.contract-status.pending {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.contract-terms {
+  margin: 25px 0;
+}
+
+.contract-terms h5 {
+  color: var(--accent-color);
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.terms-box {
+  background: var(--input-bg);
+  border: 1px solid rgba(157, 140, 255, 0.2);
+  border-radius: 8px;
+  padding: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.terms-box pre {
+  white-space: pre-wrap;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.contract-actions {
+  text-align: center;
+  padding: 20px;
+  background: rgba(157, 140, 255, 0.05);
+  border-radius: 12px;
+  margin-top: 25px;
+}
+
+.contract-actions p {
+  color: var(--text-color);
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.delegation-setup {
+  padding: 20px 0;
+}
+
+.delegation-info {
+  background: linear-gradient(135deg, rgba(157, 140, 255, 0.1), rgba(79, 209, 197, 0.1));
+  border: 1px solid rgba(157, 140, 255, 0.2);
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+.delegation-info h4 {
+  color: var(--accent-color);
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.delegation-info p {
+  color: var(--text-color);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.delegation-details {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(157, 140, 255, 0.1);
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-item strong {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.delegation-actions {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.completion-summary {
+  padding: 20px 0;
+  text-align: center;
+}
+
+.success-message {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(79, 209, 197, 0.1));
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.success-message h4 {
+  color: #22c55e;
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+}
+
+.success-message p {
+  color: var(--text-color);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.completion-details {
+  background: var(--card-bg);
+  border: 1px solid rgba(157, 140, 255, 0.2);
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.tx-hash {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  background: var(--input-bg);
+  padding: 4px 8px;
+  border-radius: 4px;
+  word-break: break-all;
+  display: inline-block;
+  margin-left: 10px;
+  color: var(--accent-color-secondary);
+}
+
+.address-hash {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  background: linear-gradient(135deg, rgba(157, 140, 255, 0.1), rgba(79, 209, 197, 0.1));
+  border: 1px solid rgba(157, 140, 255, 0.3);
+  padding: 6px 10px;
+  border-radius: 6px;
+  word-break: break-all;
+  display: inline-block;
+  margin-left: 10px;
+  color: var(--accent-color);
+  font-weight: 500;
+}
+
+.next-steps {
+  background: rgba(79, 209, 197, 0.1);
+  border: 1px solid rgba(79, 209, 197, 0.2);
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.next-steps h5 {
+  color: var(--accent-color-secondary);
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.next-steps ol {
+  color: var(--text-color);
+  padding-left: 20px;
+  line-height: 1.6;
+}
+
+.next-steps li {
+  margin: 8px 0;
+}
+
+/* Responsive adjustments for Service Contract Modal */
+@media (max-width: 768px) {
+  .contract-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .tx-hash {
+    margin-left: 0;
+    margin-top: 5px;
+  }
+
+  .terms-box {
+    max-height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .delegation-info,
+  .success-message,
+  .completion-details,
+  .next-steps {
+    padding: 20px;
+  }
+
+  .terms-box {
+    padding: 15px;
+  }
+
+  .terms-box pre {
+    font-size: 0.85rem;
+  }
+}

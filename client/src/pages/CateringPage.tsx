@@ -4,6 +4,7 @@ import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
+import ServiceContractModal from '../components/ServiceContractModal';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import mcoMockData from '../components/data/mco-mock.json';
@@ -23,6 +24,7 @@ const CateringPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isCardFormOpen, setIsCardFormOpen] = useState(false);
+  const [isServiceContractModalOpen, setIsServiceContractModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [preferredDate, setPreferredDate] = useState('');
@@ -120,9 +122,9 @@ const CateringPage: React.FC = () => {
   };
 
   const handleButton2Click = () => {
-    console.log('Loyalty card payment clicked');
+    console.log('Opening Service Contract Modal');
+    setIsServiceContractModalOpen(true);
     handleCloseModal();
-    showNotification('Request for service sent!', 'success');
   };
 
   const renderStepContent = () => {
@@ -301,10 +303,10 @@ const CateringPage: React.FC = () => {
             <div className="payment-section">
               <div className="payment-options">
                 <button className="payment-card-button" onClick={handleButton1Click}>
-                  Pay with Card
+                  Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Pay with Loyalty Card
+                  Request Service Contract
                 </button>
               </div>
             </div>
@@ -586,6 +588,14 @@ const CateringPage: React.FC = () => {
         isOpen={isCardFormOpen}
         onClose={() => setIsCardFormOpen(false)}
         onSubmit={handleCardSubmit}
+      />
+
+            <ServiceContractModal
+        isOpen={isServiceContractModalOpen}
+        onClose={() => setIsServiceContractModalOpen(false)}
+        serviceName="Diane's Catering"
+        servicePrice="0.001 SepoliaETH"
+        selectedServices={selectedServices}
       />
     </div>
   );
