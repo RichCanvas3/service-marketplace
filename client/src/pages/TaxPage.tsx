@@ -394,7 +394,7 @@ const TaxPage: React.FC = () => {
         <div className="section">
           <h3 className="section-title">About Us</h3>
           <div style={{ maxWidth: '800px', lineHeight: 'var(--line-height-relaxed)' }}>
-            <p>Welcome to Creative Collective Tax Studio, where we provide expert tax preparation and planning services. Our team of certified tax professionals combines technical expertise with personalized service to help you navigate complex tax situations.</p>
+            <p>Welcome to Rob's Tax Services, where we provide expert tax preparation and planning services. Our team of certified tax professionals combines technical expertise with personalized service to help you navigate complex tax situations.</p>
           </div>
         </div>
 

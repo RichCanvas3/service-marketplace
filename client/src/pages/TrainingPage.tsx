@@ -394,7 +394,7 @@ const TrainingPage: React.FC = () => {
         <div className="section">
           <h3 className="section-title">About Us</h3>
           <div style={{ maxWidth: '800px', lineHeight: 'var(--line-height-relaxed)' }}>
-            <p>Welcome to Creative Collective Training Studio, where we provide professional development and skill enhancement programs. Our team of expert trainers combines industry knowledge with engaging teaching methods to deliver exceptional learning experiences.</p>
+            <p>Welcome to Doug's Athletic Training, where we provide professional development and skill enhancement programs. Our team of expert trainers combines industry knowledge with engaging teaching methods to deliver exceptional learning experiences.</p>
           </div>
         </div>
 

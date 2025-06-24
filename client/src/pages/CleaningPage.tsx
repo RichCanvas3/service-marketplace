@@ -415,7 +415,7 @@ const CleaningPage: React.FC = () => {
         <div className="section">
           <h3 className="section-title">About Us</h3>
           <div style={{ maxWidth: '800px', lineHeight: 'var(--line-height-relaxed)' }}>
-            <p>Welcome to Creative Collective Cleaning Studio, where we provide exceptional cleaning services for your home or business. Our team of professional cleaners combines attention to detail with eco-friendly practices to deliver spotless results.</p>
+            <p>Welcome to Diane's Home Cleaning, where we provide exceptional cleaning services for your home or business. Our team of professional cleaners combines attention to detail with eco-friendly practices to deliver spotless results.</p>
           </div>
         </div>
 
