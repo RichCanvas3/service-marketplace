@@ -1,18 +1,24 @@
 <img src='./client/public/favicon.svg' width='50'>
 <br>
-<br>
 
 # Service Marketplace & Loyalty Program
 
 ### Note: Some Service Marketplace functionality and features are currently mocked up for demonstration purposes.
 
+### Key Features
+
+- Trusted parties using KYC and KYB processes
+- Verifiable credential (VC) contracts for requested services
+- Delegation of payments allowing service providers to pull funds from the users' MetaMask smart accounts
+- Agent-to-Agent Communication through MCP
+
 ## Service Marketplace
 
-<b>Service Marketplace (SM)</b> is a decentralized application that connects users with local service providers and allows them to purchase a variety of everyday services through the SM platform - home cleaning, lawn care, auto repair, financial guidance, and more!
+<b>Service Marketplace</b> is an example of a real-world decentralized application that connects users with local service providers and allows them to purchase a variety of everyday services - home cleaning, lawn care, auto repair, financial guidance, and more!
 
-SM bridges the gap between traditional and decentralized finance by allowing payment for services via credit/debit card, as well as the MetaMask Card (but only through the SM loyalty program).
+<b>Service Marketplace</b> bridges the gap between traditional and decentralized finance by accepting both traditional and decentralized types of payment for services (but crypto payment using USDC is only available through the Service Market Loyalty Program).
 
-The goal of the SM loyalty program is to drive on-chain spending by offering a way to accumulate points that can be redeemed for exclusive perks and rewards.
+The goal of the <b>Service Marketplace Loyalty Program</b> is to drive on-chain interaction and spending by offering a way to accumulate points that can be redeemed for perks and rewards.
 
 ## Loyalty Program & Card
 
@@ -98,7 +104,18 @@ The list goes on and on - there are endless creative opportunities to reward use
 
 To be written soon.
 
-## Future Improvements
+Both users and service providers have a credibility score
+
+real-world use cases of the MetaMask Card (rewards, identity
+
+On-chain identity and behavioral data can easily be traced.
+
+Loyalty program, access tiers, or exclusive perks.
+
+
+Full transaction history of services purchased on-chain
+
+## Path Forward & Future Improvements
 
 There are many future improvements that can be made to the Service Marketplace application. Some improvements include:
 
@@ -112,16 +129,29 @@ There are many future improvements that can be made to the Service Marketplace a
 
 ## MetaMask Delegation Toolkit (DTK) Implementation
 
-For recurring services purchased through Service Marketplace (house cleaning or lawn care for example), the MetaMask DTK would be utilized to allow recurring payments to be taken out of the user's wallet based on the signed contract between the two parties.
+For recurring services purchased through Service Marketplace (house cleaning or lawn care for example), the MetaMask Delegation Toolkit would be utilized to allow recurring payments to be taken out of the user's wallet based on the signed contract between the two parties.
 
 If the service provider failed to show up for the service appointment and violate the contract, any payment taken out would immediately be refunded back to the user.
 
 Specific permissions, spending limits, and time-based access would be implemented using the MetaMask DTK.
 
+### How Delegation is Utilized
+
+The user's smart account grants permission to the service provider's smart account to take a certain amount of money out on their behalf, under specific rules and restrictions.
+
+Delegator account - user's account
+Delegate account - service provider's account
+
+### Better Context (Re-Write)
+
+The delegator (user) allows the service provider’s account (the delegate) permission to take money out of their account, under specific rules and restrictions.
+
+The user can authorize the service provider to spend a certain amount of their funds for a specific purpose or within a limited timeframe, without giving the service provider full access to their wallet.
+
 ## Submission Requirements
 
-- [x] Must explore real-world use case of the MetaMask Card
-- [x] Must use USDC as the stablecoin of choice
+- [] Must explore real-world use case of the MetaMask Card
+- [] Must use USDC as the stablecoin of choice
 - [] Must have a live hosted demo or working prototype
 - [] Must have a README with project details
 - [] Must have a short recorded demo video
@@ -148,6 +178,20 @@ touch client/.env
 touch server/.env
 
 # Add necessary environment variables
+
+# Client
+VITE_BUNDLER_URL=url-here
+VITE_PAYMASTER_URL=url-here
+VITE_DEBUG=@veramo/*
+VITE_SEPOLIA_RPC_URL=url-here
+VITE_MAINNET_RPC_URL=url-here
+
+# Server
+OPTIMISM_RPC_URL=url-here
+MAINNET_RPC_URL=url-here
+SEPOLIA_RPC_URL=url-here
+SERVER_PRIVATE_KEY=key-here
+BUNDLER_URL=url-here
 ```
 
 ### 3. Install Dependencies & Run Build
