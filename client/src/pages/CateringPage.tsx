@@ -594,7 +594,7 @@ const CateringPage: React.FC = () => {
         isOpen={isServiceContractModalOpen}
         onClose={() => setIsServiceContractModalOpen(false)}
         serviceName="Diane's Catering"
-        servicePrice="0.001 SepoliaETH"
+        servicePrice="0.00005 SepoliaETH"
         selectedServices={selectedServices}
       />
     </div>

@@ -17,6 +17,7 @@ import {
 } from '@metamask/delegation-toolkit';
 import { createPimlicoClient } from 'permissionless/clients/pimlico';
 import { createBundlerClient } from 'viem/account-abstraction';
+import { encodeNonce } from 'permissionless/utils';
 import { useNotification } from '../context/NotificationContext';
 import Modal from './Modal';
 
@@ -52,6 +53,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
   const [walletConnected, setWalletConnected] = useState(false);
   const [userAddress, setUserAddress] = useState<string>('');
   const [delegationTx, setDelegationTx] = useState<string>('');
+  const [delegationData, setDelegationData] = useState<any>(null); // Store actual delegation object
   const [paymentProcessing, setPaymentProcessing] = useState(false);
   const [paymentTx, setPaymentTx] = useState<string>('');
   const [countdown, setCountdown] = useState<number>(0);
@@ -222,11 +224,10 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       console.log('Starting payment delegation creation...');
 
       // Check environment variables
-      const rpcUrl = import.meta.env.VITE_SEPOLIA_RPC_URL;
-      if (!rpcUrl) {
-        throw new Error('VITE_SEPOLIA_RPC_URL environment variable is not set');
-      }
+      const rpcUrl = import.meta.env.VITE_SEPOLIA_RPC_URL || 'https://ethereum-sepolia-rpc.publicnode.com';
+      const bundlerUrl = import.meta.env.VITE_BUNDLER_URL || 'https://api.pimlico.io/v2/11155111/rpc?apikey=pim_KgWXFW2Up4xpDku2WjCfE5';
       console.log('RPC URL configured:', rpcUrl);
+      console.log('Bundler URL configured:', bundlerUrl.substring(0, 50) + '...');
 
       // Create MetaMask smart account
       const publicClient = createPublicClient({
@@ -248,34 +249,53 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       const account = accounts[0];
       console.log('User account:', account);
 
+      // Create wallet client for signing
+      const walletClient = createWalletClient({
+        chain: sepolia,
+        transport: custom(window.ethereum)
+      });
+
+      // Get the account from the wallet client (this will have proper signing methods)
+      const [clientAccount] = await walletClient.getAddresses();
+      console.log('Wallet client account:', clientAccount);
+
+      if (!clientAccount || clientAccount.toLowerCase() !== account.toLowerCase()) {
+        throw new Error('Wallet client account mismatch');
+      }
+
+      // Create a custom account object for MetaMask delegation
+      const customAccount = {
+        address: account as Address,
+        async signMessage({ message }: { message: string | Uint8Array }) {
+          console.log('Signing message:', message);
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          if (typeof message === 'string') {
+            return await signer.signMessage(message);
+          } else {
+            return await signer.signMessage(message);
+          }
+        },
+        async signTypedData({ domain, types, primaryType, message }: any) {
+          console.log('Signing typed data');
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          return await signer.signTypedData(domain, types, message);
+        },
+        async signTransaction(transaction: any) {
+          console.log('Signing transaction');
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          return await signer.signTransaction(transaction);
+        },
+        source: 'custom' as const,
+        type: 'local' as const
+      };
+
       // Create smart account
       console.log('Creating smart account...');
       let smartAccount;
       try {
-        // Create a custom account object that uses MetaMask for signing
-        const customAccount = {
-          address: account as Address,
-          async signMessage({ message }: { message: string | Uint8Array }) {
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            const signer = await provider.getSigner();
-            if (typeof message === 'string') {
-              return await signer.signMessage(message);
-            } else {
-              return await signer.signMessage(message);
-            }
-          },
-          async signTypedData({ domain, types, primaryType, message }: any) {
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            const signer = await provider.getSigner();
-            return await signer.signTypedData(domain, types, message);
-          },
-          async signTransaction() {
-            throw new Error('signTransaction not supported');
-          },
-          source: 'custom' as const,
-          type: 'local' as const
-        };
-
         smartAccount = await toMetaMaskSmartAccount({
           client: publicClient,
           implementation: Implementation.Hybrid,
@@ -284,6 +304,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
           signatory: { account: customAccount },
         });
         console.log('Smart account created:', smartAccount.address);
+        console.log('EOA owner:', account);
       } catch (smartAccountError) {
         console.error('Error creating smart account:', smartAccountError);
         throw new Error(`Failed to create smart account: ${smartAccountError.message}`);
@@ -302,13 +323,18 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
         throw new Error(`Failed to create caveats: ${caveatError.message}`);
       }
 
-            // Create delegation
+            // Create delegation - targeting Service Provider Smart Account instead of EOA
+      const serviceProviderSmartAccount = '0x66cB1D45cA24eB3FF774DA65A5BA5E65Dd63C6ED'; // Service Provider Smart Account
       console.log('Creating delegation...');
       console.log('Delegation params:', {
         from: smartAccount.address,
-        to: contract.providerAddress,
+        to: serviceProviderSmartAccount, // Changed from contract.providerAddress (EOA) to Smart Account
         caveatsCount: caveats.length
       });
+
+      console.log('🔄 SMART ACCOUNT TO SMART ACCOUNT DELEGATION:');
+      console.log('User Smart Account (delegator):', smartAccount.address);
+      console.log('Service Provider Smart Account (delegate):', serviceProviderSmartAccount);
 
       // Note: We're creating a delegation without caveats for testing
       // In production, you'd want to add appropriate caveats for security
@@ -317,10 +343,10 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       try {
         delegation = createDelegation({
           from: smartAccount.address,
-          to: contract.providerAddress as Address,
+          to: serviceProviderSmartAccount as Address, // Changed to Smart Account
           caveats: caveats
         });
-        console.log('Delegation created');
+        console.log('Delegation created (Smart Account → Smart Account)');
       } catch (delegationError) {
         console.error('Error creating delegation:', delegationError);
         throw new Error(`Failed to create delegation: ${delegationError.message}`);
@@ -345,6 +371,15 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       };
 
       console.log('Payment delegation created:', delegation);
+      console.log('Delegation structure for backend:', {
+        delegator: delegation.delegator || delegation.from,
+        delegate: delegation.delegate || delegation.to,
+        signature: signature,
+        full_delegation: delegation
+      });
+
+      // Store the complete delegation data for later use
+      setDelegationData(delegation);
 
       // Send delegation to backend for processing (optional - for demonstration)
       console.log('Sending delegation to backend...');
@@ -354,10 +389,13 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
+                      body: JSON.stringify({
             contractId: contract.id,
             delegation,
-            signature
+            signature,
+            userSmartAccount: smartAccount.address,
+            userEOA: account, // Send the user's EOA address
+            serviceProviderSmartAccount: serviceProviderSmartAccount // Include Service Provider Smart Account
           }),
         });
 
@@ -439,6 +477,254 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
     }
   };
 
+  const deployServiceProviderSmartAccount = async () => {
+    if (!walletConnected || !userAddress) {
+      showNotification('Please connect your wallet first', 'error');
+      return;
+    }
+
+    setIsLoading(true);
+    showNotification('Deploying service provider smart account...', 'info');
+
+    try {
+      console.log('🚀 DEPLOYING SERVICE PROVIDER SMART ACCOUNT');
+      console.log('Service Provider EOA: 0x2aa1520F3a67D5390CB60BdCbAEb4fc897007608');
+
+      const rpcUrl = import.meta.env.VITE_SEPOLIA_RPC_URL || 'https://ethereum-sepolia-rpc.publicnode.com';
+      const bundlerUrl = import.meta.env.VITE_BUNDLER_URL || 'https://api.pimlico.io/v2/11155111/rpc?apikey=pim_KgWXFW2Up4xpDku2WjCfE5';
+
+      // Create clients
+      const publicClient = createPublicClient({
+        chain: sepolia,
+        transport: http(rpcUrl)
+      });
+
+      const bundlerClient = createBundlerClient({
+        transport: http(bundlerUrl),
+        chain: sepolia
+      }) as any;
+
+      const pimlicoClient = createPimlicoClient({
+        transport: http(bundlerUrl),
+        chain: sepolia
+      });
+
+      // Service provider EOA address
+      const serviceProviderEOA = '0x2aa1520F3a67D5390CB60BdCbAEb4fc897007608';
+
+      // Create custom account for signing (this would normally be done server-side)
+      const customAccount = {
+        address: userAddress as Address, // You'll sign on behalf for demo
+        async signMessage({ message }: { message: string | Uint8Array }) {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          return await signer.signMessage(message);
+        },
+        async signTypedData({ domain, types, primaryType, message }: any) {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          return await signer.signTypedData(domain, types, message);
+        },
+        async signTransaction(transaction: any) {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          return await signer.signTransaction(transaction);
+        },
+        source: 'custom' as const,
+        type: 'local' as const
+      };
+
+      // Create service provider smart account
+      const serviceProviderSmartAccount = await toMetaMaskSmartAccount({
+        client: publicClient,
+        implementation: Implementation.Hybrid,
+        deployParams: [serviceProviderEOA as Address, [], [], []],
+        deploySalt: '0x0000000000000000000000000000000000000000000000000000000000000001', // Different salt
+        signatory: { account: customAccount },
+      });
+
+      console.log('Service Provider Smart Account computed address:', serviceProviderSmartAccount.address);
+
+      // Check if already deployed
+      const code = await publicClient.getCode({ address: serviceProviderSmartAccount.address as Address });
+      if (code && code !== '0x') {
+        showNotification('Service provider smart account already deployed!', 'success');
+        console.log('✅ Service provider smart account already exists at:', serviceProviderSmartAccount.address);
+        return;
+      }
+
+      console.log('⚠️ Service provider smart account not deployed. Deploying now...');
+
+      // Get gas fees
+      const { fast: fee } = await pimlicoClient.getUserOperationGasPrice();
+
+      // Generate nonce
+      const key = BigInt(Date.now());
+      const nonce = encodeNonce({ key, sequence: 0n });
+
+      console.log('📡 Sending UserOperation to deploy service provider smart account...');
+
+      // Send UserOperation to deploy service provider smart account
+      const userOperationHash = await bundlerClient.sendUserOperation({
+        account: serviceProviderSmartAccount,
+        calls: [
+          {
+            to: serviceProviderSmartAccount.address, // Self-call to trigger deployment
+            value: parseEther('0'), // No ETH transfer
+            data: '0x' as `0x${string}` // Empty data
+          }
+        ],
+        nonce,
+        ...fee
+      });
+
+      console.log('✅ UserOperation submitted:', userOperationHash);
+      showNotification('Service provider smart account deployment submitted! Waiting for confirmation...', 'info');
+
+      // Wait for confirmation
+      const receipt = await bundlerClient.waitForUserOperationReceipt({
+        hash: userOperationHash,
+      });
+
+      console.log('🎉 SERVICE PROVIDER SMART ACCOUNT DEPLOYED!');
+      console.log('📍 Address:', serviceProviderSmartAccount.address);
+      console.log('🔗 Transaction:', receipt.receipt.transactionHash);
+
+      showNotification(`Service provider smart account deployed! Address: ${serviceProviderSmartAccount.address}`, 'success');
+
+    } catch (error) {
+      console.error('❌ Service provider smart account deployment failed:', error);
+      showNotification(`Deployment failed: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const deploySmartAccount = async () => {
+    if (!walletConnected || !userAddress) {
+      showNotification('Please connect your wallet first', 'error');
+      return;
+    }
+
+    setIsLoading(true);
+    showNotification('Deploying your smart account...', 'info');
+
+    try {
+      console.log('🚀 DEPLOYING SMART ACCOUNT FOR USER:', userAddress);
+
+            const rpcUrl = import.meta.env.VITE_SEPOLIA_RPC_URL || 'https://ethereum-sepolia-rpc.publicnode.com';
+      const bundlerUrl = import.meta.env.VITE_BUNDLER_URL || 'https://api.pimlico.io/v2/11155111/rpc?apikey=pim_KgWXFW2Up4xpDku2WjCfE5';
+
+      console.log('🔧 Environment check:', {
+        rpcUrl,
+        bundlerUrl: bundlerUrl.substring(0, 50) + '...'
+      });
+
+      // Create clients
+      const publicClient = createPublicClient({
+        chain: sepolia,
+        transport: http(rpcUrl)
+      });
+
+      const bundlerClient = createBundlerClient({
+        transport: http(bundlerUrl),
+        chain: sepolia
+      }) as any;
+
+      const pimlicoClient = createPimlicoClient({
+        transport: http(bundlerUrl),
+        chain: sepolia
+      });
+
+      // Create custom account for signing
+      const customAccount = {
+        address: userAddress as Address,
+        async signMessage({ message }: { message: string | Uint8Array }) {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          return await signer.signMessage(message);
+        },
+        async signTypedData({ domain, types, primaryType, message }: any) {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          return await signer.signTypedData(domain, types, message);
+        },
+        async signTransaction(transaction: any) {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          return await signer.signTransaction(transaction);
+        },
+        source: 'custom' as const,
+        type: 'local' as const
+      };
+
+      // Create smart account
+      const smartAccount = await toMetaMaskSmartAccount({
+        client: publicClient,
+        implementation: Implementation.Hybrid,
+        deployParams: [userAddress as Address, [], [], []],
+        deploySalt: '0x0000000000000000000000000000000000000000000000000000000000000000',
+        signatory: { account: customAccount },
+      });
+
+      console.log('Smart account computed address:', smartAccount.address);
+      console.log('Expected address: 0x327ab00586Be5651630a5827BD5C9122c8B639F8');
+
+      // Check if already deployed
+      const code = await publicClient.getCode({ address: smartAccount.address as Address });
+      if (code && code !== '0x') {
+        showNotification('Smart account already deployed!', 'success');
+        console.log('✅ Smart account already exists at:', smartAccount.address);
+        return;
+      }
+
+      console.log('⚠️ Smart account not deployed. Deploying now...');
+
+      // Get gas fees
+      const { fast: fee } = await pimlicoClient.getUserOperationGasPrice();
+
+      // Generate nonce
+      const key = BigInt(Date.now());
+      const nonce = encodeNonce({ key, sequence: 0n });
+
+      console.log('📡 Sending UserOperation to deploy smart account...');
+
+      // Send UserOperation to deploy smart account
+      const userOperationHash = await bundlerClient.sendUserOperation({
+        account: smartAccount,
+        calls: [
+          {
+            to: smartAccount.address, // Self-call to trigger deployment
+            value: parseEther('0'), // No ETH transfer
+            data: '0x' as `0x${string}` // Empty data
+          }
+        ],
+        nonce,
+        ...fee
+      });
+
+      console.log('✅ UserOperation submitted:', userOperationHash);
+      showNotification('Smart account deployment submitted! Waiting for confirmation...', 'info');
+
+      // Wait for confirmation
+      const receipt = await bundlerClient.waitForUserOperationReceipt({
+        hash: userOperationHash,
+      });
+
+      console.log('🎉 SMART ACCOUNT DEPLOYED!');
+      console.log('📍 Address:', smartAccount.address);
+      console.log('🔗 Transaction:', receipt.receipt.transactionHash);
+
+      showNotification(`Smart account deployed successfully! Address: ${smartAccount.address}`, 'success');
+
+    } catch (error) {
+      console.error('❌ Smart account deployment failed:', error);
+      showNotification(`Deployment failed: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const processPayment = async () => {
     if (!contract) return;
 
@@ -455,37 +741,78 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
     try {
       console.log('Processing payment for delegation...');
 
-      // Simulate payment processing using the delegation
-      const response = await fetch('http://localhost:3001/service-contract/execute-payment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          contractId: contract.id,
-          amount: contract.paymentAmount,
-          delegationTx: delegationTx
-        }),
-      });
+            // ONLY DELEGATION PAYMENT - No EOA fallback
+      console.log('🎯 EXECUTING DELEGATION-ONLY PAYMENT');
+        console.log('🚀 REAL DELEGATION: Service provider executes delegation');
+        console.log('From: Smart Contract 0x327ab00586Be5651630a5827BD5C9122c8B639F8 (0.101 ETH)');
+        console.log('To:', contract.providerAddress, '(Service Provider)');
+        console.log('Amount:', contract.paymentAmount, 'ETH');
+        console.log('Executor: Service Provider (pays gas)');
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Payment processed:', data);
+        // Call server to execute the delegation on your behalf
+        showNotification('Requesting service provider to execute delegation...', 'info');
 
-        if (data.transactionHash) {
-          setPaymentTx(data.transactionHash);
-          showNotification(`Payment of ${contract.paymentAmount} ETH processed successfully!`, 'success');
+        const delegationResponse = await fetch('http://localhost:3001/service-contract/execute-payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contractId: contract.id,
+            amount: contract.paymentAmount,
+            delegationTx: 'real-delegation-execution',
+            delegationData: delegationData || {
+              delegate: contract.providerAddress,
+              delegator: '0x327ab00586Be5651630a5827BD5C9122c8B639F8',
+              authority: '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+              caveats: [],
+              salt: '0x',
+              signature: '0xb71881efdde2bc95082dd92d7aee98acfb11adca60bff33734475f80070839734a9c2c8fc884747c8b3f00d0842640c3e8b53950d2de4190b7ee741b9bbc1f951c'
+            }
+          }),
+        });
 
-          // Update contract to show payment completed
-          const updatedContract = { ...contract, status: 'completed' as const };
-          setContract(updatedContract);
+        if (delegationResponse.ok) {
+          const delegationData = await delegationResponse.json();
+          console.log('✅ DELEGATION EXECUTED:', delegationData);
+
+          if (delegationData.success) {
+            showNotification(`Delegation executed! ${contract.paymentAmount} ETH transferred from smart contract`, 'success');
+            setPaymentTx(delegationData.transactionHash);
+            const updatedContract = { ...contract, status: 'completed' as const };
+            setContract(updatedContract);
+            return;
+          }
+        }
+
+        console.log('❌ Delegation execution failed');
+        throw new Error('Delegation execution failed on server - no fallback payment');
+
+      // NO FALLBACK: If delegation fails, show error - don't charge EOA
+      console.log('❌ DELEGATION FAILED - NO FALLBACK PAYMENT');
+      console.log('Will not charge user EOA');
+
+      throw new Error('Delegation execution failed on server. Smart Account payment required.');
+    } catch (error) {
+      console.error('❌ PAYMENT ERROR DETAILS:', error);
+      console.log('Error type:', typeof error);
+      console.log('Error message:', error instanceof Error ? error.message : 'Unknown error');
+      console.log('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+
+      // More specific error handling
+      if (error instanceof Error) {
+        if (error.message.includes('insufficient funds')) {
+          showNotification(`Insufficient funds: You need at least ${contract.paymentAmount} ETH + gas fees`, 'error');
+        } else if (error.message.includes('rejected')) {
+          showNotification('Transaction rejected by user', 'error');
+        } else if (error.message.includes('Server error')) {
+          showNotification(`Server error: ${error.message}`, 'error');
+        } else {
+          showNotification(`Payment failed: ${error.message}`, 'error');
         }
       } else {
-        throw new Error('Payment processing failed');
+        showNotification('Failed to process payment - Unknown error', 'error');
       }
-    } catch (error) {
-      console.error('Error processing payment:', error);
-      showNotification('Failed to process payment', 'error');
     } finally {
       setPaymentProcessing(false);
     }
@@ -495,6 +822,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
     setCurrentStep(1);
     setContract(null);
     setDelegationTx('');
+    setDelegationData(null);
     setPaymentProcessing(false);
     setPaymentTx('');
     setCountdown(0);
@@ -535,6 +863,50 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
             ) : (
               <div className="wallet-connected">
                 <p>✅ Wallet Connected: {userAddress.substring(0, 6)}...{userAddress.substring(38)}</p>
+
+                {/* Smart Account Deployment Section */}
+                <div className="smart-account-section" style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef' }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#333' }}>🤖 Smart Account Deployment</h4>
+
+                  {/* User Smart Account */}
+                  <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '6px' }}>
+                    <h5 style={{ margin: '0 0 5px 0', color: '#1976d2' }}>👤 Your Smart Account</h5>
+                    <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#666' }}>
+                      Your EOA: <code>{userAddress}</code><br/>
+                      Expected Smart Account: <code>0x327ab00586Be5651630a5827BD5C9122c8B639F8</code>
+                    </p>
+                    <button
+                      className="service-button"
+                      style={{ backgroundColor: '#007bff', marginBottom: '5px', padding: '8px 12px', fontSize: '14px' }}
+                      onClick={deploySmartAccount}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? 'Deploying...' : '🚀 Deploy Your Smart Account'}
+                    </button>
+                  </div>
+
+                  {/* Service Provider Smart Account */}
+                  <div style={{ marginBottom: '10px', padding: '10px', backgroundColor: '#f3e5f5', borderRadius: '6px' }}>
+                    <h5 style={{ margin: '0 0 5px 0', color: '#7b1fa2' }}>🏢 Service Provider Smart Account</h5>
+                    <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#666' }}>
+                      Provider EOA: <code>0x2aa1520F3a67D5390CB60BdCbAEb4fc897007608</code><br/>
+                      Will compute new smart account address
+                    </p>
+                    <button
+                      className="service-button"
+                      style={{ backgroundColor: '#9c27b0', marginBottom: '5px', padding: '8px 12px', fontSize: '14px' }}
+                      onClick={deployServiceProviderSmartAccount}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? 'Deploying...' : '🏭 Deploy Provider Smart Account'}
+                    </button>
+                  </div>
+
+                  <p style={{ margin: '0', fontSize: '12px', color: '#888' }}>
+                    Deploy smart accounts to enable full Account Abstraction delegation
+                  </p>
+                </div>
+
                 <button
                   className="service-button"
                   onClick={requestServiceContract}
