@@ -835,17 +835,32 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
         return (
           <div className="step-content">
             <h3>Step 1: Request Service Contract</h3>
-            <div className="service-summary">
-              <h4>Service Details:</h4>
-              <p><strong>Service:</strong> {serviceName}</p>
-              <p><strong>Price:</strong> {servicePrice}</p>
+            <div className="service-summary" style={{ marginBottom: '20px', padding: '15px', backgroundColor: 'linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%)', borderRadius: '8px', border: '1px solid #bbdefb' }}>
+              <h4 style={{ margin: '0 0 15px 0', color: '#1976d2' }}>📋 Service Details</h4>
+              <div style={{ marginBottom: '10px' }}>
+                <strong>Service Type:</strong> <span style={{ color: '#007bff' }}>{serviceName}</span>
+              </div>
+              <div style={{ marginBottom: '10px' }}>
+                <strong>Total Price:</strong> <span style={{ color: '#28a745', fontWeight: 'bold' }}>{servicePrice}</span>
+              </div>
               <div>
                 <strong>Selected Services:</strong>
-                <ul>
+                <div style={{ marginTop: '8px' }}>
                   {selectedServices.map((service, index) => (
-                    <li key={index}>{service}</li>
+                    <div key={index} style={{
+                      display: 'inline-block',
+                      margin: '4px 8px 4px 0',
+                      padding: '4px 8px',
+                      backgroundColor: '#e3f2fd',
+                      color: '#1976d2',
+                      borderRadius: '12px',
+                      fontSize: '13px',
+                      border: '1px solid #bbdefb'
+                    }}>
+                      ✓ {service}
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             </div>
 
@@ -865,11 +880,11 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                 <p>✅ Wallet Connected: {userAddress.substring(0, 6)}...{userAddress.substring(38)}</p>
 
                 {/* Smart Account Deployment Section */}
-                <div className="smart-account-section" style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef' }}>
+                <div className="smart-account-section" style={{ marginBottom: '20px', padding: '15px', background: 'linear-gradient(135deg, #fff3e0 0%, #f3e5f5 50%, #e8f5e8 100%)', borderRadius: '8px', border: '1px solid #ffcc02' }}>
                   <h4 style={{ margin: '0 0 10px 0', color: '#333' }}>🤖 Smart Account Deployment</h4>
 
                   {/* User Smart Account */}
-                  <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#e3f2fd', borderRadius: '6px' }}>
+                  <div style={{ marginBottom: '15px', padding: '10px', background: 'linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%)', borderRadius: '6px', border: '1px solid #2196f3' }}>
                     <h5 style={{ margin: '0 0 5px 0', color: '#1976d2' }}>👤 Your Smart Account</h5>
                     <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#666' }}>
                       Your EOA: <code>{userAddress}</code><br/>
@@ -886,11 +901,11 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                   </div>
 
                   {/* Service Provider Smart Account */}
-                  <div style={{ marginBottom: '10px', padding: '10px', backgroundColor: '#f3e5f5', borderRadius: '6px' }}>
+                  <div style={{ marginBottom: '10px', padding: '10px', background: 'linear-gradient(135deg, #f3e5f5 0%, #fce4ec 100%)', borderRadius: '6px', border: '1px solid #9c27b0' }}>
                     <h5 style={{ margin: '0 0 5px 0', color: '#7b1fa2' }}>🏢 Service Provider Smart Account</h5>
                     <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#666' }}>
                       Provider EOA: <code>0x2aa1520F3a67D5390CB60BdCbAEb4fc897007608</code><br/>
-                      Will compute new smart account address
+                      Smart Account: <code>0x66cB1D45cA24eB3FF774DA65A5BA5E65Dd63C6ED</code>
                     </p>
                     <button
                       className="service-button"
@@ -930,6 +945,17 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                   <span className="contract-status pending">Pending Signature</span>
                 </div>
 
+                {/* Contract Parties Section */}
+                <div className="contract-parties" style={{ marginBottom: '20px', padding: '15px', background: 'linear-gradient(135deg, #fff3e0 0%, #f3e5f5 50%, #e8f5e8 100%)', borderRadius: '8px', border: '1px solid #ffcc02' }}>
+                  <h4 style={{ margin: '0 0 15px 0', color: '#333' }}>📋 Contract Parties</h4>
+                  <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#666' }}>
+                    Service Provider EOA: <code>0x2aa1520F3a67D5390CB60BdCbAEb4fc897007608</code><br/>
+                    Service Provider Smart Account: <code>0x66cB1D45cA24eB3FF774DA65A5BA5E65Dd63C6ED</code><br/>
+                    Customer EOA: <code>{userAddress}</code><br/>
+                    Customer Smart Account: <code>0x327ab00586Be5651630a5827BD5C9122c8B639F8</code>
+                  </p>
+                </div>
+
                 <div className="contract-terms">
                   <h5>Contract Terms:</h5>
                   <div className="terms-box">
@@ -967,7 +993,9 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                       <strong>Amount Authorized:</strong> {contract.paymentAmount} SepoliaETH
                     </div>
                     <div className="detail-item">
-                      <strong>Recipient:</strong> {contract.providerAddress}
+                      <strong>Recipient (Service Provider Smart Account):</strong>
+                      <br/>
+                      <code style={{ fontSize: '12px' }}>0x66cB1D45cA24eB3FF774DA65A5BA5E65Dd63C6ED</code>
                     </div>
                     <div className="detail-item">
                       <strong>Valid Until:</strong> {new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString()}
@@ -1013,12 +1041,12 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                   <strong>Amount:</strong> {contract?.paymentAmount} SepoliaETH
                 </div>
                 <div className="detail-item">
-                  <strong>Your Address (Delegator):</strong>
-                  <code className="address-hash">{userAddress}</code>
+                  <strong>Your Smart Account (Delegator):</strong>
+                  <code className="address-hash">0x327ab00586Be5651630a5827BD5C9122c8B639F8</code>
                 </div>
                 <div className="detail-item">
-                  <strong>Recipient Address (Delegate):</strong>
-                  <code className="address-hash">{contract?.providerAddress}</code>
+                  <strong>Service Provider Smart Account (Delegate):</strong>
+                  <code className="address-hash">0x66cB1D45cA24eB3FF774DA65A5BA5E65Dd63C6ED</code>
                 </div>
                 <div className="detail-item">
                   <strong>Delegation Transaction:</strong>
@@ -1033,16 +1061,18 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
               </div>
 
               {!paymentTx && !paymentProcessing && (
-                <div className="payment-section">
+                <div className="payment-section" style={{ textAlign: 'center' }}>
                   <h5>Ready for Payment Processing</h5>
                   <p>Click "Complete Service" to simulate the service provider collecting payment using your delegation.</p>
-                  <button
-                    className="service-button"
-                    onClick={processPayment}
-                    disabled={paymentProcessing}
-                  >
-                    Complete Service & Process Payment
-                  </button>
+                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '15px' }}>
+                    <button
+                      className="service-button"
+                      onClick={processPayment}
+                      disabled={paymentProcessing}
+                    >
+                      Complete Service & Process Payment
+                    </button>
+                  </div>
                 </div>
               )}
 
