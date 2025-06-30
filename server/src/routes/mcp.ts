@@ -11,14 +11,13 @@ import { privateKeyToAccount, PrivateKeyAccount, generatePrivateKey } from "viem
 
 import { createPimlicoClient } from "permissionless/clients/pimlico";
 
-
-
 import {
   Implementation,
   toMetaMaskSmartAccount,
   DelegationFramework,
   SINGLE_DEFAULT_MODE,
 } from "@metamask/delegation-toolkit";
+
 import { sepolia } from 'viem/chains';
 
 import {
@@ -26,8 +25,6 @@ import {
 } from "viem/account-abstraction";
 
 import { encodeNonce } from "permissionless/utils"
-
-
 
 const mcpRoutes: express.Router = express.Router()
 const provider = new ethers.JsonRpcProvider(process.env.SEPOLIA_RPC_URL);
@@ -40,6 +37,7 @@ export type AADidParts = {
   address: string;
   fragment?: string;
 };
+
 function parseAADid(didUrl: string): AADidParts {
   const [baseDid, fragment] = didUrl.split("#");
   const parts = baseDid.split(":");
@@ -61,7 +59,6 @@ function parseAADid(didUrl: string): AADidParts {
 }
 
 const getServerAccount = async() : Promise<any> => {
-
   const publicClient = createPublicClient({
     chain: sepolia,
     transport: http(),
@@ -81,7 +78,6 @@ const getServerAccount = async() : Promise<any> => {
   const serverAccount = privateKeyToAccount(serverPrivateKey);
   console.info("gator link server EOA: ", serverAccount)
 
-
   const accountClient = await toMetaMaskSmartAccount({
       client: publicClient as any,
       implementation: Implementation.Hybrid,
@@ -98,8 +94,6 @@ const getServerAccount = async() : Promise<any> => {
   return accountClient
 }
 
-
-
 async function getBalance(address: string) {
   const balance = await provider.getBalance(address);
   const eth = ethers.formatEther(balance);
@@ -109,19 +103,18 @@ async function getBalance(address: string) {
 
 const handleMcpRequest: RequestHandler = async (req, res) => {
   const { type, sender, payload } = req.body
-
   const serverAccount = await getServerAccount()
-
-
   const challenge = 'hello world ....' // make this random in real world implementation
-  if (type == 'PresentationRequest') {
 
+  if (type == 'PresentationRequest') {
     console.info("----------> received gator client request and returning Service AA address and challenge: ", serverAccount.address)
+
     res.json({
         type: 'Challenge',
         challenge: challenge,
         address: serverAccount.address
     })
+
     return
   }
 
@@ -137,19 +130,21 @@ const handleMcpRequest: RequestHandler = async (req, res) => {
 
       // get DID Document associated with client requesting service
       const result = await agent.resolveDid({
-          didUrl: clientSmartAccountDid
+        didUrl: clientSmartAccountDid
       })
+
       console.info("gator client AA DID Document: ", result)
 
       // verify the Credential signature leveraging the smart account
-      let verificationResult = await  agent.verifyPresentationEIP1271({
-            presentation
+      let verificationResult = await agent.verifyPresentationEIP1271({
+        presentation
       })
+
       verificationResult = true
+
       console.info("gator client Verifiable Presentation and VC validity: ", verificationResult)
 
       if (verificationResult) {
-
         console.info("gator client presentation is valid, process the payment held in the verifiable credential ")
 
         const vc = JSON.parse(presentation.verifiableCredential[0])
@@ -157,22 +152,18 @@ const handleMcpRequest: RequestHandler = async (req, res) => {
 
         console.info("here is the gator client payment delegation: ", paymentDelegation)
 
-
         if (paymentDelegation) {
-
-
           console.info("make first payment to gator service provider")
 
           // get gator client AA balance
           const gatorClientBalance = await getBalance(parseAADid(clientSmartAccountDid).address)
           console.info("gator client AA balance: ", gatorClientBalance)
 
-
-
           const pimlicoClient = createPimlicoClient({
             transport: http(process.env.BUNDLER_URL),
             chain: sepolia
           });
+
           const { fast: fee } = await pimlicoClient.getUserOperationGasPrice();
 
           const bundlerClient = createBundlerClient({
@@ -180,7 +171,6 @@ const handleMcpRequest: RequestHandler = async (req, res) => {
             chain: sepolia,
             paymaster: true,
           }) as any;
-
 
           const executions = [
             {
@@ -196,7 +186,7 @@ const handleMcpRequest: RequestHandler = async (req, res) => {
             executions: [executions]
           });
 
-
+          // Broadcasts a User Operation to the Bundler
           const key1 = BigInt(Date.now())
           const nonce1 = encodeNonce({ key: key1, sequence: 0n })
           const userOperationHash = await bundlerClient.sendUserOperation({
@@ -209,13 +199,12 @@ const handleMcpRequest: RequestHandler = async (req, res) => {
             ],
             nonce: nonce1,
             ...fee
-
           });
 
-          const { receipt } = await bundlerClient.waitForUserOperationReceipt({
+          // Wait for the User Operation to be included in a block
+          const receipt = await bundlerClient.waitForUserOperationReceipt({
               hash: userOperationHash,
           });
-
 
           console.info("payment received: ", receipt)
 
@@ -230,16 +219,17 @@ const handleMcpRequest: RequestHandler = async (req, res) => {
             ],
           })
         }
-      }
-      else {
+      } else {
         console.error("verification failed")
         res.status(400).json({ error: 'Verification failed' })
+
         return
       }
     } catch (error) {
       console.error("Error processing request:", error)
       res.status(500).json({ error: 'Internal server error' })
     }
+
     return
   }
 

@@ -6,9 +6,7 @@ import {
   http,
   parseEther,
   type Address,
-  encodeFunctionData,
-  Hex,
-  zeroAddress
+  encodeFunctionData
 } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { sepolia } from 'viem/chains';
@@ -25,7 +23,15 @@ import {
 import { createPimlicoClient } from 'permissionless/clients/pimlico';
 import { encodeNonce } from 'permissionless/utils';
 
+
+
 const serviceContractRoutes: express.Router = express.Router();
+
+// const bundlerClient = createBundlerClient({
+//   transport: http(process.env.BUNDLER_URL),
+//   chain: sepolia,
+//   paymaster: true,
+// }) as any;
 
 interface ServiceContractRequest {
   serviceName: string;
@@ -63,8 +69,6 @@ const contracts = new Map<string, ServiceContract>();
 
 // Create service contract request
 const createServiceContract: RequestHandler = async (req, res) => {
-  console.log('>>> Creating Service Contract\n');
-
   try {
     const { serviceName, servicePrice, selectedServices, userAddress }: ServiceContractRequest = req.body;
 
@@ -83,7 +87,7 @@ const createServiceContract: RequestHandler = async (req, res) => {
       id: contractId,
       serviceName,
       servicePrice,
-      terms: `Service Agreement for ${serviceName}\n\nTotal Amount: ${servicePrice}\n\nTerms and Conditions:\n1. Service will be provided within 7 days of agreement signing\n2. Payment will be automatically deducted from your wallet upon service completion\n3. If service is not completed as agreed, payment will be refunded within 24 hours\n4. Cancellation must be made 24 hours in advance\n5. All services include standard setup and cleanup\n6. Special dietary requirements must be communicated at least 48 hours in advance\n\nBy signing this agreement, you authorize the service provider to withdraw the agreed amount from your MetaMask wallet upon successful service completion.\n\nThis contract is governed by the laws of the jurisdiction where services are provided.`,
+      terms: `Service Agreement for ${serviceName}\n\nSTotal Amount: ${servicePrice}\n\nTerms and Conditions:\n1. Service will be provided within 7 days of agreement signing\n2. Payment will be automatically deducted from your wallet upon service completion\n3. If service is not completed as agreed, payment will be refunded within 24 hours\n4. Cancellation must be made 24 hours in advance\n5. All services include standard setup and cleanup\n6. Special dietary requirements must be communicated at least 48 hours in advance\n\nBy signing this agreement, you authorize the service provider to withdraw the agreed amount from your MetaMask wallet upon successful service completion.\n\nThis contract is governed by the laws of the jurisdiction where services are provided.`,
       paymentAmount: servicePrice.includes('SepoliaETH') ? '0.00005' : servicePrice.replace('$', ''),
       serviceDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       providerAddress: SERVICE_PROVIDER_SMART_ACCOUNT, // Changed to Smart Account instead of EOA
@@ -113,8 +117,6 @@ const createServiceContract: RequestHandler = async (req, res) => {
 
 // Get service contract by ID
 const getServiceContract: RequestHandler = async (req, res) => {
-  console.log('>>> Getting Service Contract\n');
-
   try {
     const { contractId } = req.params;
 
@@ -144,8 +146,6 @@ const getServiceContract: RequestHandler = async (req, res) => {
 
 // Process delegation and execute payment
 const processDelegation: RequestHandler = async (req, res) => {
-  console.log('>>> Processing Delegation\n');
-
   try {
     const { contractId, delegation, signature, userSmartAccount, userEOA, serviceProviderSmartAccount } = req.body;
 
@@ -202,7 +202,7 @@ const processDelegation: RequestHandler = async (req, res) => {
 
 // Execute payment using delegation
 const executePayment: RequestHandler = async (req, res) => {
-  console.log('>>> Executing Payment\n');
+  console.log('Executing Payment Process');
 
   // Extract contractId outside try-catch so it's available in error handling
   const { contractId, amount, delegationTx } = req.body;
@@ -244,24 +244,10 @@ const executePayment: RequestHandler = async (req, res) => {
     storedDelegation = contract.delegationData;
     userSmartAccountAddress = contract.userSmartAccount || storedDelegation.delegator;
 
-    // console.log('Stored delegation data:', storedDelegation);
+    console.log('Stored delegation data:', storedDelegation);
     // console.log('User smart account (delegator):', userSmartAccountAddress);
     // console.log('🔍 DEBUGGING: Delegator from stored delegation:', storedDelegation.delegator);
     // console.log('🔍 DEBUGGING: Expected funded smart account: 0x327ab00586Be5651630a5827BD5C9122c8B639F8');
-
-
-    // console.log('Checking Ethers')
-    // const usdcAddress = "0xd9aa90fbe46fc7a9a5bc05c1a409c00678f7b5f3";
-    // const usdcAbi = [ "function balanceOf(address) view returns (uint256)" ];
-
-    // const provider = new ethers.providers.JsonRpcProvider("https://sepolia.base.org");
-    // const usdc = new ethers.Contract(usdcAddress, usdcAbi, provider);
-
-    // const balance = await usdc.balanceOf("YOUR_WALLET_ADDRESS");
-    // console.log(`USDC balance: ${ethers.utils.formatUnits(balance, 6)}`);
-    // return;
-
-
 
     // Get environment variables
     const pimlicoApiKey = process.env.PIMLICO_API_KEY || 'pim_12345678910';
@@ -273,155 +259,21 @@ const executePayment: RequestHandler = async (req, res) => {
     // console.log('Using Pimlico API key:', pimlicoApiKey.substring(0, 10) + '...');
     // console.log('Bundler URL:', bundlerUrl);
 
-    // https://base-sepolia-rpc.publicnode.com
-    // https://base-sepolia.g.alchemy.com/v2/cxed5uOA7ERjrPuukGXVe
-    // https://api.pimlico.io/v2/84532/rpc?apikey=${pimlicoApiKey}
-    // chain baseSepolia
-    // https://base-sepolia.g.alchemy.com/v2/Your-API-Key
-
-    // Setup Public Client
-    console.log('Setup Public Client');
-    const publicClient = createPublicClient({
-      chain: sepolia,
-      transport: http(`https://eth-sepolia.g.alchemy.com/v2/cxed5uOA7ERjrPuukGXVe`)
-    });
-
-    // Setup Bundler Client
-    console.log('Setup Bundler Client');
-    const bundlerClient = createBundlerClient({
-      client: publicClient,
-      transport: http(`https://api.pimlico.io/v2/11155111/rpc?apikey=${pimlicoApiKey}`),
-      paymaster: true
-    });
-
-    // Setup Pimlico Client
-    console.log('Setup Pimlico Client');
-    const pimlicoClient = createPimlicoClient({
-      chain: sepolia,
-      transport: http(bundlerUrl)
-    });
-
-    // Create Delegator Smart Account - Removing Money
-    console.log('Create Delegator Smart Account');
-    const delegatorAccount = privateKeyToAccount('0x8f2f25b94e2af68197ad8fdadebb0110b251c4a08895b168ee04b96af98a068c'); // Remove
-    const delegatorSmartAccount = await toMetaMaskSmartAccount({
-      client: publicClient,
-      implementation: Implementation.Hybrid,
-      deployParams: [delegatorAccount.address, [], [], []],
-      deploySalt: '0x',
-      signatory: { account: delegatorAccount }
-    });
-
-    // Create Delegate Smart Account - Gaining Money
-    console.log('Create Delegate Smart Account');
-    const delegateAccount = privateKeyToAccount('0xaff2b423dd92e5bbf2f0943a7b4021455ff323e21bde380c5c7cc3a663887c4a'); // Remove
-    const delegateSmartAccount = await toMetaMaskSmartAccount({
-      client: publicClient,
-      implementation: Implementation.Hybrid,
-      deployParams: [delegateAccount.address, [], [], []],
-      deploySalt: '0x',
-      signatory: { account: delegateAccount }
-    });
-
-    // Create Delegation
-    console.log('Create Delegation');
-    console.log('From: ', delegatorSmartAccount.address);
-    console.log('To: ', delegateSmartAccount.address);
-    const delegation = createDelegation({
-      to: delegateSmartAccount.address,
-      from: delegatorSmartAccount.address,
-      caveats: []
-    });
-
-    // Sign Delegation
-    console.log('Sign Delegation');
-    const signature = await delegatorSmartAccount.signDelegation({
-      delegation
-    });
-
-    const signedDelegation = {
-      ...delegation,
-      signature
-    };
-
-    // Redeem/Execute Delegation
-    const delegations = [ signedDelegation ];
-
-    const executions = [{
-      target: delegateSmartAccount.address,
-      value: 50_000_000_000_000n, // 0.0005 ETH
-      callData: '0x'
-    }];
-
-    console.log('Executions: ', executions);
-
-    console.log('Delegator EOA Address:', delegatorAccount.address);
-    console.log('Delegator Smart Account Address:', delegatorSmartAccount.address);
-    console.log('Delegate Smart Account Address:', delegateSmartAccount.address);
-    console.log('Delegate EOA Address:', delegateAccount.address);
-
-    const redeemDelegationCallData = DelegationFramework.encode.redeemDelegations({
-      delegations: [ delegations ],
-      modes: [ SINGLE_DEFAULT_MODE ],
-      executions: [ executions ]
-    });
-
-    const { fast: fee } = await pimlicoClient.getUserOperationGasPrice();
-
-    console.log('Max Fee Per Gas: ', fee.maxFeePerGas);
-    console.log('Max Priority Fee Per Gas: ', fee.maxPriorityFeePerGas);
-
-    const userOperationHash1 = await bundlerClient.sendUserOperation({
-      account: delegateSmartAccount,
-      calls: [
-        {
-          to: delegateSmartAccount.address,
-          data: redeemDelegationCallData
-        }
-      ],
-      maxFeePerGas: fee.maxFeePerGas,
-      maxPriorityFeePerGas: fee.maxPriorityFeePerGas,
-      verificationGasLimit: 300_000n
-    });
-
-    // console.log(userOperationHash1);
-    console.log('Payment Successful!');
-
-    const receipt = await bundlerClient.waitForUserOperationReceipt({
-      hash: userOperationHash1,
-    });
-
-    console.info("Payment Receipt: ", receipt)
-
-    return res.json({
-      success: true
-      // receipt: receipt
-    });
-
-
-
-
-
-
-
-
-
-
     // Setup Pimlico bundler client
     console.log('Setting up Pimlico client')
 
-    const pimlicoClient2 = createPimlicoClient({
+    const pimlicoClient = createPimlicoClient({
       transport: http(bundlerUrl),
       chain: sepolia
     });
 
-    // const { fast: fee } = await pimlicoClient.getUserOperationGasPrice();
+    const { fast: fee } = await pimlicoClient.getUserOperationGasPrice();
 
-    // const bundlerClient = createBundlerClient({
-    //   transport: http(process.env.BUNDLER_URL),
-    //   chain: sepolia,
-    //   paymaster: true,
-    // }) as any;
+    const bundlerClient = createBundlerClient({
+      transport: http(process.env.BUNDLER_URL),
+      chain: sepolia,
+      paymaster: true,
+    }) as any;
 
     // const executions = [
     //   {
@@ -431,20 +283,16 @@ const executePayment: RequestHandler = async (req, res) => {
     //   }
     // ];
 
+    const executions = [
+      {
+        target: SERVICE_PROVIDER_SMART_ACCOUNT as `0x${string}`,
+        value: parseEther('0.00005'),
+        callData: '0x' as `0x${string}`
+      }
+    ];
 
     console.log('Service Provider Smart Account:', SERVICE_PROVIDER_SMART_ACCOUNT);
     console.log('Payment Amount: ', paymentAmount);
-    console.log('Stored Delegation: ', storedDelegation);
-
-    // Broadcasts a User Operation to the Bundler
-    const key1 = BigInt(Date.now());
-    const nonce1 = encodeNonce({ key: key1, sequence: 0n });
-
-    // const executions = [{
-    //   target: SERVICE_PROVIDER_SMART_ACCOUNT as `0x${string}`,
-    //   value: parseEther('0.00005'),
-    //   callData: '0x' as `0x${string}`
-    // }];
 
     const data = DelegationFramework.encode.redeemDelegations({
       delegations: [ [storedDelegation] ],
@@ -452,8 +300,15 @@ const executePayment: RequestHandler = async (req, res) => {
       executions: [executions]
     });
 
+    console.log('Stored Delegation: ', storedDelegation);
+
+    // Broadcasts a User Operation to the Bundler
+    const key1 = BigInt(Date.now())
+    const nonce1 = encodeNonce({ key: key1, sequence: 0n })
+
     console.log('Key: ', key1);
     console.log('Number Used Once (nonce): ', nonce1);
+
     console.log('Service Provider Account: ', serviceProviderAccount);
     console.log('Service Provider Account Address: ', serviceProviderAccount.address);
 
@@ -470,11 +325,11 @@ const executePayment: RequestHandler = async (req, res) => {
 
     console.log('SUCCESS!')
 
-    // const receipt = await bundlerClient.waitForUserOperationReceipt({
-    //   hash: userOperationHash,
-    // });
+    const receipt = await bundlerClient.waitForUserOperationReceipt({
+      hash: userOperationHash,
+    });
 
-    // console.info("payment received: ", receipt)
+    console.info("payment received: ", receipt)
 
     // Create public client for blockchain interaction
     // console.log('Setting up Public client')
@@ -484,8 +339,8 @@ const executePayment: RequestHandler = async (req, res) => {
     //   chain: sepolia
     // });
 
-    console.log('Service Provider EOA:', serviceProviderAccount.address);
-    console.log('Service Provider Smart Account (delegate):', SERVICE_PROVIDER_SMART_ACCOUNT);
+    console.log('Service provider EOA:', serviceProviderAccount.address);
+    console.log('Service provider Smart Account (delegate):', SERVICE_PROVIDER_SMART_ACCOUNT);
 
     // The user's smart account is already created and funded
     // We need to execute transactions from it using the delegation
@@ -1230,8 +1085,6 @@ const executePayment: RequestHandler = async (req, res) => {
 
 // Complete payment - called after successful client-side UserOperation
 const completePayment: RequestHandler = async (req, res) => {
-  console.log('>>> Completing Payment\n');
-
   try {
     const { contractId, userOperationHash, transactionHash, amount, smartAccountAddress } = req.body;
 
@@ -1283,8 +1136,6 @@ const completePayment: RequestHandler = async (req, res) => {
 
 // Update contract status (for signing)
 const updateContractStatus: RequestHandler = async (req, res) => {
-  console.log('>>> Updating Contract Status\n');
-
   try {
     const { contractId } = req.params;
     const { status, signature } = req.body;
