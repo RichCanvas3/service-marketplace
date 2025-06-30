@@ -4,6 +4,7 @@ import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
+import ServiceContractModal from '../components/ServiceContractModal';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import mcoMockData from '../components/data/mco-mock.json';
@@ -41,6 +42,7 @@ const CleaningPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isCardFormOpen, setIsCardFormOpen] = useState(false);
+  const [isServiceContractModalOpen, setIsServiceContractModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [preferredDate, setPreferredDate] = useState('');
@@ -91,13 +93,10 @@ const CleaningPage: React.FC = () => {
     if (currentStep === 3) {
       setCurrentStep(4);
     } else if (currentStep === 4) {
-      // Handle form submission
-      const selectedServiceDetails = dhcServices
-        .filter(service => selectedServices.includes(service.name))
-        .map(service => `${service.name} (${service.price})`);
-
-      alert(`Booking submitted!\n\nSelected services:\n${selectedServiceDetails.join('\n')}`);
-      handleCloseModal();
+      // Handle form submission - Open Service Contract Modal
+      console.log('Opening Service Contract Modal');
+      setIsServiceContractModalOpen(true);
+      handleCloseModal(); // Close the booking modal
     } else {
       setCurrentStep(prev => prev + 1);
     }
@@ -604,6 +603,20 @@ const CleaningPage: React.FC = () => {
         isOpen={isCardFormOpen}
         onClose={() => setIsCardFormOpen(false)}
         onSubmit={handleCardSubmit}
+      />
+
+      <ServiceContractModal
+        isOpen={isServiceContractModalOpen}
+        onClose={() => setIsServiceContractModalOpen(false)}
+        serviceName="Cleaning Services"
+        servicePrice={(() => {
+          const total = selectedServices.reduce((sum, serviceName) => {
+            const service = dhcServices.find(s => s.name === serviceName);
+            return sum + (parseFloat(service?.price?.replace(/[^0-9.-]+/g, '') || '0'));
+          }, 0);
+          return `$${total.toFixed(2)}`;
+        })()}
+        selectedServices={selectedServices}
       />
     </div>
   );
