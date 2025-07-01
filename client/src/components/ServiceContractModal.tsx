@@ -203,7 +203,33 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       if (data.success && data.contract) {
         setContract(data.contract);
         setCurrentStep(3);
-        showNotification('Service agreement signed successfully!', 'success');
+
+        // Save signed contract to localStorage
+        const signedContract = {
+          ...data.contract,
+          signature,
+          signedAt: new Date().toISOString(),
+          selectedServices: selectedServices, // Include selected services
+          serviceName: serviceName,
+          servicePrice: servicePrice
+        };
+
+        // Get existing contracts from localStorage
+        const existingContracts = JSON.parse(localStorage.getItem('signedContracts') || '[]');
+
+        // Add new contract (avoid duplicates)
+        const contractIndex = existingContracts.findIndex((c: any) => c.id === signedContract.id);
+        if (contractIndex >= 0) {
+          existingContracts[contractIndex] = signedContract; // Update existing
+        } else {
+          existingContracts.push(signedContract); // Add new
+        }
+
+        // Save back to localStorage
+        localStorage.setItem('signedContracts', JSON.stringify(existingContracts));
+
+        console.log('💾 Contract saved to localStorage:', signedContract);
+        showNotification('Service agreement signed and saved successfully!', 'success');
       } else {
         throw new Error(data.error || 'Failed to update contract status');
       }
@@ -364,7 +390,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       });
 
       // Create delegation - targeting Service Provider Smart Account instead of EOA
-      const serviceProviderSmartAccount = '0x66cB1D45cA24eB3FF774DA65A5BA5E65Dd63C6ED'; // Service Provider Smart Account
+      const serviceProviderSmartAccount = '0xc6Ff874f8D4b590478cC10Fae4D33E968546dCF9'; // Service Provider Smart Account
       console.log('Creating delegation...');
       console.log('Delegation params:', {
         from: smartAccount.address,
@@ -840,6 +866,29 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
               setPaymentTx(serverResult.transactionHash);
               const updatedContract = { ...contract, status: 'completed' as const };
               setContract(updatedContract);
+
+              // Update contract in localStorage with payment completion
+              const completedContract = {
+                ...updatedContract,
+                paymentTx: serverResult.transactionHash,
+                completedAt: new Date().toISOString(),
+                paymentMethod: 'delegation_' + currency.toLowerCase(),
+                selectedServices: selectedServices,
+                serviceName: serviceName,
+                servicePrice: servicePrice
+              };
+
+              // Get existing contracts from localStorage
+              const existingContracts = JSON.parse(localStorage.getItem('signedContracts') || '[]');
+
+              // Update the contract
+              const contractIndex = existingContracts.findIndex((c: any) => c.id === completedContract.id);
+              if (contractIndex >= 0) {
+                existingContracts[contractIndex] = completedContract;
+                localStorage.setItem('signedContracts', JSON.stringify(existingContracts));
+                console.log('💾 Contract updated with payment completion:', completedContract);
+              }
+
               return;
             }
           }
@@ -907,6 +956,29 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                setPaymentTx(receipt.hash);
                const updatedContract = { ...contract, status: 'completed' as const };
                setContract(updatedContract);
+
+               // Update contract in localStorage with payment completion
+               const completedContract = {
+                 ...updatedContract,
+                 paymentTx: receipt.hash,
+                 completedAt: new Date().toISOString(),
+                 paymentMethod: 'direct_eth_transfer',
+                 selectedServices: selectedServices,
+                 serviceName: serviceName,
+                 servicePrice: servicePrice
+               };
+
+               // Get existing contracts from localStorage
+               const existingContracts = JSON.parse(localStorage.getItem('signedContracts') || '[]');
+
+               // Update the contract
+               const contractIndex = existingContracts.findIndex((c: any) => c.id === completedContract.id);
+               if (contractIndex >= 0) {
+                 existingContracts[contractIndex] = completedContract;
+                 localStorage.setItem('signedContracts', JSON.stringify(existingContracts));
+                 console.log('💾 Contract updated with payment completion:', completedContract);
+               }
+
                return;
              } else {
                throw new Error('Transaction failed or was reverted');
@@ -1170,7 +1242,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                     <h5 style={{ margin: '0 0 5px 0', color: '#7b1fa2' }}>🏢 Service Provider Smart Account</h5>
                     <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#666' }}>
                       Provider EOA: <code>0x977bc18693ba4F4bfF8051d27e722b930F3f3Fe3</code><br/>
-                      Smart Account: <code>0x66cB1D45cA24eB3FF774DA65A5BA5E65Dd63C6ED</code>
+                      Smart Account: <code>0xc6Ff874f8D4b590478cC10Fae4D33E968546dCF9</code>
                     </p>
                     <button
                       className="service-button"
@@ -1237,7 +1309,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                   <h4 style={{ margin: '0 0 15px 0', color: '#333' }}>📋 Contract Parties</h4>
                   <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#666' }}>
                     Service Provider EOA: <code>0x977bc18693ba4F4bfF8051d27e722b930F3f3Fe3</code><br/>
-                    Service Provider Smart Account: <code>0x66cB1D45cA24eB3FF774DA65A5BA5E65Dd63C6ED</code><br/>
+                    Service Provider Smart Account: <code>0xc6Ff874f8D4b590478cC10Fae4D33E968546dCF9</code><br/>
                     Customer EOA: <code>{userAddress}</code><br/>
                     Customer Smart Account: <code>0x327ab00586Be5651630a5827BD5C9122c8B639F8</code>
                   </p>
@@ -1282,7 +1354,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                     <div className="detail-item">
                       <strong>Recipient (Service Provider Smart Account):</strong>
                       <br/>
-                      <code style={{ fontSize: '12px' }}>0x66cB1D45cA24eB3FF774DA65A5BA5E65Dd63C6ED</code>
+                      <code style={{ fontSize: '12px' }}>0xc6Ff874f8D4b590478cC10Fae4D33E968546dCF9</code>
                     </div>
                     <div className="detail-item">
                       <strong>Valid Until:</strong> {new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString()}
@@ -1333,7 +1405,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                 </div>
                 <div className="detail-item">
                   <strong>Service Provider Smart Account (Delegate):</strong>
-                  <code className="address-hash">0x66cB1D45cA24eB3FF774DA65A5BA5E65Dd63C6ED</code>
+                  <code className="address-hash">0xc6Ff874f8D4b590478cC10Fae4D33E968546dCF9</code>
                 </div>
                 <div className="detail-item">
                   <strong>Delegation Transaction:</strong>

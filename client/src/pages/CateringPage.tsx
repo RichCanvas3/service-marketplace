@@ -123,8 +123,10 @@ const CateringPage: React.FC = () => {
 
   const handleButton2Click = () => {
     console.log('Opening Service Contract Modal');
+    console.log('Selected services being passed:', selectedServices);
     setIsServiceContractModalOpen(true);
-    handleCloseModal();
+    // Close the main modal without clearing selectedServices
+    setIsModalOpen(false);
   };
 
   const renderStepContent = () => {

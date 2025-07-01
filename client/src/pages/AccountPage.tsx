@@ -1648,6 +1648,359 @@ const AccountPage: React.FC = () => {
             </div>
           )}
         </div>
+
+        {/* Signed Service Contracts Section */}
+        <SignedContractsSection />
+
+      </div>
+    </div>
+  );
+};
+
+// Component to display signed service contracts
+const SignedContractsSection: React.FC = () => {
+  const [signedContracts, setSignedContracts] = useState<any[]>([]);
+  const { showNotification } = useNotification();
+
+  const loadContracts = () => {
+    const contracts = JSON.parse(localStorage.getItem('signedContracts') || '[]');
+    setSignedContracts(contracts);
+  };
+
+  useEffect(() => {
+    loadContracts();
+  }, []);
+
+  const handleRefresh = () => {
+    loadContracts();
+    showNotification('Contracts refreshed!', 'info');
+  };
+
+  const handleClearAll = () => {
+    if (signedContracts.length === 0) return;
+
+    if (window.confirm('Are you sure you want to clear all signed contracts? This cannot be undone.')) {
+      localStorage.removeItem('signedContracts');
+      setSignedContracts([]);
+      showNotification('All contracts cleared!', 'info');
+    }
+  };
+
+  if (signedContracts.length === 0) {
+    return (
+      <div style={{
+        background: 'linear-gradient(135deg, #18181b, #27272a)',
+        borderRadius: 20,
+        padding: '24px 28px',
+        marginBottom: 32,
+        border: '1px solid #3f3f46',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+        width: '100%'
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          marginBottom: 20
+        }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+            borderRadius: '50%',
+            width: 40,
+            height: 40,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 18
+          }}>📋</div>
+          <h3 style={{
+            margin: 0,
+            fontSize: 20,
+            fontWeight: 600,
+            color: '#f7fafc',
+            letterSpacing: 0.5
+          }}>Signed Service Contracts</h3>
+        </div>
+        <div style={{
+          background: '#0f0f23',
+          borderRadius: 16,
+          padding: '32px 24px',
+          border: '1px solid #2d3748',
+          textAlign: 'center',
+          color: '#9ca3af'
+        }}>
+          <div style={{
+            fontSize: 48,
+            marginBottom: 16,
+            opacity: 0.6
+          }}>📄</div>
+          <div style={{
+            fontSize: 18,
+            fontWeight: 600,
+            color: '#e2e8f0',
+            marginBottom: 8
+          }}>No contracts signed yet</div>
+          <div style={{
+            fontSize: 15
+          }}>Your signed service contracts will appear here once you sign agreements with service providers.</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{
+      background: 'linear-gradient(135deg, #18181b, #27272a)',
+      borderRadius: 20,
+      padding: '24px 28px',
+      marginBottom: 32,
+      border: '1px solid #3f3f46',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+      width: '100%'
+    }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12,
+        marginBottom: 20
+      }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+          borderRadius: '50%',
+          width: 40,
+          height: 40,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: 18
+        }}>📋</div>
+        <h3 style={{
+          margin: 0,
+          fontSize: 20,
+          fontWeight: 600,
+          color: '#f7fafc',
+          letterSpacing: 0.5
+        }}>Signed Service Contracts</h3>
+        <div style={{
+          background: 'linear-gradient(135deg, #10b981, #059669)',
+          borderRadius: 8,
+          padding: '4px 12px',
+          color: 'white',
+          fontSize: 12,
+          fontWeight: 600
+        }}>{signedContracts.length} Contract{signedContracts.length !== 1 ? 's' : ''}</div>
+
+        {/* Action Buttons */}
+        <div style={{ display: 'flex', gap: 8, marginLeft: 'auto' }}>
+          <button
+            onClick={handleRefresh}
+            style={{
+              background: 'transparent',
+              border: '1px solid #06b6d4',
+              color: '#06b6d4',
+              borderRadius: 6,
+              padding: '6px 12px',
+              fontSize: 12,
+              cursor: 'pointer',
+              fontWeight: 500,
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              (e.target as HTMLButtonElement).style.backgroundColor = '#06b6d4';
+              (e.target as HTMLButtonElement).style.color = 'white';
+            }}
+            onMouseLeave={(e) => {
+              (e.target as HTMLButtonElement).style.backgroundColor = 'transparent';
+              (e.target as HTMLButtonElement).style.color = '#06b6d4';
+            }}
+          >
+            🔄 Refresh
+          </button>
+          {signedContracts.length > 0 && (
+            <button
+              onClick={handleClearAll}
+              style={{
+                background: 'transparent',
+                border: '1px solid #ef4444',
+                color: '#ef4444',
+                borderRadius: 6,
+                padding: '6px 12px',
+                fontSize: 12,
+                cursor: 'pointer',
+                fontWeight: 500,
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                (e.target as HTMLButtonElement).style.backgroundColor = '#ef4444';
+                (e.target as HTMLButtonElement).style.color = 'white';
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLButtonElement).style.backgroundColor = 'transparent';
+                (e.target as HTMLButtonElement).style.color = '#ef4444';
+              }}
+            >
+              🗑️ Clear All
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16
+      }}>
+        {signedContracts.map((contract, index) => (
+          <div key={contract.id || index} style={{
+            background: '#0f0f23',
+            borderRadius: 12,
+            padding: '20px',
+            border: '1px solid #2d3748',
+            position: 'relative'
+          }}>
+            {/* Contract Header */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              marginBottom: 16
+            }}>
+              <div>
+                <h4 style={{
+                  margin: '0 0 4px 0',
+                  color: '#06b6d4',
+                  fontSize: 18,
+                  fontWeight: 600
+                }}>{contract.serviceName}</h4>
+                <div style={{
+                  color: '#9ca3af',
+                  fontSize: 13,
+                  fontFamily: 'monospace'
+                }}>Contract #{contract.id?.substring(9) || 'N/A'}</div>
+              </div>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-end',
+                gap: 4
+              }}>
+                <div style={{
+                  background: 'linear-gradient(135deg, #10b981, #059669)',
+                  color: 'white',
+                  padding: '4px 12px',
+                  borderRadius: 8,
+                  fontSize: 12,
+                  fontWeight: 600
+                }}>✓ Signed</div>
+                <div style={{
+                  color: '#9ca3af',
+                  fontSize: 12
+                }}>{new Date(contract.signedAt).toLocaleDateString()}</div>
+              </div>
+            </div>
+
+            {/* Selected Services */}
+            {contract.selectedServices && contract.selectedServices.length > 0 && (
+              <div style={{ marginBottom: 16 }}>
+                <div style={{
+                  color: '#e2e8f0',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  marginBottom: 8
+                }}>Selected Services:</div>
+                <div style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 6
+                }}>
+                  {contract.selectedServices.map((service: string, serviceIndex: number) => (
+                    <div key={serviceIndex} style={{
+                      background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+                      color: 'white',
+                      padding: '4px 10px',
+                      borderRadius: 10,
+                      fontSize: 12,
+                      fontWeight: 500
+                    }}>
+                      ✓ {service}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Contract Details */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: 12,
+              marginBottom: 16
+            }}>
+              <div>
+                <div style={{
+                  color: '#9ca3af',
+                  fontSize: 12,
+                  fontWeight: 500,
+                  marginBottom: 4
+                }}>Payment Amount</div>
+                <div style={{
+                  color: '#10b981',
+                  fontSize: 16,
+                  fontWeight: 600
+                }}>{contract.paymentAmount} {contract.servicePrice?.includes('USDC') ? 'USDC' : 'ETH'}</div>
+              </div>
+              <div>
+                <div style={{
+                  color: '#9ca3af',
+                  fontSize: 12,
+                  fontWeight: 500,
+                  marginBottom: 4
+                }}>Service Date</div>
+                <div style={{
+                  color: '#e2e8f0',
+                  fontSize: 14,
+                  fontWeight: 500
+                }}>{contract.serviceDate ? new Date(contract.serviceDate).toLocaleDateString() : 'TBD'}</div>
+              </div>
+              <div>
+                <div style={{
+                  color: '#9ca3af',
+                  fontSize: 12,
+                  fontWeight: 500,
+                  marginBottom: 4
+                }}>Status</div>
+                <div style={{
+                  color: '#f59e0b',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  textTransform: 'capitalize'
+                }}>{contract.status || 'signed'}</div>
+              </div>
+            </div>
+
+            {/* Signature Info */}
+            <div style={{
+              background: '#1a1a2e',
+              borderRadius: 8,
+              padding: '12px',
+              border: '1px solid #374151'
+            }}>
+              <div style={{
+                color: '#9ca3af',
+                fontSize: 12,
+                fontWeight: 500,
+                marginBottom: 4
+              }}>Digital Signature</div>
+              <div style={{
+                color: '#4fd1c5',
+                fontFamily: 'monospace',
+                fontSize: 11,
+                wordBreak: 'break-all',
+                lineHeight: 1.4
+              }}>{contract.signature?.substring(0, 100)}...</div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
