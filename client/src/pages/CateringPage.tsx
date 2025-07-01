@@ -308,8 +308,13 @@ const CateringPage: React.FC = () => {
                   Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Request Service Contract
+                  Pay with MetaMask
                 </button>
+              </div>
+              <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
+                <Link to="/loyalty-card" style={{ color: '#ED8936', textDecoration: 'underline' }}>
+                  Learn more.
+                </Link>
               </div>
             </div>
           </div>
@@ -596,7 +601,7 @@ const CateringPage: React.FC = () => {
         isOpen={isServiceContractModalOpen}
         onClose={() => setIsServiceContractModalOpen(false)}
         serviceName="Diane's Catering"
-                      servicePrice="0.000001 USDC"
+                      servicePrice="1 USDC"
         selectedServices={selectedServices}
       />
     </div>

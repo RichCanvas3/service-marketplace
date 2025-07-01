@@ -135,9 +135,26 @@ const AccountPage: React.FC = () => {
     setTimeout(() => setSaveMsg(''), 1500);
   };
 
+  const handleResetLoyalty = () => {
+    if (window.confirm('Reset loyalty points to 0 and clear all rewards/transactions? This cannot be undone.')) {
+      const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
+      mcoData.loyaltyPoints = 0;
+      mcoData.loyaltyMember = false;
+      mcoData.membershipLevel = 'Bronze';
+      mcoData.rewards = [];
+      mcoData.pastTransactions = [];
+      localStorage.setItem('mcoData', JSON.stringify(mcoData));
+      showNotification('🔄 Loyalty data reset! You now have 0 points.', 'info');
+      // Force a page refresh to update the UI
+      window.location.reload();
+    }
+  };
+
   const truncateAddress = (address: string) => {
     return address ? `${address.slice(0, 5)}...` : '';
   };
+
+
 
   // Function to get color based on KYC credibility score
   const getKycCredibilityColor = (score: number) => {
@@ -869,6 +886,33 @@ const AccountPage: React.FC = () => {
               color: '#f7fafc',
               letterSpacing: 0.5
             }}>My Loyalty Card</h3>
+
+            {/* Reset Loyalty Button */}
+            <button
+              onClick={handleResetLoyalty}
+              style={{
+                background: 'transparent',
+                border: '1px solid #f59e0b',
+                color: '#f59e0b',
+                borderRadius: 8,
+                padding: '8px 12px',
+                fontSize: 12,
+                cursor: 'pointer',
+                fontWeight: 500,
+                transition: 'all 0.2s ease',
+                marginLeft: 'auto'
+              }}
+              onMouseEnter={(e) => {
+                (e.target as HTMLButtonElement).style.backgroundColor = '#f59e0b';
+                (e.target as HTMLButtonElement).style.color = 'white';
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLButtonElement).style.backgroundColor = 'transparent';
+                (e.target as HTMLButtonElement).style.color = '#f59e0b';
+              }}
+            >
+              🎯 Reset Loyalty
+            </button>
           </div>
           {mcoData && mcoData.loyaltyMember ? (
             <div style={{
@@ -1662,8 +1706,27 @@ const SignedContractsSection: React.FC = () => {
   const [signedContracts, setSignedContracts] = useState<any[]>([]);
   const { showNotification } = useNotification();
 
+  // Get the appropriate block explorer URL for transaction hash
+  const getExplorerUrl = (txHash: string) => {
+    // Since we're primarily using Base Sepolia (84532), default to that
+    // Users can verify the network from the transaction details
+    return `https://sepolia.etherscan.io/tx/${txHash}`;
+  };
+
   const loadContracts = () => {
-    const contracts = JSON.parse(localStorage.getItem('signedContracts') || '[]');
+    const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
+
+    // Migration: Move old signedContracts to MCO object
+    const oldContracts = localStorage.getItem('signedContracts');
+    if (oldContracts && !mcoData.signedContracts) {
+      console.log('📦 Migrating signedContracts to MCO object...');
+      mcoData.signedContracts = JSON.parse(oldContracts);
+      localStorage.setItem('mcoData', JSON.stringify(mcoData));
+      localStorage.removeItem('signedContracts'); // Clean up old key
+      console.log('✅ Migration complete!');
+    }
+
+    const contracts = mcoData.signedContracts || [];
     setSignedContracts(contracts);
   };
 
@@ -1680,7 +1743,9 @@ const SignedContractsSection: React.FC = () => {
     if (signedContracts.length === 0) return;
 
     if (window.confirm('Are you sure you want to clear all signed contracts? This cannot be undone.')) {
-      localStorage.removeItem('signedContracts');
+      const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
+      mcoData.signedContracts = [];
+      localStorage.setItem('mcoData', JSON.stringify(mcoData));
       setSignedContracts([]);
       showNotification('All contracts cleared!', 'info');
     }
@@ -1895,7 +1960,19 @@ const SignedContractsSection: React.FC = () => {
                 <div style={{
                   color: '#9ca3af',
                   fontSize: 12
-                }}>{new Date(contract.signedAt).toLocaleDateString()}</div>
+                }}>{(() => {
+                  if (!contract.signedAt) return 'N/A';
+                  const date = new Date(contract.signedAt);
+                  if (isNaN(date.getTime())) return 'N/A';
+
+                  return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  });
+                })()}</div>
               </div>
             </div>
 
@@ -1960,7 +2037,18 @@ const SignedContractsSection: React.FC = () => {
                   color: '#e2e8f0',
                   fontSize: 14,
                   fontWeight: 500
-                }}>{contract.serviceDate ? new Date(contract.serviceDate).toLocaleDateString() : 'TBD'}</div>
+                }}>{(() => {
+                  if (!contract.serviceDate) return 'TBD';
+                  const date = new Date(contract.serviceDate);
+                  if (isNaN(date.getTime())) return 'TBD';
+
+                  return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    weekday: 'short'
+                  });
+                })()}</div>
               </div>
               <div>
                 <div style={{
@@ -1980,24 +2068,104 @@ const SignedContractsSection: React.FC = () => {
 
             {/* Signature Info */}
             <div style={{
-              background: '#1a1a2e',
-              borderRadius: 8,
-              padding: '12px',
-              border: '1px solid #374151'
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: 12
             }}>
-              <div style={{
-                color: '#9ca3af',
-                fontSize: 12,
-                fontWeight: 500,
-                marginBottom: 4
-              }}>Digital Signature</div>
-              <div style={{
-                color: '#4fd1c5',
-                fontFamily: 'monospace',
-                fontSize: 11,
-                wordBreak: 'break-all',
-                lineHeight: 1.4
-              }}>{contract.signature?.substring(0, 100)}...</div>
+              {contract.signature && (
+                <div style={{
+                  background: '#1a1a2e',
+                  borderRadius: 8,
+                  padding: '12px',
+                  border: '1px solid #374151'
+                }}>
+                  <div style={{
+                    color: '#9ca3af',
+                    fontSize: 12,
+                    fontWeight: 500,
+                    marginBottom: 4
+                  }}>Service Contract Signature</div>
+                  <div style={{
+                    color: '#4fd1c5',
+                    fontFamily: 'monospace',
+                    fontSize: 11,
+                    wordBreak: 'break-all',
+                    lineHeight: 1.4
+                  }}>{contract.signature.substring(0, 100)}...</div>
+                </div>
+              )}
+              {contract.delegationData?.signature && (
+                <div style={{
+                  background: '#1a1a2e',
+                  borderRadius: 8,
+                  padding: '12px',
+                  border: '1px solid #374151'
+                }}>
+                  <div style={{
+                    color: '#9ca3af',
+                    fontSize: 12,
+                    fontWeight: 500,
+                    marginBottom: 4
+                  }}>Delegation Signature</div>
+                  <div style={{
+                    color: '#a78bfa',
+                    fontFamily: 'monospace',
+                    fontSize: 11,
+                    wordBreak: 'break-all',
+                    lineHeight: 1.4
+                  }}>{contract.delegationData.signature.substring(0, 100)}...</div>
+                </div>
+              )}
+              {contract.paymentTx && (
+                <div style={{
+                  background: '#1a1a2e',
+                  borderRadius: 8,
+                  padding: '12px',
+                  border: '1px solid #374151'
+                }}>
+                  <div style={{
+                    color: '#9ca3af',
+                    fontSize: 12,
+                    fontWeight: 500,
+                    marginBottom: 4,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6
+                  }}>
+                    Payment Transaction Hash
+                    <span style={{
+                      fontSize: 10,
+                      color: '#6b7280'
+                    }}>🔗 Click to view on explorer</span>
+                  </div>
+                  <a
+                    href={getExplorerUrl(contract.paymentTx)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: '#fbbf24',
+                      fontFamily: 'monospace',
+                      fontSize: 11,
+                      wordBreak: 'break-all',
+                      lineHeight: 1.4,
+                      textDecoration: 'none',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      display: 'block'
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.target as HTMLElement).style.color = '#f59e0b';
+                      (e.target as HTMLElement).style.textDecoration = 'underline';
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.target as HTMLElement).style.color = '#fbbf24';
+                      (e.target as HTMLElement).style.textDecoration = 'none';
+                    }}
+                  >
+                    {contract.paymentTx}
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         ))}

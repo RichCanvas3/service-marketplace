@@ -44,7 +44,7 @@ const LoyaltyCardPage: React.FC = () => {
       userId: account || mcoObj.userId || '',
       loyaltyMember: true,
       membershipLevel: 'Bronze',
-      loyaltyPoints: 380,
+      loyaltyPoints: 0,
       rewards: [
         { id: 1, name: '5% Off Next House Cleaning', summary: 'Reward for writing a review and referring a friend', points: 100 }
       ],

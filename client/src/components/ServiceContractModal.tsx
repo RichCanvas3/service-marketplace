@@ -61,6 +61,100 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
   const [countdown, setCountdown] = useState<number>(0);
   const { showNotification } = useNotification();
 
+  // Helper function to award loyalty points (100 points per 1 USDC spent)
+  const awardLoyaltyPoints = (paymentAmount: string, currency: string, serviceName: string) => {
+    const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
+
+    if (currency === 'USDC') {
+      const usdcAmount = parseFloat(paymentAmount);
+      const pointsEarned = Math.floor(usdcAmount * 100); // 100 points per 1 USDC
+
+      // Update loyalty points
+      const currentPoints = mcoData.loyaltyPoints || 0;
+      mcoData.loyaltyPoints = currentPoints + pointsEarned;
+
+      // Update loyalty member status if they weren't already
+      if (!mcoData.loyaltyMember && pointsEarned > 0) {
+        mcoData.loyaltyMember = true;
+      }
+
+            // Update membership level and add rewards based on total points
+      const oldLevel = mcoData.membershipLevel || 'Bronze';
+      if (mcoData.loyaltyPoints >= 1000) {
+        mcoData.membershipLevel = 'Gold';
+      } else if (mcoData.loyaltyPoints >= 500) {
+        mcoData.membershipLevel = 'Silver';
+      } else if (mcoData.loyaltyPoints >= 100) {
+        mcoData.membershipLevel = 'Bronze';
+      }
+
+      // Initialize rewards array if it doesn't exist
+      if (!mcoData.rewards) {
+        mcoData.rewards = [];
+      }
+
+      // Add milestone rewards when hitting certain point thresholds
+      const milestones = [
+        { points: 100, reward: '🥉 Bronze Status Unlocked!', description: '5% discount on future services' },
+        { points: 500, reward: '🥈 Silver Status Unlocked!', description: '10% discount + Priority booking' },
+        { points: 1000, reward: '🥇 Gold Status Unlocked!', description: '15% discount + Free upgrades' },
+        { points: 2000, reward: '💎 Diamond Member!', description: '20% discount + VIP support' }
+      ];
+
+      milestones.forEach(milestone => {
+        const previousPoints = currentPoints;
+        if (mcoData.loyaltyPoints >= milestone.points && previousPoints < milestone.points) {
+          mcoData.rewards.push({
+            id: `milestone-${milestone.points}`,
+            title: milestone.reward,
+            description: milestone.description,
+            earnedAt: new Date().toISOString(),
+            type: 'milestone'
+          });
+          showNotification(`🎊 ${milestone.reward} ${milestone.description}`, 'success');
+        }
+      });
+
+      // Add transaction history if it doesn't exist
+      if (!mcoData.pastTransactions) {
+        mcoData.pastTransactions = [];
+      }
+
+      // Add this transaction to history
+      mcoData.pastTransactions.unshift({
+        id: `tx-${Date.now()}`,
+        serviceName: serviceName,
+        amount: usdcAmount,
+        currency: 'USDC',
+        pointsEarned: pointsEarned,
+        date: new Date().toISOString(),
+        type: 'purchase'
+      });
+
+      // Keep only last 10 transactions
+      if (mcoData.pastTransactions.length > 10) {
+        mcoData.pastTransactions = mcoData.pastTransactions.slice(0, 10);
+      }
+
+      // Save updated MCO data
+      localStorage.setItem('mcoData', JSON.stringify(mcoData));
+
+      console.log(`🎉 LOYALTY POINTS AWARDED: ${pointsEarned} points for ${usdcAmount} USDC spent on ${serviceName}`);
+      console.log(`📊 Total Points: ${mcoData.loyaltyPoints} | Level: ${mcoData.membershipLevel}`);
+
+      // Show notification about points earned
+      if (oldLevel !== mcoData.membershipLevel) {
+        showNotification(`🎯 ${pointsEarned} points earned! 🎊 Promoted to ${mcoData.membershipLevel}! Total: ${mcoData.loyaltyPoints}`, 'success');
+      } else {
+        showNotification(`🎯 ${pointsEarned} loyalty points earned! Total: ${mcoData.loyaltyPoints}`, 'success');
+      }
+
+      return pointsEarned;
+    }
+
+    return 0;
+  };
+
   useEffect(() => {
     checkWalletConnection();
     // Debug: Check if environment variable is loaded
@@ -204,7 +298,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
         setContract(data.contract);
         setCurrentStep(3);
 
-        // Save signed contract to localStorage
+        // Save signed contract to MCO object
         const signedContract = {
           ...data.contract,
           signature,
@@ -214,8 +308,9 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
           servicePrice: servicePrice
         };
 
-        // Get existing contracts from localStorage
-        const existingContracts = JSON.parse(localStorage.getItem('signedContracts') || '[]');
+        // Get existing MCO data and contracts
+        const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
+        const existingContracts = mcoData.signedContracts || [];
 
         // Add new contract (avoid duplicates)
         const contractIndex = existingContracts.findIndex((c: any) => c.id === signedContract.id);
@@ -225,8 +320,9 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
           existingContracts.push(signedContract); // Add new
         }
 
-        // Save back to localStorage
-        localStorage.setItem('signedContracts', JSON.stringify(existingContracts));
+        // Save contracts back to MCO object
+        mcoData.signedContracts = existingContracts;
+        localStorage.setItem('mcoData', JSON.stringify(mcoData));
 
         console.log('💾 Contract saved to localStorage:', signedContract);
         showNotification('Service agreement signed and saved successfully!', 'success');
@@ -352,7 +448,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       let spendingLimitWei: bigint;
 
       if (isUSDC) {
-        // For USDC: 6 decimals, so 0.000001 USDC = 1 wei of USDC
+        // For USDC: 6 decimals, so 1 USDC = 1,000,000 wei of USDC
         paymentAmountWei = BigInt(parseFloat(contract.paymentAmount) * 1_000_000); // Convert to USDC wei (6 decimals)
         spendingLimitWei = paymentAmountWei + BigInt(1000); // Add small USDC buffer
       } else {
@@ -867,6 +963,9 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
               const updatedContract = { ...contract, status: 'completed' as const };
               setContract(updatedContract);
 
+              // Award loyalty points for USDC payments
+              awardLoyaltyPoints(contract.paymentAmount, currency, serviceName);
+
               // Update contract in localStorage with payment completion
               const completedContract = {
                 ...updatedContract,
@@ -878,14 +977,16 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                 servicePrice: servicePrice
               };
 
-              // Get existing contracts from localStorage
-              const existingContracts = JSON.parse(localStorage.getItem('signedContracts') || '[]');
+              // Get existing MCO data and contracts
+              const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
+              const existingContracts = mcoData.signedContracts || [];
 
               // Update the contract
               const contractIndex = existingContracts.findIndex((c: any) => c.id === completedContract.id);
               if (contractIndex >= 0) {
                 existingContracts[contractIndex] = completedContract;
-                localStorage.setItem('signedContracts', JSON.stringify(existingContracts));
+                mcoData.signedContracts = existingContracts;
+                localStorage.setItem('mcoData', JSON.stringify(mcoData));
                 console.log('💾 Contract updated with payment completion:', completedContract);
               }
 
@@ -952,10 +1053,14 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                console.log('🎉 CLIENT-SIDE TRANSFER SUCCESSFUL!');
                console.log('Transaction receipt:', receipt);
 
-               showNotification(`Payment successful! ${contract.paymentAmount} ETH transferred to service provider`, 'success');
+               const currency = 'ETH';
+               showNotification(`Payment successful! ${contract.paymentAmount} ${currency} transferred to service provider`, 'success');
                setPaymentTx(receipt.hash);
                const updatedContract = { ...contract, status: 'completed' as const };
                setContract(updatedContract);
+
+               // Award loyalty points (ETH payments currently don't earn points, only USDC)
+               awardLoyaltyPoints(contract.paymentAmount, currency, serviceName);
 
                // Update contract in localStorage with payment completion
                const completedContract = {
@@ -968,14 +1073,16 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                  servicePrice: servicePrice
                };
 
-               // Get existing contracts from localStorage
-               const existingContracts = JSON.parse(localStorage.getItem('signedContracts') || '[]');
+               // Get existing MCO data and contracts
+               const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
+               const existingContracts = mcoData.signedContracts || [];
 
                // Update the contract
                const contractIndex = existingContracts.findIndex((c: any) => c.id === completedContract.id);
                if (contractIndex >= 0) {
                  existingContracts[contractIndex] = completedContract;
-                 localStorage.setItem('signedContracts', JSON.stringify(existingContracts));
+                 mcoData.signedContracts = existingContracts;
+                 localStorage.setItem('mcoData', JSON.stringify(mcoData));
                  console.log('💾 Contract updated with payment completion:', completedContract);
                }
 
@@ -1076,21 +1183,21 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
         userBalanceFormatted: ethers.formatUnits(balance, decimals) + ' USDC'
       });
 
-      // Check if user has enough USDC
-      if (balance < 1n) {
-        showNotification(`Insufficient USDC balance. You have ${ethers.formatUnits(balance, decimals)} USDC, need at least 0.000001 USDC`, 'error');
+              // Check if user has enough USDC
+        if (balance < 1000000n) {
+        showNotification(`Insufficient USDC balance. You have ${ethers.formatUnits(balance, decimals)} USDC, need at least 1 USDC`, 'error');
         return;
       }
 
       // Transfer details
       const recipientAddress = '0x977bc18693ba4F4bfF8051d27e722b930F3f3Fe3'; // Service Provider EOA
-      const transferAmount = 1n; // 0.000001 USDC (1 wei of USDC since USDC has 6 decimals)
+      const transferAmount = 1000000n; // 1 USDC (1,000,000 wei of USDC since USDC has 6 decimals)
 
       console.log('Transfer Details:', {
         from: userAddress,
         to: recipientAddress,
         amount: transferAmount.toString(),
-        amountFormatted: '0.000001 USDC'
+        amountFormatted: '1 USDC'
       });
 
       showNotification('Executing USDC transfer...', 'info');
@@ -1112,10 +1219,13 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
           gasUsed: receipt.gasUsed?.toString(),
           from: userAddress,
           to: recipientAddress,
-          amount: '0.000001 USDC'
+          amount: '1 USDC'
         });
 
-        showNotification('🎉 USDC transfer successful! 0.000001 USDC transferred', 'success');
+        showNotification('🎉 USDC transfer successful! 1 USDC transferred', 'success');
+
+        // Award loyalty points for test transfer too (simulating service purchase)
+        awardLoyaltyPoints('1', 'USDC', 'USDC Test Transfer');
 
         // Check balances after transfer
         const newBalance = await usdcContract.balanceOf(userAddress);
@@ -1263,12 +1373,12 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                 <div className="usdc-test-section" style={{ marginBottom: '20px', padding: '15px', background: 'linear-gradient(135deg, #fff9c4 0%, #ffeb3b 20%, #fff9c4 100%)', borderRadius: '8px', border: '1px solid #ffc107' }}>
                   <h4 style={{ margin: '0 0 10px 0', color: '#333' }}>🧪 USDC Test Transfer</h4>
                   <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#666' }}>
-                    Test a direct EOA to EOA USDC transfer of 0.000001 USDC before using delegation
+                    Test a direct EOA to EOA USDC transfer of 1 USDC before using delegation
                   </p>
                   <div style={{ fontSize: '12px', color: '#888', marginBottom: '10px' }}>
                     <strong>From:</strong> {userAddress}<br/>
                     <strong>To:</strong> 0x977bc18693ba4F4bfF8051d27e722b930F3f3Fe3 (Service Provider EOA)<br/>
-                    <strong>Amount:</strong> 0.000001 USDC (1 wei of USDC)<br/>
+                    <strong>Amount:</strong> 1 USDC (1,000,000 wei of USDC)<br/>
                     <strong>Contract:</strong> 0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238
                   </div>
                   <button
@@ -1350,6 +1460,11 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                   <div className="delegation-details">
                     <div className="detail-item">
                       <strong>Amount Authorized:</strong> {contract.paymentAmount} {servicePrice.includes('USDC') ? 'USDC' : 'SepoliaETH'}
+                    </div>
+                    <div className="detail-item">
+                      <strong>Sender (Your Smart Account):</strong>
+                      <br/>
+                      <code style={{ fontSize: '12px' }}>0x327ab00586Be5651630a5827BD5C9122c8B639F8</code>
                     </div>
                     <div className="detail-item">
                       <strong>Recipient (Service Provider Smart Account):</strong>

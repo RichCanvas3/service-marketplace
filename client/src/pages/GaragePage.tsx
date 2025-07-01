@@ -4,6 +4,7 @@ import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
+import ServiceContractModal from '../components/ServiceContractModal';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import mcoMockData from '../components/data/mco-mock.json';
@@ -23,6 +24,7 @@ const GaragePage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isCardFormOpen, setIsCardFormOpen] = useState(false);
+  const [isServiceContractModalOpen, setIsServiceContractModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [preferredDate, setPreferredDate] = useState('');
@@ -120,9 +122,11 @@ const GaragePage: React.FC = () => {
   };
 
   const handleButton2Click = () => {
-    console.log('Loyalty card payment clicked');
-    handleCloseModal();
-    showNotification('Request for service sent!', 'success');
+    console.log('Opening Service Contract Modal');
+    console.log('Selected services being passed:', selectedServices);
+    setIsServiceContractModalOpen(true);
+    // Close the main modal without clearing selectedServices
+    setIsModalOpen(false);
   };
 
   const renderStepContent = () => {
@@ -304,8 +308,13 @@ const GaragePage: React.FC = () => {
                   Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Request Service Contract
+                  Pay with MetaMask
                 </button>
+              </div>
+              <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
+                <Link to="/loyalty-card" style={{ color: '#ED8936', textDecoration: 'underline' }}>
+                  Learn more.
+                </Link>
               </div>
             </div>
           </div>
@@ -588,6 +597,14 @@ const GaragePage: React.FC = () => {
         isOpen={isCardFormOpen}
         onClose={() => setIsCardFormOpen(false)}
         onSubmit={handleCardSubmit}
+      />
+
+      <ServiceContractModal
+        isOpen={isServiceContractModalOpen}
+        onClose={() => setIsServiceContractModalOpen(false)}
+        serviceName="Mike's Mobile Garage"
+                      servicePrice="1 USDC"
+        selectedServices={selectedServices}
       />
     </div>
   );

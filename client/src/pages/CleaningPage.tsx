@@ -138,9 +138,11 @@ const CleaningPage: React.FC = () => {
   };
 
   const handleButton2Click = () => {
-    console.log('Loyalty card payment clicked');
-    handleCloseModal();
-    showNotification('Request for service sent!', 'success');
+    console.log('Opening Service Contract Modal');
+    console.log('Selected services being passed:', selectedServices);
+    setIsServiceContractModalOpen(true);
+    // Close the main modal without clearing selectedServices
+    setIsModalOpen(false);
   };
 
   const renderStepContent = () => {
@@ -322,8 +324,13 @@ const CleaningPage: React.FC = () => {
                   Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Request Service Contract
+                  Pay with MetaMask
                 </button>
+              </div>
+              <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
+                <Link to="/loyalty-card" style={{ color: '#ED8936', textDecoration: 'underline' }}>
+                  Learn more.
+                </Link>
               </div>
             </div>
           </div>
@@ -608,14 +615,8 @@ const CleaningPage: React.FC = () => {
       <ServiceContractModal
         isOpen={isServiceContractModalOpen}
         onClose={() => setIsServiceContractModalOpen(false)}
-        serviceName="Cleaning Services"
-        servicePrice={(() => {
-          const total = selectedServices.reduce((sum, serviceName) => {
-            const service = dhcServices.find(s => s.name === serviceName);
-            return sum + (parseFloat(service?.price?.replace(/[^0-9.-]+/g, '') || '0'));
-          }, 0);
-          return `$${total.toFixed(2)}`;
-        })()}
+        serviceName="Daisy's Home Cleaning"
+                      servicePrice="1 USDC"
         selectedServices={selectedServices}
       />
     </div>
