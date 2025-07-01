@@ -317,8 +317,8 @@ const executePayment: RequestHandler = async (req, res) => {
 
     // Create Delegate Smart Account - Gaining Money
     console.log('Create Delegate Smart Account');
-    // Service Provider EOA address - the actual service provider
-    const SERVICE_PROVIDER_EOA = '0x977bc18693ba4F4bfF8051d27e722b930F3f3Fe3';
+    // Service Provider SCA address - the target smart contract account
+    const SERVICE_PROVIDER_SCA = '0xc6Ff874f8D4b590478cC10Fae4D33E968546dCF9';
     const delegateAccount = privateKeyToAccount('0xaff2b423dd92e5bbf2f0943a7b4021455ff323e21bde380c5c7cc3a663887c4a'); // Remove
     const delegateSmartAccount = await toMetaMaskSmartAccount({
       client: publicClient,
@@ -356,7 +356,7 @@ const executePayment: RequestHandler = async (req, res) => {
     console.log('Encode USDC Transfer Call');
     console.log('💰 USDC Transfer Details:');
     console.log('  - From: User Smart Account (' + delegatorSmartAccount.address + ')');
-    console.log('  - To: Service Provider EOA (' + SERVICE_PROVIDER_EOA + ')');
+    console.log('  - To: Service Provider SCA (' + SERVICE_PROVIDER_SCA + ')');
     console.log('  - Amount: 0.000001 USDC (1 wei of USDC)');
     const USDC_ADDRESS = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"; // Correct Ethereum Sepolia USDC
     const ERC20_ABI = parseAbi([
@@ -370,7 +370,7 @@ const executePayment: RequestHandler = async (req, res) => {
     const transferCallData = encodeFunctionData({
       abi: ERC20_ABI,
       functionName: 'transfer',
-      args: [SERVICE_PROVIDER_EOA, usdcAmount] // Transfer to Service Provider EOA instead of Smart Account
+      args: [SERVICE_PROVIDER_SCA, usdcAmount] // Transfer to Service Provider SCA
     });
 
     const executions = [{
@@ -384,7 +384,7 @@ const executePayment: RequestHandler = async (req, res) => {
     console.log('Delegator Smart Account Address:', delegatorSmartAccount.address);
     console.log('Delegate Smart Account Address:', delegateSmartAccount.address);
     console.log('Delegate EOA Address:', delegateAccount.address);
-    console.log('Service Provider EOA (USDC Recipient):', SERVICE_PROVIDER_EOA);
+    console.log('Service Provider SCA (USDC Recipient):', SERVICE_PROVIDER_SCA);
 
     // ========== STEP 5: REDEEM DELEGATION & EXECUTE ==========
     console.log('Redeem & Execute Delegation');
@@ -424,16 +424,16 @@ const executePayment: RequestHandler = async (req, res) => {
       success: true,
       transactionHash: receipt.receipt.transactionHash,
       userOperationHash: userOperationHash1,
-      message: "🎉 USDC Delegation Payment Successful! User Smart Account → Service Provider EOA - 0.000001 USDC",
+      message: "🎉 USDC Delegation Payment Successful! User Smart Account → Service Provider SCA - 0.000001 USDC",
       amount: "0.000001",
       currency: "USDC",
       timestamp: new Date().toISOString(),
       realTransaction: true,
       paymentDirection: {
         from: delegatorSmartAccount.address,
-        to: SERVICE_PROVIDER_EOA,
+        to: SERVICE_PROVIDER_SCA,
         method: 'usdc_delegation_execution',
-        description: 'Service Provider executed delegation to transfer USDC from User Smart Account to Service Provider EOA'
+        description: 'Service Provider executed delegation to transfer USDC from User Smart Account to Service Provider SCA'
       },
       delegationExecution: {
         framework: 'MetaMask Delegation Toolkit',
