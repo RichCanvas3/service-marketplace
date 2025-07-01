@@ -7,7 +7,9 @@ import {
   http,
   parseEther,
   type Address,
-  custom
+  custom,
+  encodeFunctionData,
+  parseAbi
 } from 'viem';
 import {
   Implementation,
@@ -318,19 +320,30 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       // Create caveat builder for secure delegation
       const caveatBuilder = createCaveatBuilder(smartAccount.environment);
 
-      // Calculate payment amount in wei for spending limit
-      const paymentAmountWei = parseEther(contract.paymentAmount);
+      // Calculate payment amount for spending limit (handle both USDC and ETH)
+      const isUSDC = servicePrice.includes('USDC');
+      let paymentAmountWei: bigint;
+      let spendingLimitWei: bigint;
 
-      // Add spending limit caveat - allow only the exact payment amount + small buffer for gas
-      const spendingLimitWei = paymentAmountWei + parseEther('0.001'); // Add 0.001 ETH buffer
+      if (isUSDC) {
+        // For USDC: 6 decimals, so 0.000001 USDC = 1 wei of USDC
+        paymentAmountWei = BigInt(parseFloat(contract.paymentAmount) * 1_000_000); // Convert to USDC wei (6 decimals)
+        spendingLimitWei = paymentAmountWei + BigInt(1000); // Add small USDC buffer
+      } else {
+        // For ETH: 18 decimals
+        paymentAmountWei = parseEther(contract.paymentAmount);
+        spendingLimitWei = paymentAmountWei + parseEther('0.001'); // Add 0.001 ETH buffer
+      }
 
       // Set expiration to 30 days from now
       const thirtyDaysFromNow = Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60);
 
       console.log('Adding caveats:', {
-        spendingLimit: ethers.formatEther(spendingLimitWei) + ' ETH',
-        paymentAmount: contract.paymentAmount + ' ETH',
-        buffer: '0.001 ETH (for gas)',
+        spendingLimit: isUSDC
+          ? (Number(spendingLimitWei) / 1_000_000).toFixed(6) + ' USDC'
+          : ethers.formatEther(spendingLimitWei) + ' ETH',
+        paymentAmount: contract.paymentAmount + (isUSDC ? ' USDC' : ' ETH'),
+        buffer: isUSDC ? '0.001000 USDC (buffer)' : '0.001 ETH (for gas)',
         period: '30 days',
         expiration: new Date(thirtyDaysFromNow * 1000).toISOString()
       });
@@ -363,9 +376,13 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       console.log('User Smart Account (delegator):', smartAccount.address);
       console.log('Service Provider Smart Account (delegate):', serviceProviderSmartAccount);
       console.log('Delegation security features:', {
-        spendingLimit: caveats.length > 0 ? `${ethers.formatEther(spendingLimitWei)} ETH max` : 'None (UNSAFE)',
+        spendingLimit: caveats.length > 0
+          ? (isUSDC
+              ? `${(Number(spendingLimitWei) / 1_000_000).toFixed(6)} USDC max`
+              : `${ethers.formatEther(spendingLimitWei)} ETH max`)
+          : 'None (UNSAFE)',
         timeLimit: caveats.length > 0 ? '30 days' : 'None (UNSAFE)',
-        transferLimit: caveats.length > 0 ? 'Native token transfers only' : 'Unlimited (UNSAFE)',
+        transferLimit: caveats.length > 0 ? (isUSDC ? 'USDC transfers only' : 'Native token transfers only') : 'Unlimited (UNSAFE)',
         expiration: caveats.length > 0 ? new Date(thirtyDaysFromNow * 1000).toLocaleDateString() : 'Never'
       });
 
@@ -518,7 +535,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
 
     try {
       console.log('🚀 DEPLOYING SERVICE PROVIDER SMART ACCOUNT');
-      console.log('Service Provider EOA: 0x2aa1520F3a67D5390CB60BdCbAEb4fc897007608');
+      console.log('Service Provider EOA: 0x977bc18693ba4F4bfF8051d27e722b930F3f3Fe3');
 
       const rpcUrl = import.meta.env.VITE_SEPOLIA_RPC_URL || 'https://ethereum-sepolia-rpc.publicnode.com';
       const bundlerUrl = import.meta.env.VITE_BUNDLER_URL || 'https://api.pimlico.io/v2/11155111/rpc?apikey=pim_KgWXFW2Up4xpDku2WjCfE5';
@@ -541,7 +558,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       });
 
       // Service provider EOA address
-      const serviceProviderEOA = '0x2aa1520F3a67D5390CB60BdCbAEb4fc897007608';
+      const serviceProviderEOA = '0x977bc18693ba4F4bfF8051d27e722b930F3f3Fe3';
 
       // Create custom account for signing (this would normally be done server-side)
       const customAccount = {
@@ -818,7 +835,8 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
             console.log('✅ SERVER-SIDE DELEGATION EXECUTED:', serverResult);
 
             if (serverResult.success && serverResult.transactionHash) {
-              showNotification(`Delegation executed! ${contract.paymentAmount} ETH transferred from Smart Account`, 'success');
+              const currency = servicePrice.includes('USDC') ? 'USDC' : 'ETH';
+              showNotification(`Delegation executed! ${contract.paymentAmount} ${currency} transferred from Smart Account`, 'success');
               setPaymentTx(serverResult.transactionHash);
               const updatedContract = { ...contract, status: 'completed' as const };
               setContract(updatedContract);
@@ -837,6 +855,16 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
            console.log('🎯 REAL CLIENT-SIDE DELEGATION REDEMPTION');
            console.log('This fixes the 0x155ff427 signature verification issue');
 
+                      // Check if we're dealing with USDC or ETH
+           const isUSDCPayment = servicePrice.includes('USDC');
+
+           if (isUSDCPayment) {
+             console.log('❌ USDC delegation failed on server-side');
+             console.log('USDC payments require delegation framework - no fallback available');
+             console.log('Client-side USDC transfers require ERC-20 contract interaction via delegation');
+             throw new Error('USDC delegation execution failed on server. USDC payments require successful delegation framework execution.');
+           }
+
            try {
              // Create a simple ETH transfer using the User Smart Account
              // This bypasses the delegation signature verification issue
@@ -846,10 +874,10 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
              const provider = new ethers.BrowserProvider(window.ethereum);
              const signer = await provider.getSigner();
 
-             // Calculate payment amount
+             // Calculate payment amount (only for ETH)
              const paymentAmount = ethers.parseEther(contract.paymentAmount);
              // FIXED: Send to Service Provider EOA instead of Smart Account
-             const serviceProviderEOA = '0x2aa1520F3a67D5390CB60BdCbAEb4fc897007608';
+             const serviceProviderEOA = '0x977bc18693ba4F4bfF8051d27e722b930F3f3Fe3';
 
              console.log('🔧 Transfer details:');
              console.log('- From: User EOA (connected wallet)');
@@ -912,7 +940,8 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       // More specific error handling
       if (error instanceof Error) {
         if (error.message.includes('insufficient funds')) {
-          showNotification(`Insufficient funds: You need at least ${contract.paymentAmount} ETH + gas fees`, 'error');
+          const currency = servicePrice.includes('USDC') ? 'USDC' : 'ETH';
+          showNotification(`Insufficient funds: You need at least ${contract.paymentAmount} ${currency} + gas fees`, 'error');
         } else if (error.message.includes('rejected')) {
           showNotification('Transaction rejected by user', 'error');
         } else if (error.message.includes('Server error')) {
@@ -925,6 +954,131 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       }
     } finally {
       setPaymentProcessing(false);
+    }
+  };
+
+  // Test function for direct USDC transfer (EOA to EOA)
+  const testUSDCTransfer = async () => {
+    if (!walletConnected || !userAddress) {
+      showNotification('Please connect your wallet first', 'error');
+      return;
+    }
+
+    setIsLoading(true);
+    showNotification('Testing USDC transfer...', 'info');
+
+    try {
+      console.log('🧪 TESTING DIRECT USDC TRANSFER (EOA to EOA)');
+
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+
+      // USDC contract details (Sepolia testnet)
+      const USDC_ADDRESS = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"; // Correct Ethereum Sepolia USDC
+      const USDC_ABI = parseAbi([
+        "function transfer(address to, uint256 amount) returns (bool)",
+        "function balanceOf(address account) view returns (uint256)",
+        "function decimals() view returns (uint8)",
+        "function symbol() view returns (string)"
+      ]);
+
+      // Create USDC contract instance
+      const usdcContract = new ethers.Contract(USDC_ADDRESS, [
+        "function transfer(address to, uint256 amount) returns (bool)",
+        "function balanceOf(address account) view returns (uint256)",
+        "function decimals() view returns (uint8)",
+        "function symbol() view returns (string)"
+      ], signer);
+
+      // Check USDC balance first
+      console.log('Checking USDC balance...');
+      const balance = await usdcContract.balanceOf(userAddress);
+      const decimals = await usdcContract.decimals();
+      const symbol = await usdcContract.symbol();
+
+      console.log('USDC Details:', {
+        contract: USDC_ADDRESS,
+        symbol: symbol,
+        decimals: decimals,
+        userBalance: balance.toString(),
+        userBalanceFormatted: ethers.formatUnits(balance, decimals) + ' USDC'
+      });
+
+      // Check if user has enough USDC
+      if (balance < 1n) {
+        showNotification(`Insufficient USDC balance. You have ${ethers.formatUnits(balance, decimals)} USDC, need at least 0.000001 USDC`, 'error');
+        return;
+      }
+
+      // Transfer details
+      const recipientAddress = '0x977bc18693ba4F4bfF8051d27e722b930F3f3Fe3'; // Service Provider EOA
+      const transferAmount = 1n; // 0.000001 USDC (1 wei of USDC since USDC has 6 decimals)
+
+      console.log('Transfer Details:', {
+        from: userAddress,
+        to: recipientAddress,
+        amount: transferAmount.toString(),
+        amountFormatted: '0.000001 USDC'
+      });
+
+      showNotification('Executing USDC transfer...', 'info');
+
+      // Execute the transfer
+      const tx = await usdcContract.transfer(recipientAddress, transferAmount);
+
+      console.log('✅ Transaction submitted:', tx.hash);
+      showNotification('USDC transfer submitted! Waiting for confirmation...', 'info');
+
+      // Wait for confirmation
+      const receipt = await tx.wait();
+
+      if (receipt && receipt.status === 1) {
+        console.log('🎉 USDC TRANSFER SUCCESSFUL!');
+        console.log('Transaction Receipt:', {
+          hash: receipt.hash,
+          blockNumber: receipt.blockNumber?.toString(),
+          gasUsed: receipt.gasUsed?.toString(),
+          from: userAddress,
+          to: recipientAddress,
+          amount: '0.000001 USDC'
+        });
+
+        showNotification('🎉 USDC transfer successful! 0.000001 USDC transferred', 'success');
+
+        // Check balances after transfer
+        const newBalance = await usdcContract.balanceOf(userAddress);
+        const recipientBalance = await usdcContract.balanceOf(recipientAddress);
+
+        console.log('Post-transfer balances:', {
+          sender: ethers.formatUnits(newBalance, decimals) + ' USDC',
+          recipient: ethers.formatUnits(recipientBalance, decimals) + ' USDC'
+        });
+
+      } else {
+        throw new Error('Transaction failed or was reverted');
+      }
+
+    } catch (error) {
+      console.error('❌ USDC transfer failed:', error);
+
+      let errorMessage = 'USDC transfer failed: ';
+      if (error instanceof Error) {
+        if (error.message.includes('insufficient funds')) {
+          errorMessage += 'Insufficient USDC balance';
+        } else if (error.message.includes('rejected')) {
+          errorMessage += 'Transaction rejected by user';
+        } else if (error.message.includes('ERC20: transfer amount exceeds balance')) {
+          errorMessage += 'Insufficient USDC balance';
+        } else {
+          errorMessage += error.message;
+        }
+      } else {
+        errorMessage += 'Unknown error';
+      }
+
+      showNotification(errorMessage, 'error');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -1015,7 +1169,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                   <div style={{ marginBottom: '10px', padding: '10px', background: 'linear-gradient(135deg, #f3e5f5 0%, #fce4ec 100%)', borderRadius: '6px', border: '1px solid #9c27b0' }}>
                     <h5 style={{ margin: '0 0 5px 0', color: '#7b1fa2' }}>🏢 Service Provider Smart Account</h5>
                     <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#666' }}>
-                      Provider EOA: <code>0x2aa1520F3a67D5390CB60BdCbAEb4fc897007608</code><br/>
+                      Provider EOA: <code>0x977bc18693ba4F4bfF8051d27e722b930F3f3Fe3</code><br/>
                       Smart Account: <code>0x66cB1D45cA24eB3FF774DA65A5BA5E65Dd63C6ED</code>
                     </p>
                     <button
@@ -1031,6 +1185,28 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                   <p style={{ margin: '0', fontSize: '12px', color: '#888' }}>
                     Deploy smart accounts to enable full Account Abstraction delegation
                   </p>
+                </div>
+
+                {/* USDC Test Section */}
+                <div className="usdc-test-section" style={{ marginBottom: '20px', padding: '15px', background: 'linear-gradient(135deg, #fff9c4 0%, #ffeb3b 20%, #fff9c4 100%)', borderRadius: '8px', border: '1px solid #ffc107' }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#333' }}>🧪 USDC Test Transfer</h4>
+                  <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#666' }}>
+                    Test a direct EOA to EOA USDC transfer of 0.000001 USDC before using delegation
+                  </p>
+                  <div style={{ fontSize: '12px', color: '#888', marginBottom: '10px' }}>
+                    <strong>From:</strong> {userAddress}<br/>
+                    <strong>To:</strong> 0x977bc18693ba4F4bfF8051d27e722b930F3f3Fe3 (Service Provider EOA)<br/>
+                    <strong>Amount:</strong> 0.000001 USDC (1 wei of USDC)<br/>
+                    <strong>Contract:</strong> 0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238
+                  </div>
+                  <button
+                    className="service-button"
+                    style={{ backgroundColor: '#ffc107', color: '#000', fontSize: '14px', padding: '8px 12px' }}
+                    onClick={testUSDCTransfer}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Testing...' : '🧪 Test USDC Transfer'}
+                  </button>
                 </div>
 
                 <button
@@ -1060,7 +1236,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                 <div className="contract-parties" style={{ marginBottom: '20px', padding: '15px', background: 'linear-gradient(135deg, #fff3e0 0%, #f3e5f5 50%, #e8f5e8 100%)', borderRadius: '8px', border: '1px solid #ffcc02' }}>
                   <h4 style={{ margin: '0 0 15px 0', color: '#333' }}>📋 Contract Parties</h4>
                   <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#666' }}>
-                    Service Provider EOA: <code>0x2aa1520F3a67D5390CB60BdCbAEb4fc897007608</code><br/>
+                    Service Provider EOA: <code>0x977bc18693ba4F4bfF8051d27e722b930F3f3Fe3</code><br/>
                     Service Provider Smart Account: <code>0x66cB1D45cA24eB3FF774DA65A5BA5E65Dd63C6ED</code><br/>
                     Customer EOA: <code>{userAddress}</code><br/>
                     Customer Smart Account: <code>0x327ab00586Be5651630a5827BD5C9122c8B639F8</code>
@@ -1101,7 +1277,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
 
                   <div className="delegation-details">
                     <div className="detail-item">
-                      <strong>Amount Authorized:</strong> {contract.paymentAmount} SepoliaETH
+                      <strong>Amount Authorized:</strong> {contract.paymentAmount} {servicePrice.includes('USDC') ? 'USDC' : 'SepoliaETH'}
                     </div>
                     <div className="detail-item">
                       <strong>Recipient (Service Provider Smart Account):</strong>
@@ -1149,7 +1325,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                   <strong>Service:</strong> {contract?.serviceName}
                 </div>
                 <div className="detail-item">
-                  <strong>Amount:</strong> {contract?.paymentAmount} SepoliaETH
+                  <strong>Amount:</strong> {contract?.paymentAmount} {servicePrice.includes('USDC') ? 'USDC' : 'SepoliaETH'}
                 </div>
                 <div className="detail-item">
                   <strong>Your Smart Account (Delegator):</strong>
@@ -1205,7 +1381,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
               {paymentTx && (
                 <div className="payment-complete">
                   <h5>🎉 Payment Processed Successfully!</h5>
-                  <p>The service provider has collected {contract?.paymentAmount} SepoliaETH using your delegation.</p>
+                  <p>The service provider has collected {contract?.paymentAmount} {servicePrice.includes('USDC') ? 'USDC' : 'SepoliaETH'} using your delegation.</p>
                   <div className="final-actions">
                     <button className="service-button" onClick={handleClose}>
                       Close

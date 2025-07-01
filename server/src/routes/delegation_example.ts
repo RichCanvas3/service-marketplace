@@ -1,4 +1,4 @@
-import express, { RequestHandler } from 'express';
+aimport express, { RequestHandler } from 'express';
 import { ethers } from 'ethers';
 import {
   createPublicClient,
@@ -7,7 +7,6 @@ import {
   parseEther,
   type Address,
   encodeFunctionData,
-  parseAbi,
   Hex,
   zeroAddress
 } from 'viem';
@@ -85,7 +84,7 @@ const createServiceContract: RequestHandler = async (req, res) => {
       serviceName,
       servicePrice,
       terms: `Service Agreement for ${serviceName}\n\nTotal Amount: ${servicePrice}\n\nTerms and Conditions:\n1. Service will be provided within 7 days of agreement signing\n2. Payment will be automatically deducted from your wallet upon service completion\n3. If service is not completed as agreed, payment will be refunded within 24 hours\n4. Cancellation must be made 24 hours in advance\n5. All services include standard setup and cleanup\n6. Special dietary requirements must be communicated at least 48 hours in advance\n\nBy signing this agreement, you authorize the service provider to withdraw the agreed amount from your MetaMask wallet upon successful service completion.\n\nThis contract is governed by the laws of the jurisdiction where services are provided.`,
-      paymentAmount: servicePrice.includes('SepoliaETH') ? '0.00005' : servicePrice.includes('USDC') ? '0.000001' : servicePrice.replace('$', ''),
+      paymentAmount: servicePrice.includes('SepoliaETH') ? '0.00005' : servicePrice.replace('$', ''),
       serviceDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       providerAddress: SERVICE_PROVIDER_SMART_ACCOUNT, // Changed to Smart Account instead of EOA
       status: 'pending',
@@ -280,7 +279,14 @@ const executePayment: RequestHandler = async (req, res) => {
     // chain baseSepolia
     // https://base-sepolia.g.alchemy.com/v2/Your-API-Key
 
-    console.log("Okay, now we're coding!")
+
+
+
+
+
+
+
+
 
     // Setup Public Client
     console.log('Setup Public Client');
@@ -347,47 +353,30 @@ const executePayment: RequestHandler = async (req, res) => {
       signature
     };
 
-    // Setup Mock USDC Transfer
-    console.log('Setup Mock USDC transfer')
-
-    // ========== STEP 4: SETUP MOCK USDC TRANSFER ==========
-    console.log('Encode USDC Transfer Call');
-    const USDC_ADDRESS = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"; // Correct Ethereum Sepolia USDC
-    const ERC20_ABI = parseAbi([
-      "function transfer(address to, uint256 amount) returns (bool)",
-      "function balanceOf(address account) view returns (uint256)",
-      "function decimals() view returns (uint8)"
-    ]);
-
-    // Send 0.000001 USDC (1 wei of USDC since USDC has 6 decimals)
-    const usdcAmount = 1n; // 0.000001 USDC = 1 * 10^(-6) * 10^6 = 1 wei
-    const transferCallData = encodeFunctionData({
-      abi: ERC20_ABI,
-      functionName: 'transfer',
-      args: [delegateSmartAccount.address, usdcAmount]
-    });
+    // Redeem/Execute Delegation
+    const delegations = [ signedDelegation ];
 
     const executions = [{
-      target: USDC_ADDRESS,
-      value: 0n, // No ETH
-      callData: transferCallData
+      target: delegateSmartAccount.address,
+      value: 50_000_000_000_000n, // 0.0005 ETH
+      callData: '0x'
     }];
 
     console.log('Executions: ', executions);
+
     console.log('Delegator EOA Address:', delegatorAccount.address);
     console.log('Delegator Smart Account Address:', delegatorSmartAccount.address);
     console.log('Delegate Smart Account Address:', delegateSmartAccount.address);
     console.log('Delegate EOA Address:', delegateAccount.address);
 
-    // ========== STEP 5: REDEEM DELEGATION & EXECUTE ==========
-    console.log('Redeem & Execute Delegation');
     const redeemDelegationCallData = DelegationFramework.encode.redeemDelegations({
-      delegations: [[signedDelegation]],
-      modes: [SINGLE_DEFAULT_MODE],
-      executions: [executions]
+      delegations: [ delegations ],
+      modes: [ SINGLE_DEFAULT_MODE ],
+      executions: [ executions ]
     });
 
     const { fast: fee } = await pimlicoClient.getUserOperationGasPrice();
+
     console.log('Max Fee Per Gas: ', fee.maxFeePerGas);
     console.log('Max Priority Fee Per Gas: ', fee.maxPriorityFeePerGas);
 
@@ -404,94 +393,19 @@ const executePayment: RequestHandler = async (req, res) => {
       verificationGasLimit: 300_000n
     });
 
-    console.log('UserOperation Sent: ', userOperationHash1);
+    // console.log(userOperationHash1);
+    console.log('Payment Successful!');
 
     const receipt = await bundlerClient.waitForUserOperationReceipt({
       hash: userOperationHash1,
     });
 
-    console.info("✅ Payment Successful! Receipt: ", receipt);
+    console.info("Payment Receipt: ", receipt)
 
-    // Send successful response back to client
     return res.json({
-      success: true,
-      transactionHash: receipt.receipt.transactionHash,
-      userOperationHash: userOperationHash1,
-      message: "🎉 USDC Delegation Payment Successful! User Smart Account → Service Provider Smart Account - 0.000001 USDC",
-      amount: "0.000001",
-      currency: "USDC",
-      timestamp: new Date().toISOString(),
-      realTransaction: true,
-      paymentDirection: {
-        from: delegatorSmartAccount.address,
-        to: delegateSmartAccount.address,
-        method: 'usdc_delegation_execution',
-        description: 'Service Provider executed delegation to transfer USDC from User Smart Account'
-      },
-      delegationExecution: {
-        framework: 'MetaMask Delegation Toolkit',
-        method: 'DelegationFramework.encode.redeemDelegations',
-        transferType: 'USDC ERC-20',
-        executions: 1,
-        realExecution: true
-      }
+      success: true
+      // receipt: receipt
     });
-
-
-
-    // // Redeem/Execute Delegation
-    // const delegations = [ signedDelegation ];
-
-    // const executions = [{
-    //   target: delegateSmartAccount.address,
-    //   value: 50_000_000_000_000n, // 0.0005 ETH
-    //   callData: '0x'
-    // }];
-
-    // console.log('Executions: ', executions);
-
-    // console.log('Delegator EOA Address:', delegatorAccount.address);
-    // console.log('Delegator Smart Account Address:', delegatorSmartAccount.address);
-    // console.log('Delegate Smart Account Address:', delegateSmartAccount.address);
-    // console.log('Delegate EOA Address:', delegateAccount.address);
-
-    // const redeemDelegationCallData = DelegationFramework.encode.redeemDelegations({
-    //   delegations: [ delegations ],
-    //   modes: [ SINGLE_DEFAULT_MODE ],
-    //   executions: [ executions ]
-    // });
-
-    // const { fast: fee } = await pimlicoClient.getUserOperationGasPrice();
-
-    // console.log('Max Fee Per Gas: ', fee.maxFeePerGas);
-    // console.log('Max Priority Fee Per Gas: ', fee.maxPriorityFeePerGas);
-
-    // const userOperationHash1 = await bundlerClient.sendUserOperation({
-    //   account: delegateSmartAccount,
-    //   calls: [
-    //     {
-    //       to: delegateSmartAccount.address,
-    //       data: redeemDelegationCallData
-    //     }
-    //   ],
-    //   maxFeePerGas: fee.maxFeePerGas,
-    //   maxPriorityFeePerGas: fee.maxPriorityFeePerGas,
-    //   verificationGasLimit: 300_000n
-    // });
-
-    // // console.log(userOperationHash1);
-    // console.log('Payment Successful!');
-
-    // const receipt = await bundlerClient.waitForUserOperationReceipt({
-    //   hash: userOperationHash1,
-    // });
-
-    // console.info("Payment Receipt: ", receipt)
-
-    // return res.json({
-    //   success: true
-    //   // receipt: receipt
-    // });
 
 
 
