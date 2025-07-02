@@ -5,6 +5,7 @@ import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
 import ServiceContractModal from '../components/ServiceContractModal';
+import PremiumServices from '../components/PremiumServices';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import mcoMockData from '../components/data/mco-mock.json';
@@ -308,7 +309,7 @@ const CateringPage: React.FC = () => {
                   Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Pay with MetaMask
+                  Pay with MetaMask Card
                 </button>
               </div>
               <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
@@ -435,6 +436,43 @@ const CateringPage: React.FC = () => {
             ))}
           </ul>
         </div>
+
+        {/* Premium Services Section */}
+        <PremiumServices
+          serviceName="Catering"
+          premiumServices={[
+            {
+              name: "Celebrity Chef Experience",
+              price: "$10,000+",
+              description: "Michelin-starred chef creates a bespoke dining experience with wine pairings, live cooking demonstration, and personalized menu design.",
+              reputationRequired: 98,
+              exclusive: true
+            },
+            {
+              name: "Luxury Wedding Package",
+              price: "$8,000+",
+              description: "Full-service luxury wedding catering with dedicated event coordinator, premium tableware, and 5-course gourmet menu.",
+              reputationRequired: 93,
+              exclusive: true
+            },
+            {
+              name: "Executive Corporate Catering",
+              price: "$150/person",
+              description: "High-end corporate event catering with live cooking stations, premium ingredients, and white-glove service.",
+              reputationRequired: 90
+            },
+            {
+              name: "Private Chef Service",
+              price: "$300/hr",
+              description: "Personal chef comes to your home for intimate dinner parties, cooking classes, or special occasions.",
+              reputationRequired: 87
+            }
+          ]}
+          onSelectService={(serviceName) => {
+            setSelectedServices(prev => [...prev, serviceName]);
+            setIsModalOpen(true);
+          }}
+        />
 
         <div className="loyalty-section">
           <h3>Exclusive Rewards for Loyalty Members</h3>

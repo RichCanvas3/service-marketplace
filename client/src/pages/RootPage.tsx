@@ -30,11 +30,12 @@ const RootPage: React.FC = () => {
       // Try to load mco data from localStorage
       const storedMco = localStorage.getItem('mcoData');
       if (storedMco) {
-        setMcoData(JSON.parse(storedMco));
+        const mcoObj = JSON.parse(storedMco);
+        setMcoData(mcoObj);
+        // Load preferredName from MCO object
+        setPreferredName(mcoObj.preferredName || '');
       }
     }
-    const savedName = localStorage.getItem('preferredName') || '';
-    setPreferredName(savedName);
   }, []);
 
   const connectWallet = async () => {
@@ -50,10 +51,12 @@ const RootPage: React.FC = () => {
           mcoObj = { ...mcoMock, userId: accounts[0] };
           localStorage.setItem('mcoData', JSON.stringify(mcoObj));
           setMcoData(mcoObj);
+          setPreferredName(mcoObj.preferredName || '');
         } else {
           mcoObj = { ...JSON.parse(mco), userId: accounts[0] };
           localStorage.setItem('mcoData', JSON.stringify(mcoObj));
           setMcoData(mcoObj);
+          setPreferredName(mcoObj.preferredName || '');
         }
         showNotification('Wallet connected successfully!', 'success');
       } else {

@@ -85,7 +85,7 @@ const createServiceContract: RequestHandler = async (req, res) => {
       serviceName,
       servicePrice,
       terms: `Service Agreement for ${serviceName}\n\nTotal Amount: ${servicePrice}\n\nTerms and Conditions:\n1. Service will be provided within 7 days of agreement signing\n2. Payment will be automatically deducted from your wallet upon service completion\n3. If service is not completed as agreed, payment will be refunded within 24 hours\n4. Cancellation must be made 24 hours in advance\n5. All services include standard setup and cleanup\n6. Special dietary requirements must be communicated at least 48 hours in advance\n\nBy signing this agreement, you authorize the service provider to withdraw the agreed amount from your MetaMask wallet upon successful service completion.\n\nThis contract is governed by the laws of the jurisdiction where services are provided.`,
-      paymentAmount: servicePrice.includes('SepoliaETH') ? '0.00005' : servicePrice.includes('USDC') ? '0.000001' : servicePrice.replace('$', ''),
+      paymentAmount: servicePrice.includes('SepoliaETH') ? '0.00005' : servicePrice.includes('USDC') ? '1' : servicePrice.replace('$', ''),
       serviceDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       providerAddress: SERVICE_PROVIDER_SMART_ACCOUNT, // Changed to Smart Account instead of EOA
       status: 'pending',
@@ -357,7 +357,7 @@ const executePayment: RequestHandler = async (req, res) => {
     console.log('💰 USDC Transfer Details:');
     console.log('  - From: User Smart Account (' + delegatorSmartAccount.address + ')');
     console.log('  - To: Service Provider SCA (' + SERVICE_PROVIDER_SCA + ')');
-    console.log('  - Amount: 0.000001 USDC (1 wei of USDC)');
+    console.log('  - Amount: 1 USDC');
     const USDC_ADDRESS = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"; // Correct Ethereum Sepolia USDC
     const ERC20_ABI = parseAbi([
       "function transfer(address to, uint256 amount) returns (bool)",
@@ -365,8 +365,8 @@ const executePayment: RequestHandler = async (req, res) => {
       "function decimals() view returns (uint8)"
     ]);
 
-    // Send 0.000001 USDC (1 wei of USDC since USDC has 6 decimals)
-    const usdcAmount = 1n; // 0.000001 USDC = 1 * 10^(-6) * 10^6 = 1 wei
+    // Send 1 USDC (1 * 10^6 = 1,000,000 wei since USDC has 6 decimals)
+    const usdcAmount = 1000000n; // 1 USDC = 1 * 10^6 = 1,000,000 wei
     const transferCallData = encodeFunctionData({
       abi: ERC20_ABI,
       functionName: 'transfer',
@@ -424,8 +424,8 @@ const executePayment: RequestHandler = async (req, res) => {
       success: true,
       transactionHash: receipt.receipt.transactionHash,
       userOperationHash: userOperationHash1,
-      message: "🎉 USDC Delegation Payment Successful! User Smart Account → Service Provider SCA - 0.000001 USDC",
-      amount: "0.000001",
+      message: "🎉 USDC Delegation Payment Successful! User Smart Account → Service Provider SCA - 1 USDC",
+      amount: "1",
       currency: "USDC",
       timestamp: new Date().toISOString(),
       realTransaction: true,

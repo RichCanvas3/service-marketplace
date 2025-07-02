@@ -5,6 +5,7 @@ import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
 import ServiceContractModal from '../components/ServiceContractModal';
+import PremiumServices from '../components/PremiumServices';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import mcoMockData from '../components/data/mco-mock.json';
@@ -318,7 +319,7 @@ const TrainingPage: React.FC = () => {
                   Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Pay with MetaMask
+                  Pay with MetaMask Card
                 </button>
               </div>
               <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
@@ -445,6 +446,43 @@ const TrainingPage: React.FC = () => {
             ))}
           </ul>
         </div>
+
+        {/* Premium Services Section */}
+        <PremiumServices
+          serviceName="Training"
+          premiumServices={[
+            {
+              name: "Elite Performance Package",
+              price: "$300/month",
+              description: "Comprehensive elite training with daily coaching, nutrition planning, recovery protocols, and performance analytics.",
+              reputationRequired: 95,
+              exclusive: true
+            },
+            {
+              name: "VIP Personal Training",
+              price: "$150/hr",
+              description: "Private gym access with certified master trainer, customized equipment, and post-workout recovery suite.",
+              reputationRequired: 92,
+              exclusive: true
+            },
+            {
+              name: "Competition Prep Program",
+              price: "$400/month",
+              description: "Specialized training for athletes preparing for competitions with sport-specific coaching and peak performance strategies.",
+              reputationRequired: 88
+            },
+            {
+              name: "Premium Nutrition Coaching",
+              price: "$200/month",
+              description: "Weekly meal planning, supplement guidance, body composition tracking, and metabolic assessments.",
+              reputationRequired: 85
+            }
+          ]}
+          onSelectService={(serviceName) => {
+            setSelectedServices(prev => [...prev, serviceName]);
+            setIsModalOpen(true);
+          }}
+        />
 
         <div className="loyalty-section">
           <h3>Exclusive Rewards for Loyalty Members</h3>

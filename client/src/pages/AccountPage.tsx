@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useNotification } from '../context/NotificationContext';
 import '../custom-styles.css';
+import ReputationBadge from '../components/ReputationBadge';
+import BehavioralRewards from '../components/BehavioralRewards';
 
 const AccountPage: React.FC = () => {
   const navigate = useNavigate();
@@ -85,13 +87,14 @@ const AccountPage: React.FC = () => {
       });
     }
 
-    // Load preferred name from localStorage
-    const savedName = localStorage.getItem('preferredName') || '';
-    setPreferredName(savedName);
-
     // Load mcoData from localStorage
     const mco = localStorage.getItem('mcoData');
-    if (mco) setMcoData(JSON.parse(mco));
+    if (mco) {
+      const mcoObj = JSON.parse(mco);
+      setMcoData(mcoObj);
+      // Load preferredName from MCO object
+      setPreferredName(mcoObj.preferredName || '');
+    }
 
     return () => {
       if (window.ethereum) {
@@ -130,7 +133,11 @@ const AccountPage: React.FC = () => {
   };
 
   const handleSaveName = () => {
-    localStorage.setItem('preferredName', preferredName);
+    // Save preferredName to MCO object
+    const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
+    mcoData.preferredName = preferredName;
+    localStorage.setItem('mcoData', JSON.stringify(mcoData));
+    setMcoData(mcoData);
     setSaveMsg('Saved!');
     setTimeout(() => setSaveMsg(''), 1500);
   };
@@ -939,6 +946,11 @@ const AccountPage: React.FC = () => {
                   letterSpacing: 0.5
                 }}>{mcoData.membershipLevel}</span>
               </div>
+
+              {/* Dynamic Reputation Badge */}
+              <div style={{ width: '100%', marginBottom: 16 }}>
+                <ReputationBadge size="large" showTrend={true} />
+              </div>
               {mcoData.membershipLevel === 'Bronze' && (
                 <div style={{
                   background: 'linear-gradient(135deg, #18181b, #2d3748)',
@@ -1693,6 +1705,13 @@ const AccountPage: React.FC = () => {
           )}
         </div>
 
+        {/* Behavioral Rewards Section */}
+        {mcoData && mcoData.loyaltyMember && (
+          <div style={{ marginBottom: 32 }}>
+            <BehavioralRewards />
+          </div>
+        )}
+
         {/* Signed Service Contracts Section */}
         <SignedContractsSection />
 
@@ -1704,6 +1723,10 @@ const AccountPage: React.FC = () => {
 // Component to display signed service contracts
 const SignedContractsSection: React.FC = () => {
   const [signedContracts, setSignedContracts] = useState<any[]>([]);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedContract, setSelectedContract] = useState<any>(null);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewText, setReviewText] = useState('');
   const { showNotification } = useNotification();
 
   // Get the appropriate block explorer URL for transaction hash
@@ -1749,6 +1772,60 @@ const SignedContractsSection: React.FC = () => {
       setSignedContracts([]);
       showNotification('All contracts cleared!', 'info');
     }
+  };
+
+  const handleWriteReview = (contract: any) => {
+    setSelectedContract(contract);
+    setReviewRating(5);
+    setReviewText('');
+    setIsReviewModalOpen(true);
+  };
+
+  const handleSubmitReview = () => {
+    if (!selectedContract || !reviewText.trim()) {
+      showNotification('Please enter a review before submitting', 'error');
+      return;
+    }
+
+    // Update the contract with review data
+    const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
+    const contracts = mcoData.signedContracts || [];
+    const contractIndex = contracts.findIndex((c: any) => c.id === selectedContract.id);
+
+    if (contractIndex >= 0) {
+      contracts[contractIndex] = {
+        ...contracts[contractIndex],
+        review: {
+          rating: reviewRating,
+          text: reviewText,
+          submittedAt: new Date().toISOString()
+        }
+      };
+
+      mcoData.signedContracts = contracts;
+      localStorage.setItem('mcoData', JSON.stringify(mcoData));
+      setSignedContracts(contracts);
+
+      // Update reputation based on review
+      const { ReputationManager } = require('../utils/reputationManager');
+      ReputationManager.updateCustomerReputation({
+        serviceName: selectedContract.serviceName,
+        rating: reviewRating,
+        review: reviewText,
+        amount: parseFloat(selectedContract.paymentAmount) || 0
+      });
+
+      showNotification('Review submitted successfully!', 'success');
+      setIsReviewModalOpen(false);
+      setSelectedContract(null);
+    }
+  };
+
+  const handleCloseReviewModal = () => {
+    setIsReviewModalOpen(false);
+    setSelectedContract(null);
+    setReviewRating(5);
+    setReviewText('');
   };
 
   if (signedContracts.length === 0) {
@@ -2066,6 +2143,58 @@ const SignedContractsSection: React.FC = () => {
               </div>
             </div>
 
+            {/* Action Buttons */}
+            <div style={{
+              display: 'flex',
+              gap: 8,
+              marginTop: 16
+            }}>
+              {contract.status === 'completed' && !contract.review && (
+                <button
+                  onClick={() => handleWriteReview(contract)}
+                  style={{
+                    background: 'linear-gradient(135deg, #10b981, #059669)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: 8,
+                    padding: '8px 16px',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.target as HTMLButtonElement).style.transform = 'translateY(-1px)';
+                    (e.target as HTMLButtonElement).style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.target as HTMLButtonElement).style.transform = 'translateY(0)';
+                    (e.target as HTMLButtonElement).style.boxShadow = 'none';
+                  }}
+                >
+                  ⭐ Write Review
+                </button>
+              )}
+              {contract.review && (
+                <div style={{
+                  background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+                  color: 'white',
+                  borderRadius: 8,
+                  padding: '8px 16px',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6
+                }}>
+                  ⭐ Review Submitted ({contract.review.rating}/5)
+                </div>
+              )}
+            </div>
+
             {/* Signature Info */}
             <div style={{
               display: 'grid',
@@ -2136,7 +2265,7 @@ const SignedContractsSection: React.FC = () => {
                     <span style={{
                       fontSize: 10,
                       color: '#6b7280'
-                    }}>🔗 Click to view on explorer</span>
+                    }}>Click to view on Etherscan</span>
                   </div>
                   <a
                     href={getExplorerUrl(contract.paymentTx)}
@@ -2170,6 +2299,216 @@ const SignedContractsSection: React.FC = () => {
           </div>
         ))}
       </div>
+
+      {/* Review Modal */}
+      {isReviewModalOpen && selectedContract && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '20px'
+        }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #18181b, #27272a)',
+            borderRadius: 20,
+            padding: '32px',
+            border: '1px solid #3f3f46',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
+            maxWidth: '500px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflow: 'auto'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              marginBottom: 24
+            }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #10b981, #059669)',
+                borderRadius: '50%',
+                width: 40,
+                height: 40,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 18
+              }}>⭐</div>
+              <h3 style={{
+                margin: 0,
+                fontSize: 20,
+                fontWeight: 600,
+                color: '#f7fafc'
+              }}>Write a Review</h3>
+            </div>
+
+            <div style={{ marginBottom: 20 }}>
+              <div style={{
+                color: '#e2e8f0',
+                fontSize: 16,
+                fontWeight: 600,
+                marginBottom: 8
+              }}>{selectedContract.serviceName}</div>
+              <div style={{
+                color: '#9ca3af',
+                fontSize: 14
+              }}>Contract #{selectedContract.id?.substring(9) || 'N/A'}</div>
+            </div>
+
+            {/* Rating Selection */}
+            <div style={{ marginBottom: 24 }}>
+              <div style={{
+                color: '#e2e8f0',
+                fontSize: 14,
+                fontWeight: 600,
+                marginBottom: 12
+              }}>Rate your experience:</div>
+              <div style={{
+                display: 'flex',
+                gap: 8
+              }}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    onClick={() => setReviewRating(star)}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      fontSize: 24,
+                      cursor: 'pointer',
+                      color: star <= reviewRating ? '#fbbf24' : '#4b5563',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (star > reviewRating) {
+                        (e.target as HTMLElement).style.color = '#fbbf24';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (star > reviewRating) {
+                        (e.target as HTMLElement).style.color = '#4b5563';
+                      }
+                    }}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+              <div style={{
+                color: '#9ca3af',
+                fontSize: 13,
+                marginTop: 8
+              }}>
+                {reviewRating === 1 && 'Poor'}
+                {reviewRating === 2 && 'Fair'}
+                {reviewRating === 3 && 'Good'}
+                {reviewRating === 4 && 'Very Good'}
+                {reviewRating === 5 && 'Excellent'}
+              </div>
+            </div>
+
+            {/* Review Text */}
+            <div style={{ marginBottom: 24 }}>
+              <div style={{
+                color: '#e2e8f0',
+                fontSize: 14,
+                fontWeight: 600,
+                marginBottom: 8
+              }}>Share your experience:</div>
+              <textarea
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                placeholder="Tell us about your experience with this service..."
+                style={{
+                  width: '100%',
+                  minHeight: '120px',
+                  padding: '12px',
+                  borderRadius: 12,
+                  border: '1px solid #4a5568',
+                  background: '#2d3748',
+                  color: '#f7fafc',
+                  fontSize: 14,
+                  resize: 'vertical',
+                  outline: 'none',
+                  fontFamily: 'inherit'
+                }}
+                onFocus={(e) => {
+                  (e.target as HTMLTextAreaElement).style.borderColor = '#a78bfa';
+                  (e.target as HTMLTextAreaElement).style.boxShadow = '0 0 0 3px rgba(167, 139, 250, 0.1)';
+                }}
+                onBlur={(e) => {
+                  (e.target as HTMLTextAreaElement).style.borderColor = '#4a5568';
+                  (e.target as HTMLTextAreaElement).style.boxShadow = 'none';
+                }}
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div style={{
+              display: 'flex',
+              gap: 12,
+              justifyContent: 'flex-end'
+            }}>
+              <button
+                onClick={handleCloseReviewModal}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid #6b7280',
+                  color: '#9ca3af',
+                  borderRadius: 8,
+                  padding: '10px 20px',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  (e.target as HTMLButtonElement).style.backgroundColor = '#374151';
+                  (e.target as HTMLButtonElement).style.borderColor = '#9ca3af';
+                }}
+                onMouseLeave={(e) => {
+                  (e.target as HTMLButtonElement).style.backgroundColor = 'transparent';
+                  (e.target as HTMLButtonElement).style.borderColor = '#6b7280';
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmitReview}
+                style={{
+                  background: 'linear-gradient(135deg, #10b981, #059669)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: 8,
+                  padding: '10px 20px',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  (e.target as HTMLButtonElement).style.transform = 'translateY(-1px)';
+                  (e.target as HTMLButtonElement).style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  (e.target as HTMLButtonElement).style.transform = 'translateY(0)';
+                  (e.target as HTMLButtonElement).style.boxShadow = 'none';
+                }}
+              >
+                Submit Review
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

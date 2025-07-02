@@ -5,6 +5,7 @@ import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
 import ServiceContractModal from '../components/ServiceContractModal';
+import PremiumServices from '../components/PremiumServices';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import mcoMockData from '../components/data/mco-mock.json';
@@ -324,7 +325,7 @@ const CleaningPage: React.FC = () => {
                   Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Pay with MetaMask
+                  Pay with MetaMask Card
                 </button>
               </div>
               <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
@@ -451,6 +452,43 @@ const CleaningPage: React.FC = () => {
             ))}
           </ul>
         </div>
+
+        {/* Premium Services Section */}
+        <PremiumServices
+          serviceName="Cleaning"
+          premiumServices={[
+            {
+              name: "Executive Deep Clean",
+              price: "$400",
+              description: "Premium 8-hour deep clean with specialized equipment and eco-luxury products. Includes appliance interiors, light fixtures, and detailed organization.",
+              reputationRequired: 95,
+              exclusive: true
+            },
+            {
+              name: "Luxury Home Service",
+              price: "$250",
+              description: "White-glove cleaning with premium eco-products, detailed furniture care, and luxury linens service.",
+              reputationRequired: 90,
+              exclusive: true
+            },
+            {
+              name: "Priority Same-Day Service",
+              price: "$180",
+              description: "Emergency cleaning service with 4-hour response time. Perfect for last-minute events or unexpected guests.",
+              reputationRequired: 88
+            },
+            {
+              name: "Concierge Cleaning Package",
+              price: "$320",
+              description: "Full-service package including organizing, laundry service, and grocery restocking. Perfect for busy professionals.",
+              reputationRequired: 85
+            }
+          ]}
+          onSelectService={(serviceName) => {
+            setSelectedServices(prev => [...prev, serviceName]);
+            setIsModalOpen(true);
+          }}
+        />
 
         <div className="loyalty-section">
           <h3>Exclusive Rewards for Loyalty Members</h3>

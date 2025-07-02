@@ -3,6 +3,7 @@ import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
 import ServiceContractModal from '../components/ServiceContractModal';
+import PremiumServices from '../components/PremiumServices';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import mcoMockData from '../components/data/mco-mock.json';
@@ -335,7 +336,7 @@ const DesignPage: React.FC = () => {
                   Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Pay with MetaMask
+                  Pay with MetaMask Card
                 </button>
               </div>
               <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
@@ -462,6 +463,43 @@ const DesignPage: React.FC = () => {
             ))}
           </ul>
         </div>
+
+        {/* Premium Services Section */}
+        <PremiumServices
+          serviceName="Design"
+          premiumServices={[
+            {
+              name: "Enterprise Rebrand Package",
+              price: "$25,000+",
+              description: "Complete enterprise rebrand including logo, brand guidelines, website overhaul, marketing collateral, and launch strategy.",
+              reputationRequired: 96,
+              exclusive: true
+            },
+            {
+              name: "Award-Submission Design",
+              price: "$5,000+",
+              description: "Competition-level design work by award-winning designers with portfolio guarantees and international recognition potential.",
+              reputationRequired: 94,
+              exclusive: true
+            },
+            {
+              name: "VIP Design Consultation",
+              price: "$500/hr",
+              description: "One-on-one sessions with senior creative directors for strategic brand development and design direction.",
+              reputationRequired: 90
+            },
+            {
+              name: "Priority Rush Service",
+              price: "+50% fee",
+              description: "48-hour turnaround on any design project with dedicated team assignment and expedited revisions.",
+              reputationRequired: 87
+            }
+          ]}
+          onSelectService={(serviceName) => {
+            setSelectedServices(prev => [...prev, serviceName]);
+            setIsModalOpen(true);
+          }}
+        />
 
         <div className="loyalty-section">
           <h3>Exclusive Rewards for Loyalty Members</h3>

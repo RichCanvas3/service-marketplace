@@ -5,6 +5,7 @@ import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
 import ServiceContractModal from '../components/ServiceContractModal';
+import PremiumServices from '../components/PremiumServices';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import mcoMockData from '../components/data/mco-mock.json';
@@ -312,7 +313,7 @@ const TutoringPage: React.FC = () => {
                   Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Pay with MetaMask
+                  Pay with MetaMask Card
                 </button>
               </div>
               <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
@@ -439,6 +440,43 @@ const TutoringPage: React.FC = () => {
             ))}
           </ul>
         </div>
+
+        {/* Premium Services Section */}
+        <PremiumServices
+          serviceName="Tutoring"
+          premiumServices={[
+            {
+              name: "Elite College Prep Package",
+              price: "$200/hr",
+              description: "Comprehensive college preparation with Ivy League-educated tutors, essay coaching, interview prep, and application strategy.",
+              reputationRequired: 95,
+              exclusive: true
+            },
+            {
+              name: "PhD Subject Mastery",
+              price: "$150/hr",
+              description: "Advanced subject tutoring with PhD-level experts for AP courses, college-level material, and research mentorship.",
+              reputationRequired: 92,
+              exclusive: true
+            },
+            {
+              name: "Premium Test Prep Intensive",
+              price: "$300/session",
+              description: "Intensive SAT/ACT preparation with guaranteed score improvement, personalized study plans, and unlimited practice tests.",
+              reputationRequired: 88
+            },
+            {
+              name: "Academic Coaching Program",
+              price: "$120/hr",
+              description: "Holistic academic support including study skills, time management, organization strategies, and parent consultations.",
+              reputationRequired: 85
+            }
+          ]}
+          onSelectService={(serviceName) => {
+            setSelectedServices(prev => [...prev, serviceName]);
+            setIsModalOpen(true);
+          }}
+        />
 
         <div className="loyalty-section">
           <h3>Exclusive Rewards for Loyalty Members</h3>

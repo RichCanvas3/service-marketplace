@@ -5,6 +5,7 @@ import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
 import ServiceContractModal from '../components/ServiceContractModal';
+import PremiumServices from '../components/PremiumServices';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import mcoMockData from '../components/data/mco-mock.json';
@@ -308,7 +309,7 @@ const GaragePage: React.FC = () => {
                   Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Pay with MetaMask
+                  Pay with MetaMask Card
                 </button>
               </div>
               <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
@@ -435,6 +436,43 @@ const GaragePage: React.FC = () => {
             ))}
           </ul>
         </div>
+
+        {/* Premium Services Section */}
+        <PremiumServices
+          serviceName="Automotive"
+          premiumServices={[
+            {
+              name: "Concierge Auto Service",
+              price: "$500/month",
+              description: "White-glove automotive care with pickup/delivery, premium detailing, priority scheduling, and comprehensive maintenance tracking.",
+              reputationRequired: 96,
+              exclusive: true
+            },
+            {
+              name: "Executive Fleet Management",
+              price: "$200/vehicle",
+              description: "Complete fleet maintenance program with predictive analytics, cost optimization, and dedicated account management.",
+              reputationRequired: 92,
+              exclusive: true
+            },
+            {
+              name: "Performance Tuning Package",
+              price: "$1,500+",
+              description: "Professional performance modifications, ECU tuning, suspension upgrades, and dyno testing for enthusiast vehicles.",
+              reputationRequired: 90
+            },
+            {
+              name: "Emergency Priority Response",
+              price: "$300/year",
+              description: "24/7 priority breakdown service with guaranteed 30-minute response time and mobile repair capabilities.",
+              reputationRequired: 87
+            }
+          ]}
+          onSelectService={(serviceName) => {
+            setSelectedServices(prev => [...prev, serviceName]);
+            setIsModalOpen(true);
+          }}
+        />
 
         <div className="loyalty-section">
           <h3>Exclusive Rewards for Loyalty Members</h3>

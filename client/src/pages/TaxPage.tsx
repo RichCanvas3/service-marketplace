@@ -3,6 +3,7 @@ import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
 import ServiceContractModal from '../components/ServiceContractModal';
+import PremiumServices from '../components/PremiumServices';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import mcoMockData from '../components/data/mco-mock.json';
@@ -306,7 +307,7 @@ const TaxPage: React.FC = () => {
                   Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Pay with MetaMask
+                  Pay with MetaMask Card
                 </button>
               </div>
               <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
@@ -433,6 +434,44 @@ const TaxPage: React.FC = () => {
             ))}
           </ul>
         </div>
+
+        {/* Premium Services Section */}
+        <PremiumServices
+          serviceName="Tax"
+          premiumServices={[
+            {
+              name: "Executive Tax Strategy",
+              price: "$1,200",
+              description: "Comprehensive year-round tax planning with quarterly reviews, advanced strategies, and dedicated CPA support.",
+              reputationRequired: 95,
+              exclusive: true
+            },
+            {
+              name: "Priority Tax Preparation",
+              price: "$500",
+              description: "Fast-track tax preparation with 48-hour turnaround, direct CPA access, and amendment protection.",
+              reputationRequired: 90,
+              exclusive: true
+            },
+            {
+              name: "Business Optimization Package",
+              price: "$800",
+              description: "Complete business tax optimization including entity restructuring analysis and multi-state planning.",
+              reputationRequired: 88
+            },
+            {
+              name: "IRS Audit Protection Plus",
+              price: "$600",
+              description: "Premium audit defense with full representation, document preparation, and resolution guarantee.",
+              reputationRequired: 85
+            }
+          ]}
+          onSelectService={(serviceName) => {
+            setSelectedServices(prev => [...prev, serviceName]);
+            setIsModalOpen(true);
+          }}
+        />
+
         <div className="loyalty-section">
           <h3>Exclusive Rewards for Loyalty Members</h3>
           <div className="tiers-grid">
