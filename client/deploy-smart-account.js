@@ -18,7 +18,7 @@ async function deploySmartAccount() {
 
   // Environment setup
   const rpcUrl = 'https://ethereum-sepolia-rpc.publicnode.com';
-  const pimlicoApiKey = 'pim_KgWXFW2Up4xpDku2WjCfE5'; // Your API key
+  const pimlicoApiKey = process.env.PIMLICO_API_KEY || 'pim_12345678910';
   const bundlerUrl = `https://api.pimlico.io/v2/sepolia/rpc?apikey=${pimlicoApiKey}`;
 
   try {
