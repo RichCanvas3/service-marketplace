@@ -314,7 +314,7 @@ const GaragePage: React.FC = () => {
               </div>
               <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
                 <Link to="/loyalty-card" style={{ color: '#ED8936', textDecoration: 'underline' }}>
-                  Learn more.
+                  Learn more about the Loyalty Program.
                 </Link>
               </div>
             </div>

@@ -61,6 +61,15 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
   const [countdown, setCountdown] = useState<number>(0);
   const { showNotification } = useNotification();
 
+  const mcoSmartAccountAddress = (() => {
+    try {
+      const data = JSON.parse(localStorage.getItem('mcoData') || '{}');
+      return data.smartAccountAddress || 'N/A';
+    } catch {
+      return 'N/A';
+    }
+  })();
+
   // Helper function to award loyalty points (100 points per 1 USDC spent)
   const awardLoyaltyPoints = (paymentAmount: string, currency: string, serviceName: string) => {
     const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
@@ -106,10 +115,12 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
         if (mcoData.loyaltyPoints >= milestone.points && previousPoints < milestone.points) {
           mcoData.rewards.push({
             id: `milestone-${milestone.points}`,
-            title: milestone.reward,
+            name: milestone.reward,
             description: milestone.description,
+            points: milestone.points,
             earnedAt: new Date().toISOString(),
-            type: 'milestone'
+            type: 'milestone',
+            active: true
           });
           showNotification(`🎊 ${milestone.reward} ${milestone.description}`, 'success');
         }
@@ -349,7 +360,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
 
       // Check environment variables
       const rpcUrl = import.meta.env.VITE_SEPOLIA_RPC_URL || 'https://ethereum-sepolia-rpc.publicnode.com';
-      const bundlerUrl = import.meta.env.VITE_BUNDLER_URL || 'https://api.pimlico.io/v2/11155111/rpc?apikey=pim_KgWXFW2Up4xpDku2WjCfE5';
+      const bundlerUrl = import.meta.env.VITE_BUNDLER_URL || `https://api.pimlico.io/v2/11155111/rpc?apikey=${import.meta.env.VITE_PIMLICO_API_KEY || 'pim_12345678910'}`;
       // const bundlerUrl = import.meta.env.VITE_BUNDLER_URL || 'https://api.pimlico.io/v2/48532/rpc?apikey=pim_KgWXFW2Up4xpDku2WjCfE5';
       console.log('RPC URL configured:', rpcUrl);
       console.log('Bundler URL configured:', bundlerUrl.substring(0, 50) + '...');
@@ -430,6 +441,12 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
         });
         console.log('Smart account created:', smartAccount.address);
         console.log('EOA owner:', account);
+        // NEW: persist smart account address in MCO object
+        {
+          const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
+          mcoData.smartAccountAddress = smartAccount.address;
+          localStorage.setItem('mcoData', JSON.stringify(mcoData));
+        }
       } catch (smartAccountError) {
         console.error('Error creating smart account:', smartAccountError);
         throw new Error(`Failed to create smart account: ${smartAccountError.message}`);
@@ -839,6 +856,12 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       });
 
       console.log('Smart account computed address:', smartAccount.address);
+      // NEW: persist smart account address in MCO object
+      {
+        const mcoData = JSON.parse(localStorage.getItem('mcoData') || '{}');
+        mcoData.smartAccountAddress = smartAccount.address;
+        localStorage.setItem('mcoData', JSON.stringify(mcoData));
+      }
       console.log('Expected address: 0x327ab00586Be5651630a5827BD5C9122c8B639F8');
 
       // Check if already deployed
@@ -1335,7 +1358,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                     <h5 style={{ margin: '0 0 5px 0', color: '#1976d2' }}>👤 Your Smart Account</h5>
                     <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: '#666' }}>
                       Your EOA: <code>{userAddress}</code><br/>
-                      Expected Smart Account: <code>0x327ab00586Be5651630a5827BD5C9122c8B639F8</code>
+                      Expected Smart Account: <code>{mcoSmartAccountAddress}</code>
                     </p>
                     <button
                       className="service-button"
@@ -1421,7 +1444,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                     Service Provider EOA: <code>0x977bc18693ba4F4bfF8051d27e722b930F3f3Fe3</code><br/>
                     Service Provider Smart Account: <code>0xc6Ff874f8D4b590478cC10Fae4D33E968546dCF9</code><br/>
                     Customer EOA: <code>{userAddress}</code><br/>
-                    Customer Smart Account: <code>0x327ab00586Be5651630a5827BD5C9122c8B639F8</code>
+                    Customer Smart Account: <code>{mcoSmartAccountAddress}</code>
                   </p>
                 </div>
 
@@ -1464,7 +1487,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                     <div className="detail-item">
                       <strong>Sender (Your Smart Account):</strong>
                       <br/>
-                      <code style={{ fontSize: '12px' }}>0x327ab00586Be5651630a5827BD5C9122c8B639F8</code>
+                      <code style={{ fontSize: '12px' }}>{mcoSmartAccountAddress}</code>
                     </div>
                     <div className="detail-item">
                       <strong>Recipient (Service Provider Smart Account):</strong>
@@ -1516,7 +1539,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
                 </div>
                 <div className="detail-item">
                   <strong>Your Smart Account (Delegator):</strong>
-                  <code className="address-hash">0x327ab00586Be5651630a5827BD5C9122c8B639F8</code>
+                  <code className="address-hash">{mcoSmartAccountAddress}</code>
                 </div>
                 <div className="detail-item">
                   <strong>Service Provider Smart Account (Delegate):</strong>

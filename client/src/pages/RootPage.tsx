@@ -7,6 +7,10 @@ import { useZipCode } from '../context/ZipCodeContext';
 import { useSearch } from '../context/SearchContext';
 import { useNotification } from '../context/NotificationContext';
 import mcoMock from '../components/data/mco-mock.json';
+import { sepolia } from 'viem/chains';
+import { createPublicClient, createWalletClient, http, custom, type Address } from 'viem';
+import { Implementation, toMetaMaskSmartAccount } from '@metamask/delegation-toolkit';
+import { ethers } from 'ethers';
 
 declare global {
   interface Window {
@@ -48,15 +52,54 @@ const RootPage: React.FC = () => {
         let mco = localStorage.getItem('mcoData');
         let mcoObj;
         if (!mco) {
-          mcoObj = { ...mcoMock, userId: accounts[0] };
+          mcoObj = {
+            ...mcoMock,
+            userId: accounts[0],
+            loyaltyPoints: 0,
+            membershipLevel: 'Bronze',
+            loyaltyMember: false,
+            pastTransactions: [],
+            rewards: []
+          };
           localStorage.setItem('mcoData', JSON.stringify(mcoObj));
           setMcoData(mcoObj);
           setPreferredName(mcoObj.preferredName || '');
         } else {
+          // Preserve existing loyalty data for returning users
           mcoObj = { ...JSON.parse(mco), userId: accounts[0] };
           localStorage.setItem('mcoData', JSON.stringify(mcoObj));
           setMcoData(mcoObj);
           setPreferredName(mcoObj.preferredName || '');
+        }
+        // Generate smart account address if not already stored
+        if (!mcoObj.smartAccountAddress) {
+          try {
+            const rpcUrl = import.meta.env.VITE_SEPOLIA_RPC_URL || 'https://ethereum-sepolia-rpc.publicnode.com';
+            const publicClient = createPublicClient({ chain: sepolia, transport: http(rpcUrl) });
+
+            // minimal custom account for address derivation
+            const customAccount = {
+              address: accounts[0] as Address,
+              async signMessage() { return '0x'; },
+              async signTypedData() { return '0x'; },
+              async signTransaction() { return '0x'; },
+              source: 'custom' as const,
+              type: 'local' as const
+            };
+
+            const smartAccount = await toMetaMaskSmartAccount({
+              client: publicClient,
+              implementation: Implementation.Hybrid,
+              deployParams: [accounts[0] as Address, [], [], []],
+              deploySalt: '0x0000000000000000000000000000000000000000000000000000000000000000',
+              signatory: { account: customAccount }
+            });
+
+            mcoObj.smartAccountAddress = smartAccount.address;
+            console.log('Computed Smart Account address on login:', smartAccount.address);
+          } catch (err) {
+            console.error('Failed to compute smart account address:', err);
+          }
         }
         showNotification('Wallet connected successfully!', 'success');
       } else {

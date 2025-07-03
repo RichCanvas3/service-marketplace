@@ -73,7 +73,7 @@ const PremiumServices: React.FC<PremiumServicesProps> = ({
         boxShadow: '0 4px 12px rgba(157, 140, 255, 0.4)',
         zIndex: 2
       }}>
-        ⭐ PREMIUM SERVICES
+        PREMIUM SERVICES
       </div>
 
       <div style={{
@@ -129,7 +129,6 @@ const PremiumServices: React.FC<PremiumServicesProps> = ({
             alignItems: 'center',
             gap: '10px'
           }}>
-            <span style={{ fontSize: '20px' }}>✅</span>
             Available Premium Services ({unlockedServices.length})
           </h4>
           <div style={{
@@ -248,7 +247,6 @@ const PremiumServices: React.FC<PremiumServicesProps> = ({
             alignItems: 'center',
             gap: '10px'
           }}>
-            <span style={{ fontSize: '20px' }}>🔒</span>
             Locked Premium Services ({lockedServices.length})
           </h4>
           <div style={{
@@ -321,7 +319,7 @@ const PremiumServices: React.FC<PremiumServicesProps> = ({
                       color: '#fca5a5',
                       fontWeight: '600'
                     }}>
-                      🔒 {accessStatus.reason}
+                      {accessStatus.reason}
                     </div>
                   </div>
                   <div style={{
@@ -345,7 +343,7 @@ const PremiumServices: React.FC<PremiumServicesProps> = ({
                       padding: '2px 8px',
                       borderRadius: '4px'
                     }}>
-                      🔒 Locked
+                      Locked
                     </span>
                   </div>
                                  </div>

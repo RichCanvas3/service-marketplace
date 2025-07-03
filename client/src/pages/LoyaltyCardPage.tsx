@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../custom-styles.css';
 import serviceList from '../components/data/service-list.json';
-import mcoMockData from '../components/data/mco-mock.json';
 
 const LoyaltyCardPage: React.FC = () => {
   const [joined, setJoined] = useState(false);
@@ -19,12 +18,7 @@ const LoyaltyCardPage: React.FC = () => {
         }
       }
 
-      // If not in localStorage, check mock data
-      if (mcoMockData.loyaltyMember) {
-        setJoined(true);
-        // Optionally, you could also save this to localStorage here
-        // localStorage.setItem('mcoData', JSON.stringify(mcoMockData));
-      }
+      // If not found, remain not joined
     };
 
     checkMembershipStatus();
@@ -46,29 +40,8 @@ const LoyaltyCardPage: React.FC = () => {
       loyaltyMember: true,
       membershipLevel: 'Bronze',
       loyaltyPoints: 0,
-      rewards: [
-        { id: 1, name: '5% Off Next House Cleaning', summary: 'Reward for writing a review and referring a friend', points: 100 }
-      ],
-      pastTransactions: [
-        {
-          service: serviceList[0]?.name,
-          date: '2024-05-15',
-          amount: 120,
-          description: serviceList[0]?.services[0]?.name
-        },
-        {
-          service: serviceList[1]?.name,
-          date: '2024-03-12',
-          amount: 150,
-          description: serviceList[1]?.services[0]?.name
-        },
-        {
-          service: serviceList[2]?.name,
-          date: '2024-01-22',
-          amount: 100,
-          description: serviceList[2]?.services[1]?.name
-        }
-      ],
+      rewards: [],
+      pastTransactions: [],
       lastUpdated: new Date().toISOString()
     };
     localStorage.setItem('mcoData', JSON.stringify(mcoObj));
@@ -107,7 +80,7 @@ const LoyaltyCardPage: React.FC = () => {
             margin: '0 0 40px 0',
             opacity: '0.9'
           }}>
-            Earn reputation, unlock premium services, and get exclusive discounts.
+            Spend crypto, earn points, redeem for everyday rewards.
           </h2>
 
           <button
@@ -177,7 +150,7 @@ const LoyaltyCardPage: React.FC = () => {
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)'
           }}>
             <img
-              src='/mm-card.png'
+              src='/graphics/mm_card.png'
               alt='Service Marketplace Loyalty Card'
               style={{
                 maxWidth: '500px',
@@ -251,7 +224,6 @@ const LoyaltyCardPage: React.FC = () => {
               position: 'relative',
               paddingLeft: '30px'
             }}>
-              <span style={{ position: 'absolute', left: '0', color: 'var(--accent-color)' }}>🔍</span>
               Browse 7 service categories with detailed provider information
             </li>
             <li style={{
@@ -260,7 +232,6 @@ const LoyaltyCardPage: React.FC = () => {
               position: 'relative',
               paddingLeft: '30px'
             }}>
-              <span style={{ position: 'absolute', left: '0', color: 'var(--accent-color)' }}>💰</span>
               Pay with USDC (1 USDC per service) using secure delegation
             </li>
             <li style={{
@@ -269,7 +240,6 @@ const LoyaltyCardPage: React.FC = () => {
               position: 'relative',
               paddingLeft: '30px'
             }}>
-              <span style={{ position: 'absolute', left: '0', color: 'var(--accent-color)' }}>⭐</span>
               Build on-chain reputation through service reviews and completion
             </li>
             <li style={{
@@ -278,7 +248,6 @@ const LoyaltyCardPage: React.FC = () => {
               position: 'relative',
               paddingLeft: '30px'
             }}>
-              <span style={{ position: 'absolute', left: '0', color: 'var(--accent-color)' }}>🎁</span>
               Earn loyalty points and unlock premium services with high reputation
             </li>
             <li style={{
@@ -286,7 +255,6 @@ const LoyaltyCardPage: React.FC = () => {
               position: 'relative',
               paddingLeft: '30px'
             }}>
-              <span style={{ position: 'absolute', left: '0', color: 'var(--accent-color)' }}>🏆</span>
               Access exclusive discounts based on membership tier (5-20% off)
             </li>
           </ul>
@@ -413,9 +381,6 @@ const LoyaltyCardPage: React.FC = () => {
                 position: 'relative',
                 paddingLeft: '30px'
               }}>
-                <span style={{ position: 'absolute', left: '0', color: 'var(--accent-color-secondary)' }}>
-                  {index === 0 ? '💳' : index === 1 ? '⭐' : index === 2 ? '📈' : '🏆'}
-                </span>
                 {item}
               </li>
             ))}
@@ -465,9 +430,9 @@ const LoyaltyCardPage: React.FC = () => {
               </h4>
 
               {[
-                { title: 'Service Completion', items: ['Earn loyalty points for each completed service', 'Points vary based on service value and quality'], icon: '🛠️' },
-                { title: 'Writing Reviews', items: ['Boost reputation score with detailed reviews', 'Higher ratings provide bigger reputation gains'], icon: '📝' },
-                { title: 'Behavioral Rewards', items: ['Streak bonuses for consecutive services', 'Milestone rewards for service milestones'], icon: '🏆' }
+                { title: 'Service Completion', items: ['Earn loyalty points for each completed service', 'Points vary based on service value and quality'] },
+                { title: 'Writing Reviews', items: ['Boost reputation score with detailed reviews', 'Higher ratings provide bigger reputation gains'] },
+                { title: 'Behavioral Rewards', items: ['Streak bonuses for consecutive services', 'Milestone rewards for service milestones'] }
               ].map((section, index) => (
                 <div key={index} style={{
                   marginBottom: '25px',
@@ -485,7 +450,6 @@ const LoyaltyCardPage: React.FC = () => {
                     alignItems: 'center',
                     gap: '8px'
                   }}>
-                    <span>{section.icon}</span>
                     {section.title}
                   </h5>
                   <ul style={{ listStyle: 'none', padding: '0', margin: '0' }}>
@@ -525,10 +489,10 @@ const LoyaltyCardPage: React.FC = () => {
               }}>
                 <ul style={{ listStyle: 'none', padding: '0', margin: '0' }}>
                   {[
-                    { title: 'Service Discounts', desc: 'Automatic discounts based on membership tier (5-20%)', icon: '💰' },
-                    { title: 'Premium Services', desc: 'Access exclusive services requiring high reputation scores', icon: '⭐' },
-                    { title: 'Reputation Benefits', desc: 'Unlock premium features and exclusive provider access', icon: '🏆' },
-                    { title: 'Behavioral Rewards', desc: 'Earn bonus points and exclusive perks', icon: '🎁', subItems: ['Service streak bonuses', 'Quality reviewer rewards', 'Milestone achievements', 'Exclusive provider access'] }
+                    { title: 'Service Discounts', desc: 'Automatic discounts based on membership tier (5-20%)' },
+                    { title: 'Premium Services', desc: 'Access exclusive services requiring high reputation scores' },
+                    { title: 'Reputation Benefits', desc: 'Unlock premium features and exclusive provider access' },
+                    { title: 'Behavioral Rewards', desc: 'Earn bonus points and exclusive perks' }
                   ].map((item, index) => (
                     <li key={index} style={{
                       marginBottom: '20px',
@@ -542,28 +506,11 @@ const LoyaltyCardPage: React.FC = () => {
                         gap: '12px',
                         marginBottom: '8px'
                       }}>
-                        <span style={{ fontSize: '1.5rem' }}>{item.icon}</span>
                         <strong style={{ color: 'var(--accent-color-secondary)', fontSize: '1.1rem' }}>{item.title}</strong>
                       </div>
-                      <p style={{ margin: '0 0 8px 44px', fontSize: '0.95rem', lineHeight: '1.5' }}>
+                      <p style={{ margin: '0 0 8px 0px', fontSize: '0.95rem', lineHeight: '1.5' }}>
                         {item.desc}
                       </p>
-                      {item.subItems && (
-                        <ul style={{ listStyle: 'none', padding: '0', margin: '0 0 0 44px' }}>
-                          {item.subItems.map((subItem, subIndex) => (
-                            <li key={subIndex} style={{
-                              fontSize: '0.9rem',
-                              padding: '3px 0',
-                              position: 'relative',
-                              paddingLeft: '16px',
-                              opacity: '0.8'
-                            }}>
-                              <span style={{ position: 'absolute', left: '0', color: 'var(--accent-color-secondary)' }}>-</span>
-                              {subItem}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
                     </li>
                   ))}
                 </ul>

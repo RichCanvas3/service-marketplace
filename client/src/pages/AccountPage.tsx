@@ -4,6 +4,7 @@ import { useNotification } from '../context/NotificationContext';
 import '../custom-styles.css';
 import ReputationBadge from '../components/ReputationBadge';
 import BehavioralRewards from '../components/BehavioralRewards';
+import { ethers } from 'ethers';
 
 const AccountPage: React.FC = () => {
   const navigate = useNavigate();
@@ -14,6 +15,8 @@ const AccountPage: React.FC = () => {
   const [saveMsg, setSaveMsg] = useState<string>('');
   const [mcoData, setMcoData] = useState<any>(null);
   const [ethBalance, setEthBalance] = useState<string>('0.0000');
+  const [smartAccountDeployed, setSmartAccountDeployed] = useState<boolean>(false);
+  const smartAccountAddress = mcoData?.smartAccountAddress || '';
 
   const getEthBalance = async () => {
     if (window.ethereum && account) {
@@ -104,6 +107,22 @@ const AccountPage: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const checkDeployment = async () => {
+      if (!smartAccountAddress) return;
+      try {
+        if (window.ethereum) {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const code = await provider.getCode(smartAccountAddress);
+          setSmartAccountDeployed(code && code !== '0x');
+        }
+      } catch (err) {
+        console.error('Error checking smart account deployment:', err);
+      }
+    };
+    checkDeployment();
+  }, [smartAccountAddress]);
+
   const handleDisconnect = async () => {
     try {
       // Clear local storage
@@ -180,7 +199,7 @@ const AccountPage: React.FC = () => {
     <div className="individual-page">
       <div className="top-buttons">
         <Link to="/loyalty-card">
-          <button className="loyalty-card-button">Loyalty Card</button>
+          <button className="loyalty-card-button">Loyalty Program</button>
         </Link>
         <button
           className="connect-wallet-button"
@@ -450,6 +469,67 @@ const AccountPage: React.FC = () => {
                 }}>{account}</span>
               </div>
             </div>
+
+            {/* Smart Account Address Card */}
+            {smartAccountAddress && (
+              <div style={{
+                background: '#0f0f23',
+                borderRadius: 12,
+                padding: '16px 20px',
+                border: '1px solid #2d3748',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 8
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  marginBottom: 4
+                }}>
+                  <span style={{
+                    color: '#e2e8f0',
+                    fontWeight: 600,
+                    fontSize: 14
+                  }}>Smart Account</span>
+                  <button
+                    style={{
+                      marginLeft: 'auto',
+                      background: smartAccountDeployed ? '#4ade80' : 'transparent',
+                      color: smartAccountDeployed ? '#000' : '#a78bfa',
+                      border: smartAccountDeployed ? 'none' : '1px solid #a78bfa',
+                      padding: '4px 10px',
+                      borderRadius: 6,
+                      fontSize: 12,
+                      fontWeight: 600,
+                      cursor: smartAccountDeployed ? 'default' : 'pointer'
+                    }}
+                    disabled={smartAccountDeployed}
+                    onClick={() => {
+                      if (!smartAccountDeployed) {
+                        alert('To deploy your smart account, initiate a service contract or visit any service page and click "Deploy Smart Account".');
+                      }
+                    }}
+                  >
+                    {smartAccountDeployed ? 'Deployed' : 'Deploy Contract'}
+                  </button>
+                </div>
+                <div style={{
+                  background: '#1a1a2e',
+                  borderRadius: 8,
+                  padding: '12px 16px',
+                  border: '1px solid #4a5568'
+                }}>
+                  <span style={{
+                    color: '#9d8cff',
+                    fontFamily: 'Monaco, Consolas, monospace',
+                    fontSize: 15,
+                    wordBreak: 'break-all',
+                    letterSpacing: 0.5
+                  }}>{smartAccountAddress}</span>
+                </div>
+              </div>
+            )}
 
             {/* Network Card */}
             <div style={{
@@ -795,66 +875,6 @@ const AccountPage: React.FC = () => {
                 }}>
                   Verification status current
                 </div>
-              </div>
-            </div>
-
-            {/* Improve Score Section */}
-            <div style={{
-              background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.05))',
-              borderRadius: 12,
-              padding: '20px',
-              border: '1px solid rgba(139, 92, 246, 0.2)',
-              marginTop: 20
-            }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                marginBottom: 12
-              }}>
-                <span style={{
-                  color: '#a78bfa',
-                  fontWeight: 600,
-                  fontSize: 16
-                }}>
-                  How to Improve Your Score
-                </span>
-              </div>
-              <div style={{
-                fontSize: 14,
-                color: '#e2e8f0',
-                lineHeight: 1.5,
-                marginBottom: 12
-              }}>
-                Increase your KYC credibility score by completing more verifications and maintaining a positive transaction history.
-              </div>
-              <div style={{
-                display: 'flex',
-                gap: 12,
-                flexWrap: 'wrap'
-              }}>
-                <button style={{
-                  background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
-                  color: 'white',
-                  border: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '8px',
-                  fontSize: '13px',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 12px rgba(139, 92, 246, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-                  (e.currentTarget as HTMLElement).style.boxShadow = 'none';
-                }}
-                >
-                  Complete Phone Verification
-                </button>
               </div>
             </div>
           </div>
@@ -1402,106 +1422,7 @@ const AccountPage: React.FC = () => {
 
                 {/* Past Transactions & History */}
 
-                <div style={{
-                  fontWeight: 600,
-                  marginBottom: 16,
-                  color: '#a78bfa',
-                  fontSize: 24,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8
-                }}>
-                  <span>Past Transactions & History</span>
-                </div>
-
-                <div style={{ marginBottom: 24 }}>
-
-
-                  <div style={{ fontWeight: 600, marginBottom: 12, color: '#e2e8f0', fontSize: 14 }}>Past Transactions (3) </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {mcoData.pastTransactions && mcoData.pastTransactions.length > 0 ? mcoData.pastTransactions.map((t: any, i: number) => (
-                      <div key={i} style={{
-                        background: '#18181b',
-                        borderRadius: 10,
-                        padding: '12px 16px',
-                        color: '#e0e0e0',
-                        fontSize: 15,
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        border: '1px solid #2d3748'
-                      }}>
-                        <div style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: 2,
-                          flex: 1
-                        }}>
-                          <div style={{ fontSize: '16px', fontWeight: 600, color: '#fbbf24' }}>{t.service}</div>
-                          <div style={{ fontSize: 13, color: '#a78bfa' }}>{t.date}</div>
-                          <div>{t.description} <span style={{ color: '#34d399', fontWeight: 600 }}>{t.amount} USDC</span></div>
-                          <div><span style={{ fontSize: '12px', color: '#a78bfa', fontWeight: 600 }}>Paid with MetaMask Card and USDC</span></div>
-                        </div>
-                        <div style={{ marginLeft: 16 }}>
-                          {i === 0 ? (
-                            // First transaction shows "Review Written"
-                            <button
-                              style={{
-                                background: '#4ade80',
-                                color: '#000',
-                                border: 'none',
-                                padding: '6px 12px',
-                                borderRadius: 6,
-                                fontSize: 12,
-                                fontWeight: 600,
-                                cursor: 'default',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 4
-                              }}
-                              disabled
-                            >
-                              ✓ Review Written
-                            </button>
-                          ) : (
-                            // Other transactions show "Write Review"
-                            <button
-                              style={{
-                                background: 'transparent',
-                                color: '#a78bfa',
-                                border: '1px solid #a78bfa',
-                                padding: '6px 12px',
-                                borderRadius: 6,
-                                fontSize: 12,
-                                fontWeight: 500,
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease'
-                              }}
-                              onMouseEnter={(e) => {
-                                (e.target as HTMLButtonElement).style.backgroundColor = '#a78bfa';
-                                (e.target as HTMLButtonElement).style.color = '#232323';
-                              }}
-                              onMouseLeave={(e) => {
-                                (e.target as HTMLButtonElement).style.backgroundColor = 'transparent';
-                                (e.target as HTMLButtonElement).style.color = '#a78bfa';
-                              }}
-                              onClick={() => {
-                                // Placeholder for review functionality
-                                alert(`Write a review for ${t.service}`);
-                              }}
-                            >
-                              Write Review
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    )) : <span style={{ color: '#bdbdbd' }}>No transactions yet</span>}
-                  </div>
-                </div>
-                              </div>
-
-              <div style={{ width: '100%', margin: '12px 0', background: '#fff2', height: 1, borderRadius: 1 }} />
-
+              </div>
 
                 {/* Account Settings */}
 
@@ -1636,6 +1557,11 @@ const AccountPage: React.FC = () => {
                     <div>
                       <div style={{ fontWeight: 600 }}>MetaMask Wallet</div>
                       <div style={{ fontSize: 13, color: '#9ca3af' }}>{account ? `${account.slice(0, 6)}...${account.slice(-4)}` : 'Not Connected'}</div>
+                      {mcoData?.smartAccountAddress && (
+                        <div style={{ fontSize: 12, color: '#4ade80', marginTop: 2 }}>
+                          Smart&nbsp;Account:&nbsp;{`${mcoData.smartAccountAddress.slice(0, 6)}...${mcoData.smartAccountAddress.slice(-4)}`}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
@@ -1815,7 +1741,23 @@ const SignedContractsSection: React.FC = () => {
         amount: parseFloat(selectedContract.paymentAmount) || 0
       });
 
-      showNotification('Review submitted successfully!', 'success');
+      // Award loyalty points for writing a review
+      const pointsForReview = 50; // arbitrary reward for review submission
+      mcoData.loyaltyPoints = (mcoData.loyaltyPoints || 0) + pointsForReview;
+
+      // Determine membership level based on updated points
+      const determineLevel = (pts: number) => {
+        if (pts >= 2000) return 'Platinum';
+        if (pts >= 1000) return 'Gold';
+        if (pts >= 500) return 'Silver';
+        return 'Bronze';
+      };
+      mcoData.membershipLevel = determineLevel(mcoData.loyaltyPoints);
+
+      // Persist updated points and level
+      localStorage.setItem('mcoData', JSON.stringify(mcoData));
+
+      showNotification(`Review Submitted! +${pointsForReview} loyalty points earned.`, 'success');
       setIsReviewModalOpen(false);
       setSelectedContract(null);
     }
@@ -1956,7 +1898,7 @@ const SignedContractsSection: React.FC = () => {
               (e.target as HTMLButtonElement).style.color = '#06b6d4';
             }}
           >
-            🔄 Refresh
+            Refresh
           </button>
           {signedContracts.length > 0 && (
             <button
@@ -1981,7 +1923,7 @@ const SignedContractsSection: React.FC = () => {
                 (e.target as HTMLButtonElement).style.color = '#ef4444';
               }}
             >
-              🗑️ Clear All
+              Clear All
             </button>
           )}
         </div>
@@ -2042,10 +1984,11 @@ const SignedContractsSection: React.FC = () => {
                   const date = new Date(contract.signedAt);
                   if (isNaN(date.getTime())) return 'N/A';
 
-                  return date.toLocaleDateString('en-US', {
+                  return date.toLocaleString('en-US', {
                     year: 'numeric',
                     month: 'short',
                     day: 'numeric',
+                    weekday: 'short',
                     hour: '2-digit',
                     minute: '2-digit'
                   });
@@ -2119,11 +2062,13 @@ const SignedContractsSection: React.FC = () => {
                   const date = new Date(contract.serviceDate);
                   if (isNaN(date.getTime())) return 'TBD';
 
-                  return date.toLocaleDateString('en-US', {
+                  return date.toLocaleString('en-US', {
                     year: 'numeric',
                     month: 'short',
                     day: 'numeric',
-                    weekday: 'short'
+                    weekday: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit'
                   });
                 })()}</div>
               </div>
@@ -2175,7 +2120,7 @@ const SignedContractsSection: React.FC = () => {
                     (e.target as HTMLButtonElement).style.boxShadow = 'none';
                   }}
                 >
-                  ⭐ Write Review
+                  Write Review
                 </button>
               )}
               {contract.review && (
