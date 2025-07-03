@@ -306,7 +306,10 @@ const executePayment: RequestHandler = async (req, res) => {
 
     // Create Delegator Smart Account - Removing Money
     console.log('Create Delegator Smart Account');
-    const delegatorAccount = privateKeyToAccount('0x8f2f25b94e2af68197ad8fdadebb0110b251c4a08895b168ee04b96af98a068c'); // Remove
+    const delegatorAccount = privateKeyToAccount(
+    (process.env.SERVER_PRIVATE_KEY as `0x${string}`) ||
+    '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+  );
     const delegatorSmartAccount = await toMetaMaskSmartAccount({
       client: publicClient,
       implementation: Implementation.Hybrid,
@@ -319,7 +322,10 @@ const executePayment: RequestHandler = async (req, res) => {
     console.log('Create Delegate Smart Account');
     // Service Provider SCA address - the target smart contract account
     const SERVICE_PROVIDER_SCA = '0xc6Ff874f8D4b590478cC10Fae4D33E968546dCF9';
-    const delegateAccount = privateKeyToAccount('0xaff2b423dd92e5bbf2f0943a7b4021455ff323e21bde380c5c7cc3a663887c4a'); // Remove
+    const delegateAccount = privateKeyToAccount(
+    (process.env.DELEGATE_PRIVATE_KEY as `0x${string}`) ||
+    '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+  );
     const delegateSmartAccount = await toMetaMaskSmartAccount({
       client: publicClient,
       implementation: Implementation.Hybrid,
