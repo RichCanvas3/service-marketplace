@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
+import ServiceContractModal from '../components/ServiceContractModal';
+import PremiumServices from '../components/PremiumServices';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import mcoMockData from '../components/data/mco-mock.json';
@@ -39,6 +41,7 @@ const DesignPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isCardFormOpen, setIsCardFormOpen] = useState(false);
+  const [isServiceContractModalOpen, setIsServiceContractModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const ccdsServices = data.find(service => service.name === "Creative Collective Design Studio")?.services || [];
@@ -144,9 +147,11 @@ const DesignPage: React.FC = () => {
   };
 
   const handleButton2Click = () => {
-    console.log('Loyalty card payment clicked');
-    handleCloseModal();
-    showNotification('Request for service sent!', 'success');
+    console.log('Opening Service Contract Modal');
+    console.log('Selected services being passed:', selectedServices);
+    setIsServiceContractModalOpen(true);
+    // Close the main modal without clearing selectedServices
+    setIsModalOpen(false);
   };
 
   const handleInfoClick = (e: React.MouseEvent) => {
@@ -328,11 +333,16 @@ const DesignPage: React.FC = () => {
             <div className="payment-section">
               <div className="payment-options">
                 <button className="payment-card-button" onClick={handleButton1Click}>
-                  Pay with Card
+                  Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Pay with Loyalty Card
+                  Pay with MetaMask Card
                 </button>
+              </div>
+              <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
+                <Link to="/loyalty-card" style={{ color: '#ED8936', textDecoration: 'underline' }}>
+                  Learn more about the Loyalty Program.
+                </Link>
               </div>
             </div>
           </div>
@@ -453,6 +463,43 @@ const DesignPage: React.FC = () => {
             ))}
           </ul>
         </div>
+
+        {/* Premium Services Section */}
+        <PremiumServices
+          serviceName="Design"
+          premiumServices={[
+            {
+              name: "Enterprise Rebrand Package",
+              price: "$25,000+",
+              description: "Complete enterprise rebrand including logo, brand guidelines, website overhaul, marketing collateral, and launch strategy.",
+              reputationRequired: 96,
+              exclusive: true
+            },
+            {
+              name: "Award-Submission Design",
+              price: "$5,000+",
+              description: "Competition-level design work by award-winning designers with portfolio guarantees and international recognition potential.",
+              reputationRequired: 94,
+              exclusive: true
+            },
+            {
+              name: "VIP Design Consultation",
+              price: "$500/hr",
+              description: "One-on-one sessions with senior creative directors for strategic brand development and design direction.",
+              reputationRequired: 90
+            },
+            {
+              name: "Priority Rush Service",
+              price: "+50% fee",
+              description: "48-hour turnaround on any design project with dedicated team assignment and expedited revisions.",
+              reputationRequired: 87
+            }
+          ]}
+          onSelectService={(serviceName) => {
+            setSelectedServices(prev => [...prev, serviceName]);
+            setIsModalOpen(true);
+          }}
+        />
 
         <div className="loyalty-section">
           <h3>Exclusive Rewards for Loyalty Members</h3>
@@ -613,6 +660,14 @@ const DesignPage: React.FC = () => {
         isOpen={isCardFormOpen}
         onClose={() => setIsCardFormOpen(false)}
         onSubmit={handleCardSubmit}
+      />
+
+      <ServiceContractModal
+        isOpen={isServiceContractModalOpen}
+        onClose={() => setIsServiceContractModalOpen(false)}
+        serviceName="Creative Collective Design Studio"
+        servicePrice="1 USDC"
+        selectedServices={selectedServices}
       />
     </div>
   );

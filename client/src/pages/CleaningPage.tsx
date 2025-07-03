@@ -4,6 +4,8 @@ import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
+import ServiceContractModal from '../components/ServiceContractModal';
+import PremiumServices from '../components/PremiumServices';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import mcoMockData from '../components/data/mco-mock.json';
@@ -41,6 +43,7 @@ const CleaningPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isCardFormOpen, setIsCardFormOpen] = useState(false);
+  const [isServiceContractModalOpen, setIsServiceContractModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [preferredDate, setPreferredDate] = useState('');
@@ -91,13 +94,10 @@ const CleaningPage: React.FC = () => {
     if (currentStep === 3) {
       setCurrentStep(4);
     } else if (currentStep === 4) {
-      // Handle form submission
-      const selectedServiceDetails = dhcServices
-        .filter(service => selectedServices.includes(service.name))
-        .map(service => `${service.name} (${service.price})`);
-
-      alert(`Booking submitted!\n\nSelected services:\n${selectedServiceDetails.join('\n')}`);
-      handleCloseModal();
+      // Handle form submission - Open Service Contract Modal
+      console.log('Opening Service Contract Modal');
+      setIsServiceContractModalOpen(true);
+      handleCloseModal(); // Close the booking modal
     } else {
       setCurrentStep(prev => prev + 1);
     }
@@ -139,9 +139,11 @@ const CleaningPage: React.FC = () => {
   };
 
   const handleButton2Click = () => {
-    console.log('Loyalty card payment clicked');
-    handleCloseModal();
-    showNotification('Request for service sent!', 'success');
+    console.log('Opening Service Contract Modal');
+    console.log('Selected services being passed:', selectedServices);
+    setIsServiceContractModalOpen(true);
+    // Close the main modal without clearing selectedServices
+    setIsModalOpen(false);
   };
 
   const renderStepContent = () => {
@@ -320,11 +322,16 @@ const CleaningPage: React.FC = () => {
             <div className="payment-section">
               <div className="payment-options">
                 <button className="payment-card-button" onClick={handleButton1Click}>
-                  Pay with Card
+                  Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Pay with Loyalty Card
+                  Pay with MetaMask Card
                 </button>
+              </div>
+              <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
+                <Link to="/loyalty-card" style={{ color: '#ED8936', textDecoration: 'underline' }}>
+                  Learn more about the Loyalty Program.
+                </Link>
               </div>
             </div>
           </div>
@@ -445,6 +452,43 @@ const CleaningPage: React.FC = () => {
             ))}
           </ul>
         </div>
+
+        {/* Premium Services Section */}
+        <PremiumServices
+          serviceName="Cleaning"
+          premiumServices={[
+            {
+              name: "Executive Deep Clean",
+              price: "$400",
+              description: "Premium 8-hour deep clean with specialized equipment and eco-luxury products. Includes appliance interiors, light fixtures, and detailed organization.",
+              reputationRequired: 95,
+              exclusive: true
+            },
+            {
+              name: "Luxury Home Service",
+              price: "$250",
+              description: "White-glove cleaning with premium eco-products, detailed furniture care, and luxury linens service.",
+              reputationRequired: 90,
+              exclusive: true
+            },
+            {
+              name: "Priority Same-Day Service",
+              price: "$180",
+              description: "Emergency cleaning service with 4-hour response time. Perfect for last-minute events or unexpected guests.",
+              reputationRequired: 88
+            },
+            {
+              name: "Concierge Cleaning Package",
+              price: "$320",
+              description: "Full-service package including organizing, laundry service, and grocery restocking. Perfect for busy professionals.",
+              reputationRequired: 85
+            }
+          ]}
+          onSelectService={(serviceName) => {
+            setSelectedServices(prev => [...prev, serviceName]);
+            setIsModalOpen(true);
+          }}
+        />
 
         <div className="loyalty-section">
           <h3>Exclusive Rewards for Loyalty Members</h3>
@@ -604,6 +648,14 @@ const CleaningPage: React.FC = () => {
         isOpen={isCardFormOpen}
         onClose={() => setIsCardFormOpen(false)}
         onSubmit={handleCardSubmit}
+      />
+
+      <ServiceContractModal
+        isOpen={isServiceContractModalOpen}
+        onClose={() => setIsServiceContractModalOpen(false)}
+        serviceName="Daisy's Home Cleaning"
+                      servicePrice="1 USDC"
+        selectedServices={selectedServices}
       />
     </div>
   );

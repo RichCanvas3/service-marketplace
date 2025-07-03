@@ -4,6 +4,8 @@ import { SendMcpMessage } from '../components/SendMcpMessage';
 import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
+import ServiceContractModal from '../components/ServiceContractModal';
+import PremiumServices from '../components/PremiumServices';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import mcoMockData from '../components/data/mco-mock.json';
@@ -23,6 +25,7 @@ const GaragePage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isCardFormOpen, setIsCardFormOpen] = useState(false);
+  const [isServiceContractModalOpen, setIsServiceContractModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [preferredDate, setPreferredDate] = useState('');
@@ -120,9 +123,11 @@ const GaragePage: React.FC = () => {
   };
 
   const handleButton2Click = () => {
-    console.log('Loyalty card payment clicked');
-    handleCloseModal();
-    showNotification('Request for service sent!', 'success');
+    console.log('Opening Service Contract Modal');
+    console.log('Selected services being passed:', selectedServices);
+    setIsServiceContractModalOpen(true);
+    // Close the main modal without clearing selectedServices
+    setIsModalOpen(false);
   };
 
   const renderStepContent = () => {
@@ -301,11 +306,16 @@ const GaragePage: React.FC = () => {
             <div className="payment-section">
               <div className="payment-options">
                 <button className="payment-card-button" onClick={handleButton1Click}>
-                  Pay with Card
+                  Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Pay with Loyalty Card
+                  Pay with MetaMask Card
                 </button>
+              </div>
+              <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
+                <Link to="/loyalty-card" style={{ color: '#ED8936', textDecoration: 'underline' }}>
+                  Learn more about the Loyalty Program.
+                </Link>
               </div>
             </div>
           </div>
@@ -426,6 +436,43 @@ const GaragePage: React.FC = () => {
             ))}
           </ul>
         </div>
+
+        {/* Premium Services Section */}
+        <PremiumServices
+          serviceName="Automotive"
+          premiumServices={[
+            {
+              name: "Concierge Auto Service",
+              price: "$500/month",
+              description: "White-glove automotive care with pickup/delivery, premium detailing, priority scheduling, and comprehensive maintenance tracking.",
+              reputationRequired: 96,
+              exclusive: true
+            },
+            {
+              name: "Executive Fleet Management",
+              price: "$200/vehicle",
+              description: "Complete fleet maintenance program with predictive analytics, cost optimization, and dedicated account management.",
+              reputationRequired: 92,
+              exclusive: true
+            },
+            {
+              name: "Performance Tuning Package",
+              price: "$1,500+",
+              description: "Professional performance modifications, ECU tuning, suspension upgrades, and dyno testing for enthusiast vehicles.",
+              reputationRequired: 90
+            },
+            {
+              name: "Emergency Priority Response",
+              price: "$300/year",
+              description: "24/7 priority breakdown service with guaranteed 30-minute response time and mobile repair capabilities.",
+              reputationRequired: 87
+            }
+          ]}
+          onSelectService={(serviceName) => {
+            setSelectedServices(prev => [...prev, serviceName]);
+            setIsModalOpen(true);
+          }}
+        />
 
         <div className="loyalty-section">
           <h3>Exclusive Rewards for Loyalty Members</h3>
@@ -588,6 +635,14 @@ const GaragePage: React.FC = () => {
         isOpen={isCardFormOpen}
         onClose={() => setIsCardFormOpen(false)}
         onSubmit={handleCardSubmit}
+      />
+
+      <ServiceContractModal
+        isOpen={isServiceContractModalOpen}
+        onClose={() => setIsServiceContractModalOpen(false)}
+        serviceName="Mike's Mobile Garage"
+                      servicePrice="1 USDC"
+        selectedServices={selectedServices}
       />
     </div>
   );

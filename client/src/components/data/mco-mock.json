@@ -1,10 +1,90 @@
 {
   "userId": "0x1234567890abcdef",
-  "loyaltyMember": false,
-  "loyaltyPoints": 0,
-  "membershipLevel": "Bronze",
-  "lastUpdated": "2024-06-01T12:00:00Z",
+  "preferredName": "",
+  "loyaltyMember": true,
+  "loyaltyPoints": 350,
+  "membershipLevel": "Silver",
+  "lastUpdated": "2024-12-01T12:00:00Z",
   "kycCredibilityScore": 91,
   "kycVerificationLevel": "Verified",
-  "kycLastUpdated": "2024-11-15T14:30:00Z"
+  "kycLastUpdated": "2024-11-15T14:30:00Z",
+  "signedContracts": [],
+  "rewards": [
+    {
+      "id": 1,
+      "name": "5% Off Next House Cleaning",
+      "summary": "Reward for writing a review and referring a friend",
+      "points": 100,
+      "type": "discount",
+      "active": true
+    },
+    {
+      "id": 2,
+      "name": "Streak Bonus: 3 Services",
+      "summary": "Completed 3 services in 30 days",
+      "points": 50,
+      "type": "streak",
+      "active": true
+    }
+  ],
+  "pastTransactions": [
+    {
+      "id": "tx_001",
+      "service": "Daisy's Home Cleaning",
+      "date": "2024-11-20",
+      "amount": 120,
+      "description": "Basic House Cleaning",
+      "rating": 5,
+      "review": "Excellent service, very thorough!",
+      "pointsEarned": 120,
+      "status": "completed"
+    },
+    {
+      "id": "tx_002",
+      "service": "Rob's Tax Services",
+      "date": "2024-10-15",
+      "amount": 150,
+      "description": "Personal Tax Return",
+      "rating": 5,
+      "review": "Professional and knowledgeable",
+      "pointsEarned": 150,
+      "status": "completed"
+    },
+    {
+      "id": "tx_003",
+      "service": "Doug's Athletic Training",
+      "date": "2024-10-01",
+      "amount": 75,
+      "description": "Personal Training Session",
+      "rating": 4,
+      "review": "Great workout, will book again",
+      "pointsEarned": 75,
+      "status": "completed"
+    }
+  ],
+  "streakCount": 3,
+  "consecutiveMonths": 2,
+  "totalServicesCompleted": 3,
+  "averageRatingGiven": 4.7,
+  "verifiedCustomer": true,
+  "reputationHistory": [
+    {
+      "date": "2024-11-20",
+      "score": 91,
+      "event": "Service completed with 5-star rating",
+      "change": "+1"
+    },
+    {
+      "date": "2024-10-15",
+      "score": 90,
+      "event": "Service completed with positive review",
+      "change": "+2"
+    }
+  ],
+  "behavioralTriggers": {
+    "lastServiceDate": "2024-11-20",
+    "serviceFrequency": "regular",
+    "preferredServices": ["cleaning", "tax"],
+    "riskScore": "low"
+  }
 }

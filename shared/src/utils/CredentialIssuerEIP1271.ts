@@ -19,7 +19,7 @@ import {
 
 
 
-import { 
+import {
   type ICredentialIssuerEIP1271,
   type ICreateVerifiableCredentialEIP1271Args,
   type ICreateVerifiablePresentationEIP1271Args,
@@ -154,7 +154,7 @@ export class CredentialIssuerEIP1271 implements IAgentPlugin {
       version: '1',
     }
 
-    const primaryType = 'VerifiableCredential' 
+    const primaryType = 'VerifiableCredential'
     const allTypes = getEthTypesFromInputDoc(credential, primaryType)
     const types = { ...allTypes }
 
@@ -289,14 +289,14 @@ export class CredentialIssuerEIP1271 implements IAgentPlugin {
     if (!compat.primaryType || !compat.types || !compat.domain) {
       throw new Error('invalid_argument: proof is missing expected properties')
     }
-      
+
 
     const filteredTypes = { ...compat.types };
     delete filteredTypes.EIP712Domain;
 
     const digest  = TypedDataEncoder.hash(compat.domain, filteredTypes, verificationMessage);
     const signature = proofValue
-    
+
     const isValidSignatureData = encodeFunctionData({
           abi: [
             {
@@ -313,7 +313,7 @@ export class CredentialIssuerEIP1271 implements IAgentPlugin {
           functionName: "isValidSignature",
           args: [digest as `0x${string}`, signature],
         });
-    
+
     const publicClient = createPublicClient({
               chain: sepolia,
               transport: http(),
@@ -322,7 +322,7 @@ export class CredentialIssuerEIP1271 implements IAgentPlugin {
 
     const did = (credential.issuer as any).id
     console.info(">>>>>>>>>>>> credential issuer did: ", did)
-    
+
     const address = this.parseAADid(did as `0x${string}`).address;
     console.info("address used to validate signature: ", address)
 
@@ -388,7 +388,7 @@ export class CredentialIssuerEIP1271 implements IAgentPlugin {
 
     const digest  = TypedDataEncoder.hash(compat.domain, filteredTypes, verificationMessage);
     const signature = proofValue
-    
+
     const isValidSignatureData = encodeFunctionData({
           abi: [
             {
@@ -405,7 +405,7 @@ export class CredentialIssuerEIP1271 implements IAgentPlugin {
           functionName: "isValidSignature",
           args: [digest as `0x${string}`, signature],
         });
-    
+
     const publicClient = createPublicClient({
               chain: sepolia,
               transport: http(),

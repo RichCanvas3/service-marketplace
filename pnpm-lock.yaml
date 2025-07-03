@@ -27,8 +27,8 @@ importers:
         specifier: workspace:*
         version: link:../shared
       '@metamask/delegation-toolkit':
-        specifier: ^0.11.0
-        version: 0.11.0(viem@2.30.5(typescript@5.8.3))
+        specifier: ^0.12.0
+        version: 0.12.0(viem@2.30.5(typescript@5.8.3))
       '@veramo/core':
         specifier: ^6.0.0
         version: 6.0.0
@@ -1412,8 +1412,18 @@ packages:
     resolution: {integrity: sha512-RfeMr1Ct0givG7oOy1unwdb5lGttq9pape4OGz2mk8quG0KDqDi7cw3fzYc7wz9xFDZ2YrFanYRacaLTlqWS8g==}
     engines: {node: ^18.18 || >=20}
 
+  '@metamask/delegation-deployments@0.12.0':
+    resolution: {integrity: sha512-9SB5DhLAnbpIWbFxP3UKPXLhCt8iiRjBBjZ7hqF5dMXy9buBEDpCRg+FJYRxYRecwporrTVrv+NfKUyCbL2ncw==}
+    engines: {node: ^18.18 || >=20}
+
   '@metamask/delegation-toolkit@0.11.0':
     resolution: {integrity: sha512-KQybftUahuPPjN842ejmVaJWg2rzHpSpvd+b6qtiOBypzJs7cgw1/f8QalHLugS1eyicEYLXwvRxjjufiG4wbg==}
+    engines: {node: ^18.18 || >=20}
+    peerDependencies:
+      viem: '>=2.18.2 <3.0.0'
+
+  '@metamask/delegation-toolkit@0.12.0':
+    resolution: {integrity: sha512-vk6X4iTARLpMdES6CYiABYSOpeXYPzCKV3xDOP/nRbnFp/CxeYQBa/fT28SDj318V92CQzCI6WrKlEnF/9Y/1Q==}
     engines: {node: ^18.18 || >=20}
     peerDependencies:
       viem: '>=2.18.2 <3.0.0'
@@ -5185,6 +5195,9 @@ packages:
   web-worker@1.2.0:
     resolution: {integrity: sha512-PgF341avzqyx60neE9DD+XS26MMNMoUQRz9NOZwW32nPQrF6p77f1htcnjBSEV8BGMKZ16choqUG4hyI0Hx7mA==}
 
+  webauthn-p256@0.0.10:
+    resolution: {integrity: sha512-EeYD+gmIT80YkSIDb2iWq0lq2zbHo1CxHlQTeJ+KkCILWpVy3zASH3ByD4bopzfk0uCwXxLqKGLqp2W4O28VFA==}
+
   webauthn-p256@0.0.5:
     resolution: {integrity: sha512-drMGNWKdaixZNobeORVIqq7k5DsRC9FnG201K2QjeOoQLmtSDaSsVZdkg6n5jUALJKcAG++zBPJXmv6hy0nWFg==}
 
@@ -7205,11 +7218,21 @@ snapshots:
 
   '@metamask/delegation-deployments@0.11.0': {}
 
+  '@metamask/delegation-deployments@0.12.0': {}
+
   '@metamask/delegation-toolkit@0.11.0(viem@2.30.5(typescript@5.8.3))':
     dependencies:
       '@metamask/delegation-utils': 0.11.0(viem@2.30.5(typescript@5.8.3))
       viem: 2.30.5(typescript@5.8.3)
       webauthn-p256: 0.0.5
+
+  '@metamask/delegation-toolkit@0.12.0(viem@2.30.5(typescript@5.8.3))':
+    dependencies:
+      '@metamask/delegation-abis': 0.11.0
+      '@metamask/delegation-deployments': 0.12.0
+      buffer: 6.0.3
+      viem: 2.30.5(typescript@5.8.3)
+      webauthn-p256: 0.0.10
 
   '@metamask/delegation-utils@0.11.0(viem@2.30.5(typescript@5.8.3))':
     dependencies:
@@ -12052,6 +12075,11 @@ snapshots:
   web-streams-polyfill@3.3.3: {}
 
   web-worker@1.2.0: {}
+
+  webauthn-p256@0.0.10:
+    dependencies:
+      '@noble/curves': 1.9.1
+      '@noble/hashes': 1.8.0
 
   webauthn-p256@0.0.5:
     dependencies:

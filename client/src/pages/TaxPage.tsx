@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import Modal from '../components/Modal';
 import InfoModal from '../components/InfoModal';
 import CreditCardForm from '../components/CreditCardForm';
+import ServiceContractModal from '../components/ServiceContractModal';
+import PremiumServices from '../components/PremiumServices';
 import data from '../components/data/service-list.json';
 import employees from '../components/data/employees.json';
 import mcoMockData from '../components/data/mco-mock.json';
@@ -21,6 +23,7 @@ const TaxPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isCardFormOpen, setIsCardFormOpen] = useState(false);
+  const [isServiceContractModalOpen, setIsServiceContractModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [preferredDate, setPreferredDate] = useState('');
@@ -113,9 +116,11 @@ const TaxPage: React.FC = () => {
   };
 
   const handleButton2Click = () => {
-    console.log('Loyalty card payment clicked');
-    handleCloseModal();
-    showNotification('Request for service sent!', 'success');
+    console.log('Opening Service Contract Modal');
+    console.log('Selected services being passed:', selectedServices);
+    setIsServiceContractModalOpen(true);
+    // Close the main modal without clearing selectedServices
+    setIsModalOpen(false);
   };
 
   const handleInfoClick = (e: React.MouseEvent) => {
@@ -299,11 +304,16 @@ const TaxPage: React.FC = () => {
             <div className="payment-section">
               <div className="payment-options">
                 <button className="payment-card-button" onClick={handleButton1Click}>
-                  Pay with Card
+                  Pay with Debit/Credit Card
                 </button>
                 <button className="payment-loyalty-button" onClick={handleButton2Click} disabled={!isLoyaltyMember}>
-                  Pay with Loyalty Card
+                  Pay with MetaMask Card
                 </button>
+              </div>
+              <div style={{ color: '#ED8936', fontSize: '0.9em', marginTop: '10px', textAlign: 'center' }}>
+                <Link to="/loyalty-card" style={{ color: '#ED8936', textDecoration: 'underline' }}>
+                  Learn more about the Loyalty Program.
+                </Link>
               </div>
             </div>
           </div>
@@ -424,6 +434,44 @@ const TaxPage: React.FC = () => {
             ))}
           </ul>
         </div>
+
+        {/* Premium Services Section */}
+        <PremiumServices
+          serviceName="Tax"
+          premiumServices={[
+            {
+              name: "Executive Tax Strategy",
+              price: "$1,200",
+              description: "Comprehensive year-round tax planning with quarterly reviews, advanced strategies, and dedicated CPA support.",
+              reputationRequired: 95,
+              exclusive: true
+            },
+            {
+              name: "Priority Tax Preparation",
+              price: "$500",
+              description: "Fast-track tax preparation with 48-hour turnaround, direct CPA access, and amendment protection.",
+              reputationRequired: 90,
+              exclusive: true
+            },
+            {
+              name: "Business Optimization Package",
+              price: "$800",
+              description: "Complete business tax optimization including entity restructuring analysis and multi-state planning.",
+              reputationRequired: 88
+            },
+            {
+              name: "IRS Audit Protection Plus",
+              price: "$600",
+              description: "Premium audit defense with full representation, document preparation, and resolution guarantee.",
+              reputationRequired: 85
+            }
+          ]}
+          onSelectService={(serviceName) => {
+            setSelectedServices(prev => [...prev, serviceName]);
+            setIsModalOpen(true);
+          }}
+        />
+
         <div className="loyalty-section">
           <h3>Exclusive Rewards for Loyalty Members</h3>
           <div className="tiers-grid">
@@ -585,6 +633,14 @@ const TaxPage: React.FC = () => {
         isOpen={isCardFormOpen}
         onClose={() => setIsCardFormOpen(false)}
         onSubmit={handleCardSubmit}
+      />
+
+      <ServiceContractModal
+        isOpen={isServiceContractModalOpen}
+        onClose={() => setIsServiceContractModalOpen(false)}
+        serviceName="Rob's Tax Services"
+                      servicePrice="1 USDC"
+        selectedServices={selectedServices}
       />
     </div>
   );
