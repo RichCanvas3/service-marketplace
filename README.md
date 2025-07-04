@@ -2,36 +2,40 @@
 
 # Service Marketplace & Loyalty Program
 
+### [Watch Service Marketplace Demo Video on Hackquest](https://www.hackquest.io/projects/MetaMask-Card-Dev-Cook-Off-Service-Marketplace-and-Loyalty-Program)
+
 ### Spend crypto, earn points, redeem for everyday rewards.
 
-<b>Service Marketplace</b> is a decentralized service marketplace that connects users with local service providers and allows them to purchase a variety of everyday services. Service Marketplace bridges the gap between traditional and decentralized finance by allowing payment for services via credit/debit card, as well as with the MetaMask Card (which is only available through the Service Marketplace Loyalty program).
+<b>Service Marketplace</b> is a decentralized service marketplace that connects users with local service providers and allows them to purchase a variety of everyday services.
 
-The <b>Service Marketplace Loyalty Program</b> is a rewards program that drives on-chain spending by offering a way to accumulate loyalty points that can be redeemed for exclusive perks and rewards. Loyalty Members have tiered membership access that gives them special discounts and rewards.
+Service Marketplace bridges the gap between traditional and decentralized finance by enabling payments for services via credit/debit card and the MetaMask Card, which is exclusively available through the Service Marketplace Loyalty program.
+
+The <b>Service Marketplace Loyalty Program</b> is a rewards system that incentivizes on-chain spending by allowing users to earn loyalty points redeemable for exclusive perks and benefits. Members enjoy tiered access, unlocking special discounts and rewards at each level.
 
 ### Main Features
 
 - **Find & Compare Local Service Providers**: Discover, compare, and purchase services from local service providers.
-- **Pay with Circle's USDC**: Purchase services using real USDC and see transaction details on Etherscan.
-- **Join the Loyalty Program & Gain Rewards**: Opt-in to the Service Marketplace Loyalty Program and earn points for on-chain spending. Redeem points for rewards and increase on-chain reputation.
-- **Use the MetaMask Card & Delegation Toolkit**: Pay for services using a MetaMask Card and set up delegations using the MetaMask Delegation Toolkit (DTK), allowing service providers to pull USDC from the user's smart contract account based on the signed service agreement.
+- **Pay with Circle's USDC**: Use USDC to purchase services and view transaction details on Etherscan.
+- **Join the Loyalty Program & Earn Rewards**: Opt in to the Service Marketplace Loyalty Program to earn points for on-chain spending. Redeem points for exclusive rewards and build your on-chain reputation.
+- **Use the MetaMask Card & Delegation Toolkit**: Pay for services with your MetaMask Card and set up delegations using the MetaMask Delegation Toolkit (DTK), enabling service providers to pull USDC from the your smart contract account in alignment with a signed service agreement.
 
 # MetaMask Card Dev Cook-Off
 
 ## Alignment with Track #3: Identity & On-Chain Reputation
 
-<b>Service Marketplace</b> uses on-chain identity and behavioral data to power the Service Marketplace Loyalty Program, giving users tiered access and special perks and rewards from service providers.
+<b>Service Marketplace</b> leverages on-chain identity and behavioral data to power the Service Marketplace Loyalty Program, providing users with tiered access to exclusive perks and rewards from service providers.
 
 ### Loyalty Score (0-100)
 
-Each user receives a Loyalty Score after connecting their MetaMask wallet to the application and joining the Service Marketplace Loyalty Program. Users can increase their loyalty scores through on-chain spending, writing reviews, and completing services.
+Each user receives a Loyalty Score after connecting their MetaMask wallet and joining the Service Marketplace Loyalty Program. Users can increase their score through on-chain spending, writing reviews, and completing services.
 
 ### Accumulated Points from USDC Payments
 
-Every point spent using the MetaMask Card and USDC equates to one point earned with the rewards program. These points can be accumulated and redeemed for many different types rewards - complete service payment, discounts, and cash back, to name a few.
+Every USDC payment made using the MetaMask Card earns users loyalty points. These points can be accumulated and redeemed for various rewards, such as full service payments, discounts, and cash back.
 
 ### Tiered Membership Access
 
-When a user opts-in to the Service Marketplace Loyalty Program, they are automatically placed in the bronze tier and get access to basic perks. They can move up tiers by accumulating points throughout the year, giving them access to rewards, discounts, and special perks offered by service providers, as well as access to premium service providers.
+When users opt into the Loyalty Program, they start at the bronze tier with access to basic perks. As they accumulate points throughout the year, they progress into higher tiers, unlocking additional rewards, discounts, and special perks from service providers.
 
 **Note on Tier Discounts:** This loyalty ladder with discount percentages is a work in progress and subject to change.
 
@@ -44,11 +48,11 @@ When a user opts-in to the Service Marketplace Loyalty Program, they are automat
 
 ### Special On-Chain Rewards
 
-On-chain transactions allows users to do a lot of fun things and get rewarded for them:
+On-chain transactions unlock a variety of rewarding opportunities for users, such as:
 
-- <b>Reviews:</b> A user can only write a review if they have a transaction to the service provider. If they had a great experience or bad experience, they can leave a review since they have an on-chain transaction.
-- <b>Referrals:</b> A user can refer a friend to use a service provider, and if this friend purchases from the service provider, they can get a special reward. This is easily trackable via blockchain technology.
-- <b>Special Rewards:</b>
+- <b>Writing Reviews:</b> Users can write a review only if they have an on-chain transaction with the service provider, enabling honest feedback based on actual experience.
+- <b>Giving Referrals:</b> Users who refer others to service providers and make purchases receive special rewards.
+- <b>Special Reward Ideas:</b>
   - Earn a special reward for writing a review ($5 off coupon for example).
   - Earn a special reward for writing a review AND referring a friend who purchases a service (20% off for example).
   - Earn a special reward from a service provider for choosing them to be the first purchase on the platform (one-time opportunity).
@@ -56,37 +60,33 @@ On-chain transactions allows users to do a lot of fun things and get rewarded fo
   - Earn a special reward for spending a certain $ amount for one transaction (spend $100, get $10 off).
   - Get a special shout out or mention for a service provider after they reach a certain number of reviews (10, 25, 50 etc).
 
-The list goes on and on - there are endless creative opportunities to reward users for purchasing services.
+The possibilities are endless and there are a ton of creative ways to reward users for on-chain transactions!
 
-All data remains saved locally (either in local storage or a Masca Snap in the user's EOA), enabling personalized perks without exposing unnecessary information.
+All data is stored locally (either in local storage or via a Masca Snap in the user's EOA), enabling personalized perks without exposing unnecessary information.
 
 ## Utilization of MetaMask's Delegation Toolkit (DTK)
 
 <img src='./client/public/graphics/mmdtk_overview.png' width='auto'>
 
-<b>MetaMask's Delegation Toolkit (DTK)</b> is paramount for allowing service providers to pull funds from a user's smart contract account upon successful service completion. The scope of what can be pulled by the service provider is determined through caveats (spending limits and time restriction) and agreed upon in the service contract, signed by both the user and service provider.
+<b>MetaMask's Delegation Toolkit (DTK)</b> is essential for allowing service providers to pull funds from a user's smart contract account upon successful completion of a service. The scope of what can be pulled by the service provider is determined through <b>caveats</b> - such as spending limits and time restrictions for withdrawal - and agreed upon in the service contract signed by both the user and service provider.
 
-**Note on Failure to Provide Service**: If the service provider failed to show up for the service appointment and violate the contract, any payment taken out would immediately be refunded back to the user.
+**Note on Failure to Provide Service**: If the service provider fails to show up or violates the contract, any payment withdrawn will immediately be refunded back to the user.
 
 ### Key Hackathon Goals
 
 - **Check** - Explore a real-world use cases of the MetaMask Card.
 - **Check** - Use USDC for stablecoin payments.
-- **Check** - README with project details and a short recorded demo video is required.
-- **In Progress** - Live hosted demo or working prototype. Will update when live.
+- **Check** - README with project details and a short recorded demo video.
+- **In Progress** - Live hosted demo or working prototype. Currently trying to deploy via Azure - will update this section when app is live.
 
 ## Future Improvements
 
-There are many areas of improvements for this project. Some future improvements include:
+There are several areas for improvement in this project. Some future improvements include:
 
-### Key Areas of Improvement
-
-- Add functionality for service providers to connect their wallets and list company details and services on the All Services page.
-- Build a messaging system that sends a message to both the user and service provider when a service is requested, accepted, when a service agreement is signed, and when a delegation payment is made.
-- Add more flexibility when choosing a preferred time when purchasing a service.
-- Add functionality to easily transfer other cryptocurrency to USDC using LI.FI.
-
-</details>
+- Adding functionality for service providers to connect their wallets and list company details, services, and rewards, clickable on the All Services page.
+- Building a messaging system that notifies both users and service providers when a service is requested and accepted, a service agreement is signed, or a delegation payment is made.
+- Adding more flexibility in selecting preferred or available times when purchasing a service.
+- Adding functionality to easily convert cryptocurrency on different chains to USDC using LI.FI.
 
 # Application Setup & Tech Stack
 
@@ -104,7 +104,7 @@ There are many areas of improvements for this project. Some future improvements 
 - **Backend**: Express.js server with blockchain integration
 - **Blockchain**: Ethereum Sepolia testnet with MetaMask's Delegation Toolkit (DTK), Viem
 - **Payments**: Pimlico Paymaster, USDC, ETH
-- **Storage**: Local Storage (temporary for demo data) and Masca Snaps (for production application).
+- **Storage**: Local Storage (temporary) and Masca Snaps (for production application).
 
 ### Prerequisites
 
