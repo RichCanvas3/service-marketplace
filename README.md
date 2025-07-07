@@ -112,11 +112,13 @@ There are several areas for improvement in this project. Some future improvement
 - `pnpm v10+`
 - [MetaMask's Browser Extension](https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en)
 
-## Setup
+## Local Setup
 
-### 1. Clone the Repo
+### 1. Clone Repo
 
 ```sh
+git clone git@github.com:RichCanvas3/service-marketplace.git
+
 cd service-marketplace
 ```
 
@@ -129,25 +131,34 @@ touch server/.env
 # Add necessary environment variables
 ```
 
-**Required Client Environment Variables**
+**Required Client Environment Variables (client/.env)**
 
 ```
-VITE_BUNDLER_URL=https://api.pimlico.io/v2/11155111/rpc?apikey=pim_...
-VITE_PAYMASTER_URL=https://api.pimlico.io/v2/11155111/rpc?apikey=pim_...
 VITE_DEBUG=@veramo/*
 VITE_SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/cxed5uOA7ERjrPuukGXVe
 VITE_MAINNET_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/cxed5uOA7ERjrPuukGXVe
+
+# Requires Keys
+
 PIMLICO_API_KEY=pim_...
+VITE_BUNDLER_URL=https://api.pimlico.io/v2/11155111/rpc?apikey=pim_...
+VITE_PAYMASTER_URL=https://api.pimlico.io/v2/11155111/rpc?apikey=pim_...
 ```
 
-**Required Server Environment Variables**
+**Required Server Environment Variables (server/.env)**
 
 ```
 OPTIMISM_RPC_URL=https://opt-mainnet.g.alchemy.com/v2/cxed5uOA7ERjrPuukGXVe
 MAINNET_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/cxed5uOA7ERjrPuukGXVe
 SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/cxed5uOA7ERjrPuukGXVe
-BUNDLER_URL=https://api.pimlico.io/v2/11155111/rpc?apikey=pim_...
+
+# Requires Keys
+
 PIMLICO_API_KEY=pim_...
+BUNDLER_URL=https://api.pimlico.io/v2/11155111/rpc?apikey=pim_...
+
+# MetaMask Wallet Private Keys (64 Char String as Hex, like: 0xd60197b16dfada3d389fcf5cce94ee4baf634413c7001c0ccd2dfdbe654f0ab2)
+
 SERVER_PRIVATE_KEY=0x...
 DELEGATE_PRIVATE_KEY=0x...
 ```
