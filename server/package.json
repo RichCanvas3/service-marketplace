@@ -5,7 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "npx tsx src/index.ts",
-    "build": "tsc -b"
+    "build": "tsc -b",
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "@blockchain-lab-um/masca-connector": "^1.4.0",
