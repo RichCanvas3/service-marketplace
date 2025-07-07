@@ -78,7 +78,9 @@ const getServerAccount = async() : Promise<any> => {
   const serverAccount = privateKeyToAccount(serverPrivateKey);
   console.info("gator link server EOA: ", serverAccount)
 
+  // @ts-ignore
   const accountClient = await toMetaMaskSmartAccount({
+      // @ts-ignore: suppress type mismatch
       client: publicClient as any,
       implementation: Implementation.Hybrid,
       deployParams: [

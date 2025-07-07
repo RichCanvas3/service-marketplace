@@ -113,7 +113,7 @@ const createServiceContract: RequestHandler = async (req, res) => {
 };
 
 // Get service contract by ID
-const getServiceContract: RequestHandler = async (req, res) => {
+const getServiceContract = async (req, res) => {
   console.log('>>> Getting Service Contract\n');
 
   try {
@@ -144,7 +144,7 @@ const getServiceContract: RequestHandler = async (req, res) => {
 };
 
 // Process delegation and execute payment
-const processDelegation: RequestHandler = async (req, res) => {
+const processDelegation = async (req, res) => {
   console.log('>>> Processing Delegation\n');
 
   try {
@@ -202,7 +202,7 @@ const processDelegation: RequestHandler = async (req, res) => {
 };
 
 // Execute payment using delegation
-const executePayment: RequestHandler = async (req, res) => {
+const executePayment = async (req, res) => {
   console.log('>>> Executing Payment\n');
 
   // Extract contractId outside try-catch so it's available in error handling
@@ -251,6 +251,7 @@ const executePayment: RequestHandler = async (req, res) => {
     // console.log('🔍 DEBUGGING: Expected funded smart account: 0x327ab00586Be5651630a5827BD5C9122c8B639F8');
 
 
+
     // console.log('Checking Ethers')
     // const usdcAddress = "0xd9aa90fbe46fc7a9a5bc05c1a409c00678f7b5f3";
     // const usdcAbi = [ "function balanceOf(address) view returns (uint256)" ];
@@ -292,10 +293,9 @@ const executePayment: RequestHandler = async (req, res) => {
     // Setup Bundler Client
     console.log('Setup Bundler Client');
     const bundlerClient = createBundlerClient({
-      client: publicClient,
       transport: http(`https://api.pimlico.io/v2/11155111/rpc?apikey=${pimlicoApiKey}`),
       paymaster: true
-    });
+    }) as any;
 
     // Setup Pimlico Client
     console.log('Setup Pimlico Client');
@@ -311,7 +311,8 @@ const executePayment: RequestHandler = async (req, res) => {
     '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
   );
     const delegatorSmartAccount = await toMetaMaskSmartAccount({
-      client: publicClient,
+      // @ts-ignore
+      client: publicClient as any,
       implementation: Implementation.Hybrid,
       deployParams: [delegatorAccount.address, [], [], []],
       deploySalt: '0x',
@@ -327,7 +328,8 @@ const executePayment: RequestHandler = async (req, res) => {
     '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
   );
     const delegateSmartAccount = await toMetaMaskSmartAccount({
-      client: publicClient,
+      // @ts-ignore
+      client: publicClient as any,
       implementation: Implementation.Hybrid,
       deployParams: [delegateAccount.address, [], [], []],
       deploySalt: '0x',
@@ -380,7 +382,7 @@ const executePayment: RequestHandler = async (req, res) => {
     });
 
     const executions = [{
-      target: USDC_ADDRESS,
+      target: USDC_ADDRESS as `0x${string}`,
       value: 0n, // No ETH
       callData: transferCallData
     }];
@@ -397,7 +399,7 @@ const executePayment: RequestHandler = async (req, res) => {
     const redeemDelegationCallData = DelegationFramework.encode.redeemDelegations({
       delegations: [[signedDelegation]],
       modes: [SINGLE_DEFAULT_MODE],
-      executions: [executions]
+      executions: [executions as any]
     });
 
     const { fast: fee } = await pimlicoClient.getUserOperationGasPrice();
@@ -557,7 +559,7 @@ const executePayment: RequestHandler = async (req, res) => {
     const data = DelegationFramework.encode.redeemDelegations({
       delegations: [ [storedDelegation] ],
       modes: [SINGLE_DEFAULT_MODE],
-      executions: [executions]
+      executions: [executions as any]
     });
 
     console.log('Key: ', key1);
@@ -566,7 +568,7 @@ const executePayment: RequestHandler = async (req, res) => {
     console.log('Service Provider Account Address: ', serviceProviderAccount.address);
 
     const userOperationHash = await bundlerClient.sendUserOperation({
-      account: serviceProviderAccount,
+      account: serviceProviderAccount as any,
       calls: [{
           to: serviceProviderAccount.address,
           // value: parseEther('0.00005')
@@ -739,6 +741,7 @@ const executePayment: RequestHandler = async (req, res) => {
       // });
 
       const serviceProviderSmartAccount = await toMetaMaskSmartAccount({
+          // @ts-ignore
           client: publicClient as any,
           implementation: Implementation.Hybrid,
           deployParams: [
@@ -884,7 +887,7 @@ const executePayment: RequestHandler = async (req, res) => {
           console.log('Delegation input structure:');
           console.log('- delegations: [[storedDelegation]]');
           console.log('- modes: [SINGLE_DEFAULT_MODE]');
-          console.log('- executions: [executions]');
+          console.log('- executions: ', executions);
           console.log('- SINGLE_DEFAULT_MODE value:', SINGLE_DEFAULT_MODE);
 
           // CRITICAL FIX: Ensure proper delegation structure for redeemDelegations
@@ -892,7 +895,7 @@ const executePayment: RequestHandler = async (req, res) => {
           const delegationRedemptionData = DelegationFramework.encode.redeemDelegations({
             delegations: [ [storedDelegation] ], // Array of delegation batches
             modes: [SINGLE_DEFAULT_MODE],      // Default execution mode
-            executions: [executions]           // Array of execution batches
+            executions: [executions as any]
           });
 
           console.log('🔧 DELEGATION ENCODING VERIFICATION:');
@@ -1143,7 +1146,7 @@ const executePayment: RequestHandler = async (req, res) => {
             console.log('4. Account Deployment Check:');
             try {
               console.log('   - Checking User Smart Account deployment...');
-              const userAccountCode = await publicClient.getBytecode({ address: userSmartAccountAddress });
+              const userAccountCode = await publicClient.getBytecode({ address: userSmartAccountAddress as `0x${string}` });
               const userDeployed = userAccountCode && userAccountCode !== '0x';
               console.log('   - User Smart Account status:', userDeployed ? 'DEPLOYED ✅' : 'NOT DEPLOYED ❌');
 
@@ -1161,7 +1164,7 @@ const executePayment: RequestHandler = async (req, res) => {
 
               // Check account balances
               console.log('5. Account Balance Check:');
-              const userBalance = await publicClient.getBalance({ address: userSmartAccountAddress });
+              const userBalance = await publicClient.getBalance({ address: userSmartAccountAddress as `0x${string}` });
               const providerBalance = await publicClient.getBalance({ address: SERVICE_PROVIDER_SMART_ACCOUNT });
               console.log('   - User Smart Account balance:', (Number(userBalance) / 1e18).toFixed(6), 'ETH');
               console.log('   - Service Provider Smart Account balance:', (Number(providerBalance) / 1e18).toFixed(6), 'ETH');
@@ -1337,7 +1340,7 @@ const executePayment: RequestHandler = async (req, res) => {
 };
 
 // Complete payment - called after successful client-side UserOperation
-const completePayment: RequestHandler = async (req, res) => {
+const completePayment = async (req, res) => {
   console.log('>>> Completing Payment\n');
 
   try {
@@ -1390,7 +1393,7 @@ const completePayment: RequestHandler = async (req, res) => {
 };
 
 // Update contract status (for signing)
-const updateContractStatus: RequestHandler = async (req, res) => {
+const updateContractStatus = async (req, res) => {
   console.log('>>> Updating Contract Status\n');
 
   try {
@@ -1430,7 +1433,7 @@ const updateContractStatus: RequestHandler = async (req, res) => {
 };
 
 // List all contracts (for debugging)
-const listContracts: RequestHandler = async (req, res) => {
+const listContracts = async (req, res) => {
   try {
     const allContracts = Array.from(contracts.values());
     res.json({

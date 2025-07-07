@@ -23,7 +23,8 @@
   },
   "files": [
     "src/components/data/service-list.json",
-    "src/components/data/employees.json"
+    "src/components/data/employees.json",
+    "src/components/data/mco-mock.json"
   ],
   "references": [
     { "path": "../shared" }

@@ -114,7 +114,7 @@ const AccountPage: React.FC = () => {
         if (window.ethereum) {
           const provider = new ethers.BrowserProvider(window.ethereum);
           const code = await provider.getCode(smartAccountAddress);
-          setSmartAccountDeployed(code && code !== '0x');
+          setSmartAccountDeployed(code !== '0x');
         }
       } catch (err) {
         console.error('Error checking smart account deployment:', err);

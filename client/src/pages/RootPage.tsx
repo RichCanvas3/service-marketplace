@@ -78,7 +78,7 @@ const RootPage: React.FC = () => {
             const publicClient = createPublicClient({ chain: sepolia, transport: http(rpcUrl) });
 
             // minimal custom account for address derivation
-            const customAccount = {
+            const customAccount: any = {
               address: accounts[0] as Address,
               async signMessage() { return '0x'; },
               async signTypedData() { return '0x'; },

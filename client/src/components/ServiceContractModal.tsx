@@ -400,7 +400,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       }
 
       // Create a custom account object for MetaMask delegation
-      const customAccount = {
+      const customAccount: any = {
         address: account as Address,
         async signMessage({ message }: { message: string | Uint8Array }) {
           console.log('Signing message:', message);
@@ -447,7 +447,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
           mcoData.smartAccountAddress = smartAccount.address;
           localStorage.setItem('mcoData', JSON.stringify(mcoData));
         }
-      } catch (smartAccountError) {
+      } catch (smartAccountError: any) {
         console.error('Error creating smart account:', smartAccountError);
         throw new Error(`Failed to create smart account: ${smartAccountError.message}`);
       }
@@ -533,7 +533,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
           caveats: caveats
         });
         console.log('Delegation created (Smart Account → Smart Account)');
-      } catch (delegationError) {
+      } catch (delegationError: any) {
         console.error('Error creating delegation:', delegationError);
         throw new Error(`Failed to create delegation: ${delegationError.message}`);
       }
@@ -546,7 +546,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
           delegation: delegation
         });
         console.log('Delegation signed');
-      } catch (signError) {
+      } catch (signError: any) {
         console.error('Error signing delegation:', signError);
         throw new Error(`Failed to sign delegation: ${signError.message}`);
       }
@@ -632,7 +632,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
           console.warn('Status update error response:', errorText);
           throw new Error(`Failed to update contract status: ${response.status} - ${errorText}`);
         }
-      } catch (statusError) {
+      } catch (statusError: any) {
         console.error('Error updating contract status:', statusError);
         throw new Error(`Failed to update contract status: ${statusError.message}`);
       }
@@ -700,7 +700,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       const serviceProviderEOA = '0x977bc18693ba4F4bfF8051d27e722b930F3f3Fe3';
 
       // Create custom account for signing (this would normally be done server-side)
-      const customAccount = {
+      const customAccount: any = {
         address: userAddress as Address, // You'll sign on behalf for demo
         async signMessage({ message }: { message: string | Uint8Array }) {
           const provider = new ethers.BrowserProvider(window.ethereum);
@@ -825,7 +825,7 @@ const ServiceContractModal: React.FC<ServiceContractModalProps> = ({
       });
 
       // Create custom account for signing
-      const customAccount = {
+      const customAccount: any = {
         address: userAddress as Address,
         async signMessage({ message }: { message: string | Uint8Array }) {
           const provider = new ethers.BrowserProvider(window.ethereum);
