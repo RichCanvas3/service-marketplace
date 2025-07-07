@@ -135,10 +135,13 @@ touch server/.env
 
 ```
 VITE_DEBUG=@veramo/*
-VITE_SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/cxed5uOA7ERjrPuukGXVe
-VITE_MAINNET_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/cxed5uOA7ERjrPuukGXVe
 
-# Requires Keys
+# Requires Alchemy API Key
+
+VITE_SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/api_key...
+VITE_MAINNET_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/api_key...
+
+# Requires Pimlico API Key
 
 PIMLICO_API_KEY=pim_...
 VITE_BUNDLER_URL=https://api.pimlico.io/v2/11155111/rpc?apikey=pim_...
@@ -148,11 +151,13 @@ VITE_PAYMASTER_URL=https://api.pimlico.io/v2/11155111/rpc?apikey=pim_...
 **Required Server Environment Variables (server/.env)**
 
 ```
-OPTIMISM_RPC_URL=https://opt-mainnet.g.alchemy.com/v2/cxed5uOA7ERjrPuukGXVe
-MAINNET_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/cxed5uOA7ERjrPuukGXVe
-SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/cxed5uOA7ERjrPuukGXVe
+# Requires Alchemy API Key
 
-# Requires Keys
+OPTIMISM_RPC_URL=https://opt-mainnet.g.alchemy.com/v2/api_key...
+MAINNET_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/api_key...
+SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/api_key...
+
+# Requires Pimlico API Key
 
 PIMLICO_API_KEY=pim_...
 BUNDLER_URL=https://api.pimlico.io/v2/11155111/rpc?apikey=pim_...
