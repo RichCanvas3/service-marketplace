@@ -4,7 +4,7 @@
 
 ### [Watch Service Marketplace Demo Video on Hackquest](https://www.hackquest.io/projects/MetaMask-Card-Dev-Cook-Off-Service-Marketplace-and-Loyalty-Program)
 
-### [Deployed Service Marketplace Application](https://wonderful-sea-0ad57721e.2.azurestaticapps.net/)
+### [Deployed Service Marketplace Decentralized Application](https://wonderful-sea-0ad57721e.2.azurestaticapps.net/)
 
 ### Spend crypto, earn points, redeem for everyday rewards.
 
@@ -79,7 +79,9 @@ All data is stored locally (either in local storage or via a Masca Snap in the u
 - **Check** - Explore a real-world use cases of the MetaMask Card.
 - **Check** - Use USDC for stablecoin payments.
 - **Check** - README with project details and a short recorded demo video.
-- **In Progress** - Live hosted demo or working prototype. Currently trying to deploy via Azure - will update this section when app is live.
+- **In Progress** - Live hosted demo or working prototype.
+  - Currently trying to deploy app to Azure - will update this section when the app is live.
+  - Local setup works perfectly presuming all `.env` variables are there.
 
 ## Future Improvements
 
