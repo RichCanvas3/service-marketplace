@@ -4,6 +4,8 @@
 
 ### [Watch Service Marketplace Demo Video on Hackquest](https://www.hackquest.io/projects/MetaMask-Card-Dev-Cook-Off-Service-Marketplace-and-Loyalty-Program)
 
+### [Deployed Service Marketplace Application](https://wonderful-sea-0ad57721e.2.azurestaticapps.net/)
+
 ### Spend crypto, earn points, redeem for everyday rewards.
 
 <b>Service Marketplace</b> is a decentralized service marketplace that connects users with local service providers and allows them to purchase a variety of everyday services.
