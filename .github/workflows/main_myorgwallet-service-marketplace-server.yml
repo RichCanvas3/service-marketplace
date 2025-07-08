@@ -19,13 +19,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20.x'
-          cache: 'pnpm'
-      
+                node-version: '20.x'
+                cache: 'pnpm'
+            
       - name: Install pnpm
-        run: |
-            npm install -g pnpm
-            echo "$(npm bin -g)" >> $GITHUB_PATH
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - name: Install dependencies and build
         run: |
