@@ -20,27 +20,36 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-          # cache: 'pnpm'  # temporarily remove this line
-        
+          cache: 'pnpm'  # Enable pnpm caching for faster builds
+
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
           standalone: true
-        
+
       - name: Add pnpm to PATH
         run: echo "$(npm bin -g)" >> $GITHUB_PATH
 
       - name: Install dependencies and build
         run: |
           pnpm install --no-frozen-lockfile
-          pnpm --filter ./server build || echo "No build script"
+          pnpm --filter @mcp/shared build || echo "No build script for @mcp/shared"
+          pnpm --filter ./server build || echo "No build script for server"
           pnpm --filter ./server test || echo "No test script"
+        env:
+          NODE_ENV: production  # Ensure production dependencies are installed
 
-      - name: Zip server folder for deployment
+      - name: Verify build output
         run: |
-          cd server
-          zip -r ../release.zip .
+          ls -l server/dist
+          ls -l server/node_modules/@mcp/shared/dist || echo "Warning: @mcp/shared/dist not found"
+
+      - name: Zip server folder and dependencies for deployment
+        run: |
+          zip -r release.zip server node_modules/@mcp -x "node_modules/.cache/*"
+        env:
+          NODE_ENV: production
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -62,7 +71,7 @@ jobs:
           name: node-app
 
       - name: Extract artifact
-        run: unzip release.zip
+        run: unzip release.zip -d .
 
       - name: Login to Azure
         uses: azure/login@v2
