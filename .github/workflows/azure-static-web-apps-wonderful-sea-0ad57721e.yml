@@ -24,7 +24,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-          # cache: 'pnpm'  # removed to avoid conflicts
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
@@ -41,8 +40,13 @@ jobs:
           pnpm install --no-frozen-lockfile
           pnpm build
 
-      - name: Verify build output
-        run: ls -la client/dist
+      - name: Check if dist exists
+        run: |
+          if [ ! -d "client/dist" ]; then
+            echo "dist folder not found!"
+            exit 1
+          fi
+          ls -la client/dist
 
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
@@ -50,18 +54,5 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_SEA_0AD57721E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "client"
-          api_location: ""
-          output_location: "dist"
-          
-
-  close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close Pull Request Job
-    steps:
-      - name: Close Pull Request
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_SEA_0AD57721E }}
-          action: "close"
+          app_location: "client/dist" # points directly to built output
+          skip_app_build: true        # ensures Oryx does NOT build
