@@ -24,14 +24,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-            # cache: 'pnpm'  # temporarily remove this line
-        
+          # cache: 'pnpm'  # removed to avoid conflicts
+
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
           standalone: true
-        
+
       - name: Add pnpm to PATH
         run: echo "$(npm bin -g)" >> $GITHUB_PATH
 
@@ -40,6 +40,9 @@ jobs:
           cd client
           pnpm install --no-frozen-lockfile
           pnpm build
+
+      - name: Verify build output
+        run: ls -la client/dist
 
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
@@ -50,7 +53,7 @@ jobs:
           app_location: "client"
           api_location: ""
           output_location: "dist"
-          skip_app_build: true
+          
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
