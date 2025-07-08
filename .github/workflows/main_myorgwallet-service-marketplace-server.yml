@@ -23,15 +23,25 @@ jobs:
           cache: 'pnpm'  # Enable pnpm caching for faster builds
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4  # Use latest version for reliability
+        uses: pnpm/action-setup@v4
         with:
-          version: 8  # Match your local pnpm version
-          run_install: false  # Run install explicitly in next step
+          version: 8
+          run_install: false  # Run install explicitly later
 
-      - name: Verify pnpm installation
+      - name: Debug PATH and pnpm
         run: |
-          pnpm --version || { echo "pnpm not found"; exit 1; }
-          echo "pnpm installed successfully at $(which pnpm)"
+          echo "PATH: $PATH"
+          which pnpm || echo "pnpm not found in PATH"
+          pnpm --version || echo "pnpm version check failed"
+
+      - name: Fallback install pnpm if not found
+        run: |
+          if ! command -v pnpm >/dev/null 2>&1; then
+            echo "Installing pnpm globally via npm as fallback"
+            npm install -g pnpm@8
+          fi
+          pnpm --version
+          echo "pnpm installed at $(which pnpm)"
 
       - name: Install dependencies and build
         run: |
