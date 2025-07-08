@@ -23,10 +23,10 @@ jobs:
           cache: 'pnpm'  # Enable pnpm caching for faster builds
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4  # Use latest version for reliability
         with:
-          version: 8
-          run_install: false  # Avoid running pnpm install here; we'll do it explicitly
+          version: 8  # Match your local pnpm version
+          run_install: false  # Run install explicitly in next step
 
       - name: Verify pnpm installation
         run: |
@@ -36,9 +36,9 @@ jobs:
       - name: Install dependencies and build
         run: |
           pnpm install --no-frozen-lockfile
-          pnpm --filter @mcp/shared build || echo "No build script for @mcp/shared"
-          pnpm --filter ./server build || echo "No build script for server"
-          pnpm --filter ./server test || echo "No test script"
+          pnpm --filter shared build || echo "No build script for shared"
+          pnpm --filter server build || echo "No build script for server"
+          pnpm --filter server test || echo "No test script"
         env:
           NODE_ENV: production  # Ensure production dependencies are installed
 
