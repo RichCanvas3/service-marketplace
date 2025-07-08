@@ -26,10 +26,12 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 8
-          standalone: true
+          run_install: false  # Avoid running pnpm install here; we'll do it explicitly
 
-      - name: Add pnpm to PATH
-        run: echo "$(npm bin -g)" >> $GITHUB_PATH
+      - name: Verify pnpm installation
+        run: |
+          pnpm --version || { echo "pnpm not found"; exit 1; }
+          echo "pnpm installed successfully at $(which pnpm)"
 
       - name: Install dependencies and build
         run: |
