@@ -20,50 +20,27 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-          cache: 'pnpm'  # Enable pnpm caching for faster builds
-
+          # cache: 'pnpm'  # temporarily remove this line
+        
       - name: Install pnpm
-        run: |
-          npm install -g pnpm@8
-          pnpm --version
-          echo "pnpm installed at $(which pnpm)"
-          echo "$(npm config get prefix)/bin" >> $GITHUB_PATH
-        env:
-          NPM_CONFIG_PREFIX: /home/runner/.npm-global  # Ensure consistent global install path
-
-      - name: Debug PATH and pnpm
-        run: |
-          echo "PATH: $PATH"
-          which pnpm || { echo "pnpm not found in PATH"; exit 1; }
-          pnpm --version || { echo "pnpm version check failed"; exit 1; }
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          standalone: true
+        
+      - name: Add pnpm to PATH
+        run: echo "$(npm bin -g)" >> $GITHUB_PATH
 
       - name: Install dependencies and build
         run: |
           pnpm install --no-frozen-lockfile
-          pnpm --filter shared build || echo "No build script for shared"
-          pnpm --filter server build || echo "No build script for server"
-          pnpm --filter server test || echo "No test script"
-        env:
-          NODE_ENV: production  # Ensure production dependencies are installed
+          pnpm --filter ./server build || echo "No build script"
+          pnpm --filter ./server test || echo "No test script"
 
-      - name: Verify build output
+      - name: Zip server folder for deployment
         run: |
-          ls -l server/dist
-          ls -l server/node_modules/@mcp/shared/dist || echo "Warning: @mcp/shared/dist not found"
-
-      - name: Create deployment directory with pnpm deploy
-        run: |
-          pnpm --filter server deploy ./deployed-server
-          ls -l deployed-server
-        env:
-          NODE_ENV: production
-
-      - name: Zip deployment directory
-        run: |
-          cd deployed-server
-          zip -r ../release.zip . -x "node_modules/.cache/*"
-        env:
-          NODE_ENV: production
+          cd server
+          zip -r ../release.zip .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -85,7 +62,7 @@ jobs:
           name: node-app
 
       - name: Extract artifact
-        run: unzip release.zip -d .
+        run: unzip release.zip
 
       - name: Login to Azure
         uses: azure/login@v2
